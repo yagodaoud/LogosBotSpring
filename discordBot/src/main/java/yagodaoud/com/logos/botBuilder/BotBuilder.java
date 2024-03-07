@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import yagodaoud.com.logos.listeners.BotCommandsListener;
+import yagodaoud.com.logos.listeners.LoadCommandsListener;
 
 import java.util.EnumSet;
 
@@ -43,7 +45,7 @@ public class BotBuilder {
     }
 
     private static void configureEventListeners(JDABuilder builder) {
-//        builder.addEventListeners(new LoadCommands(), new BotCommands());
+        builder.addEventListeners(new LoadCommandsListener(), new BotCommandsListener());
     }
 
     private static void addGatewayIntents(JDABuilder builder) {
