@@ -1,4 +1,4 @@
-package yagodaoud.com.main.botBuilder;
+package yagodaoud.com.logos.botBuilder;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
