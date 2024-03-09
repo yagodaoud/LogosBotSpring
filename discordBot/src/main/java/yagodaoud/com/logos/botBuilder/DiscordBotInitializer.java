@@ -7,13 +7,14 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import yagodaoud.com.logos.commands.CommandRegistry;
+import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.crypto.CryptoPrice;
 import yagodaoud.com.logos.listeners.BotCommandsListener;
 import yagodaoud.com.logos.listeners.LoadCommandsListener;
 
 import java.util.EnumSet;
 
-public class BotBuilder {
+public class DiscordBotInitializer {
 
     public static JDA initBot(String token) {
 
@@ -46,7 +47,8 @@ public class BotBuilder {
     }
 
     private static void configureEventListeners(JDABuilder builder) {
-        CommandRegistry commandRegistry = new CommandRegistry();
+        CommandRegistryService commandRegistry = new CommandRegistryService();
+        new CryptoPrice(commandRegistry);
         builder.addEventListeners(new LoadCommandsListener(commandRegistry), new BotCommandsListener(commandRegistry));
     }
 

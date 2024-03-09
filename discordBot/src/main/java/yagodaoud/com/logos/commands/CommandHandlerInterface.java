@@ -1,12 +1,15 @@
 package yagodaoud.com.logos.commands;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+
 
 import java.util.List;
 
-public interface CommandHandler {
+public interface CommandHandlerInterface {
     void handleCommand(SlashCommandInteractionEvent event, String[] args);
 
     String getName();
-    List<String> getAliases();
+    String getDescription();
+    List<OptionData> getOptions();
 }
