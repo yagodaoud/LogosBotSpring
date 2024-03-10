@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface CommandHandlerInterface {
     void handleCommand(SlashCommandInteractionEvent event);
-
     String getName();
     String getDescription();
     List<OptionData> getOptions();

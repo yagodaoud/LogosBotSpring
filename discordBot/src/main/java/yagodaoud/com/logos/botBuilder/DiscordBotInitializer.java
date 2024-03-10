@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.crypto.BitcoinPriceSchedulerCommand;
 import yagodaoud.com.logos.crypto.FetchCryptoPriceCommand;
 import yagodaoud.com.logos.listeners.BotCommandsListener;
 import yagodaoud.com.logos.listeners.LoadCommandsListener;
@@ -49,6 +50,7 @@ public class DiscordBotInitializer {
     private static void configureEventListeners(JDABuilder builder) {
         CommandRegistryService commandRegistry = new CommandRegistryService();
         new FetchCryptoPriceCommand(commandRegistry);
+        new BitcoinPriceSchedulerCommand(commandRegistry);
         builder.addEventListeners(new LoadCommandsListener(commandRegistry), new BotCommandsListener(commandRegistry));
     }
 
