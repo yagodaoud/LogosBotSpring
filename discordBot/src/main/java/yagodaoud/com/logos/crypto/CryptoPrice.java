@@ -15,8 +15,8 @@ public class CryptoPrice implements CommandHandlerInterface {
     }
 
     @Override
-    public void handleCommand(SlashCommandInteractionEvent event, String[] args) {
-        event.reply("a " + event.getOption("crypto-price").getAsString()).queue();
+    public void handleCommand(SlashCommandInteractionEvent event) {
+        event.reply(event.getOption("crypto-symbol").getAsString()).queue();
     }
 
     @Override

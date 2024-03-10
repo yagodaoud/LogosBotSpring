@@ -16,20 +16,28 @@ import java.util.stream.Collectors;
 public class CommandRegistryService {
 
     private final Map<String, String> commandMap = new HashMap<>();
+    private final List<CommandHandlerInterface> commandHandlerlist = new ArrayList<>();
 
-    private final List<OptionData> options = new ArrayList<>();
+    private final List<OptionData> optionsList = new ArrayList<>();
     public void registerCommand(CommandHandlerInterface command) {
         commandMap.put(command.getName(), command.getDescription());
-        options.add((OptionData) command.getOptions());
+        commandHandlerlist.add(command);
+        if (command.getOptions() != null) {
+            optionsList.addAll(command.getOptions());
+        }
     }
 
     public List<CommandData> getCommands() {
         return commandMap.entrySet().stream()
                 .map(entry -> {
                     SlashCommandData slashCommandData = Commands.slash(entry.getKey(), entry.getValue());
-                    slashCommandData.addOptions(this.options);
+                    slashCommandData.addOptions(this.optionsList);
                     return slashCommandData;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public List<CommandHandlerInterface> getCommandHandlers() {
+        return this.commandHandlerlist;
     }
 }
