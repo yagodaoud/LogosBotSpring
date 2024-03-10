@@ -71,7 +71,16 @@
             <artifactId>dotenv-java</artifactId>
             <version>2.3.2</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>6.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20230227</version>
+        </dependency>
     </dependencies>
 
     <build>

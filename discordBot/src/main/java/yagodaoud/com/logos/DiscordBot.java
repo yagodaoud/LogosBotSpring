@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import yagodaoud.com.logos.botBuilder.DiscordBotInitializer;
 
 @SpringBootApplication
-@ComponentScan("com.logos.commands, com.logos.listeners")
+//@ComponentScan("com.logos.commands, com.logos.listeners")
 public class DiscordBot {
 
 	public static void main(String[] args) {
