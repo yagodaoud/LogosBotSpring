@@ -27,7 +27,6 @@ public class BitcoinPriceSchedulerCommand implements CommandHandlerInterface {
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         if (!isActive) {
-            System.out.println("BitcoinPriceSchedulerCommand instance: " + this);
             event.reply("The daily closing price of Bitcoin will be displayed from now on!").queue();
             textChannel = event.getChannel().asTextChannel();
             sendBitcoinPrice(textChannel);

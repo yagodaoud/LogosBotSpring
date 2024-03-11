@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import yagodaoud.com.logos.commands.CommandRegistryService;
 import yagodaoud.com.logos.crypto.BitcoinPriceSchedulerCommand;
 import yagodaoud.com.logos.crypto.FetchCryptoPriceCommand;
@@ -17,7 +19,14 @@ import java.util.EnumSet;
 
 public class DiscordBotInitializer {
 
-    public static JDA initBot(String token) {
+    private final CommandRegistryService commandRegistry;
+
+    @Autowired
+    public DiscordBotInitializer(CommandRegistryService commandRegistry) {
+        this.commandRegistry = commandRegistry;
+    }
+
+    public static JDA initBot(String token,  ApplicationContext context) {
 
         JDABuilder builder = JDABuilder.createDefault(token)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
@@ -33,7 +42,7 @@ public class DiscordBotInitializer {
 
         disableCache(builder);
         addGatewayIntents(builder);
-        configureEventListeners(builder);
+        configureEventListeners(builder, context);
 
         return builder.build();
     }
@@ -47,10 +56,10 @@ public class DiscordBotInitializer {
                 CacheFlag.SCHEDULED_EVENTS)));
     }
 
-    private static void configureEventListeners(JDABuilder builder) {
-        CommandRegistryService commandRegistry = new CommandRegistryService();
-        new FetchCryptoPriceCommand(commandRegistry);
-        new BitcoinPriceSchedulerCommand(commandRegistry);
+    private static void configureEventListeners(JDABuilder builder, ApplicationContext context) {
+        CommandRegistryService commandRegistry = context.getBean(CommandRegistryService.class);
+        FetchCryptoPriceCommand fetchCryptoPriceCommand = context.getBean(FetchCryptoPriceCommand.class);
+        BitcoinPriceSchedulerCommand bitcoinPriceSchedulerCommand = context.getBean(BitcoinPriceSchedulerCommand.class);
         builder.addEventListeners(new LoadCommandsListener(commandRegistry), new BotCommandsListener(commandRegistry));
     }
 

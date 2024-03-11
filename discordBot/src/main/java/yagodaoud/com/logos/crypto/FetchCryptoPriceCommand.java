@@ -3,12 +3,14 @@ package yagodaoud.com.logos.crypto;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
 
 import java.util.List;
 
+@Component
 public class FetchCryptoPriceCommand implements CommandHandlerInterface {
     CoinMarketCapApiService coinMarketCapApiService = new CoinMarketCapApiService(new RestTemplate());
     public FetchCryptoPriceCommand(CommandRegistryService commandRegistry) {
