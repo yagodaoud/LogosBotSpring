@@ -17,13 +17,13 @@ public class CommandRegistryService {
 
     private final Map<String, String> commandMap = new HashMap<>();
     private final List<CommandHandlerInterface> commandHandlerlist = new ArrayList<>();
+    private final Map<String, OptionData> optionsMap = new HashMap<>();
 
-    private final List<OptionData> optionsList = new ArrayList<>();
     public void registerCommand(CommandHandlerInterface command) {
         commandMap.put(command.getName(), command.getDescription());
         commandHandlerlist.add(command);
         if (command.getOptions() != null) {
-            optionsList.addAll(command.getOptions());
+            command.getOptions().forEach(option -> optionsMap.put(command.getName(), option));
         }
     }
 
@@ -31,7 +31,10 @@ public class CommandRegistryService {
         return commandMap.entrySet().stream()
                 .map(entry -> {
                     SlashCommandData slashCommandData = Commands.slash(entry.getKey(), entry.getValue());
-                    slashCommandData.addOptions(this.optionsList);
+                    slashCommandData.addOptions(optionsMap.entrySet().stream()
+                            .filter(optionEntry -> optionEntry.getKey().equals(entry.getKey()))
+                            .map(Map.Entry::getValue)
+                            .toArray(OptionData[]::new));
                     return slashCommandData;
                 })
                 .collect(Collectors.toList());

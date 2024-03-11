@@ -15,8 +15,9 @@ public class BitcoinPriceSchedulerService {
         this.bitcoinPriceSchedulerCommand = bitcoinPriceSchedulerCommand;
     }
 
-    @Scheduled(cron = "0 0 * * * *", zone = "UTC")
+    @Scheduled(cron = "40 58 22 * * *", zone = "GMT-3")
     public void scheduleBitcoinPrice() {
+        System.out.println("BitcoinPriceSchedulerCommand instance: " + bitcoinPriceSchedulerCommand);
         if (bitcoinPriceSchedulerCommand.isActive) {
             bitcoinPriceSchedulerCommand.sendBitcoinPrice(bitcoinPriceSchedulerCommand.textChannel);
         }
