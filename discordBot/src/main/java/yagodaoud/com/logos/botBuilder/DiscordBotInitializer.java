@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import yagodaoud.com.logos.commands.CommandRegistryService;
 import yagodaoud.com.logos.crypto.BitcoinPriceSchedulerCommand;
+import yagodaoud.com.logos.crypto.BitcoinPriceTracker;
 import yagodaoud.com.logos.crypto.FetchCryptoPriceCommand;
 import yagodaoud.com.logos.listeners.BotCommandsListener;
 import yagodaoud.com.logos.listeners.LoadCommandsListener;
@@ -60,6 +61,7 @@ public class DiscordBotInitializer {
         CommandRegistryService commandRegistry = context.getBean(CommandRegistryService.class);
         FetchCryptoPriceCommand fetchCryptoPriceCommand = context.getBean(FetchCryptoPriceCommand.class);
         BitcoinPriceSchedulerCommand bitcoinPriceSchedulerCommand = context.getBean(BitcoinPriceSchedulerCommand.class);
+        BitcoinPriceTracker bitcoinPriceTracker = context.getBean(BitcoinPriceTracker.class);
         builder.addEventListeners(new LoadCommandsListener(commandRegistry), new BotCommandsListener(commandRegistry));
     }
 
