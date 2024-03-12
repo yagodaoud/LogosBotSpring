@@ -59,6 +59,7 @@ public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
         double variation =  this.priceVariationCalculator();
 
         if (Math.abs(variation) > percentage) {
+            lastPrice = currentPrice;
             String direction = percentage > 0 ? "up" : "down";
             String emoji = percentage > 0 ? "📈" : "📉";
             message = String.format("Bitcoin is %s! $%,.2f, (%f in the last hour) %s", direction, currentPrice, variation, emoji);
@@ -67,9 +68,7 @@ public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
     }
 
     public void updateCurrentPrice(String cryptoPrice) {
-        double newPrice = parsePrice(cryptoPrice);
-        lastPrice = currentPrice;
-        currentPrice = newPrice;
+        currentPrice = parsePrice(cryptoPrice);
     }
 
     public void sendNotificationMessage(String message) {
