@@ -9,76 +9,67 @@ import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
 
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 @Component
-public class BitcoinPriceTracker implements CommandHandlerInterface{
-    private double targetPrice;
-    private double currentPrice;
-    private int priceTrend;
-    private String userId;
-    private TextChannel channel;
+public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
+
     private boolean isActive = false;
+    private double percentage;
+    private double currentPrice;
+    private double lastPrice;
+    private TextChannel channel;
+
 
     @Autowired
-    public BitcoinPriceTracker(CommandRegistryService commandRegistry) {
+    public BitcoinPercentageAlertCommand(CommandRegistryService commandRegistry) {
         commandRegistry.registerCommand(this);
+
     }
 
+    @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         if (!isActive) {
-            targetPrice = event.getOption("target-price").getAsDouble();
-            event.reply("Tracking bitcoin price when it reaches " + NumberFormat.getCurrencyInstance(Locale.US).format(targetPrice)).queue();
-            userId = event.getUser().getId();
+            percentage = event.getOption("percentage").getAsDouble();
+            event.reply("Tracking Bitcoin price when its variation is greater than " + percentage + "%!").queue();
             channel = event.getChannel().asTextChannel();
             isActive = true;
             return;
         }
         event.reply("The command is already active.").queue();
-
     }
 
     @Override
     public String getName() {
-        return "bitcoin-price-tracker";
+        return "bitcoin-percentage-alert";
     }
 
     @Override
     public String getDescription() {
-        return "If the value is reached, the bot will send a notification";
+        return "Create a percentage tracker for Bitcoin";
     }
 
     @Override
     public List<OptionData> getOptions() {
-        return List.of(new OptionData(OptionType.STRING, "target-price", "Target price desired", true));
-    }
-
-    public void updateCurrentPrice(String cryptoPrice) {
-        currentPrice = parsePrice(cryptoPrice);
-    }
-
-    public void updatePriceTrend() {
-        double previousPrice = currentPrice;
-
-        if (currentPrice > previousPrice) {
-            priceTrend = 1; // Uptrend
-        } else if (currentPrice < previousPrice) {
-            priceTrend = 0; // Downtrend
-        } else {
-            priceTrend = -1; // No change
-        }
+        return List.of(new OptionData(OptionType.STRING, "percentage", "Percentage that will trigger the alert (in %)", true));
     }
 
     public String generateNotificationMessage() {
         String message = null;
+        double variation =  this.priceVariationCalculator();
 
-        if ((currentPrice > targetPrice && priceTrend == 1) || (currentPrice < targetPrice && priceTrend == 0)) {
-            String direction = priceTrend == 1 ? "exceeded" : "gone below";
-            message = String.format("Bitcoin has %s $%,.2f, now at $%,.2f <@%s>!", direction, targetPrice, currentPrice, userId);
+        if (Math.abs(variation) > percentage) {
+            String direction = percentage > 0 ? "up" : "down";
+            String emoji = percentage > 0 ? "📈" : "📉";
+            message = String.format("Bitcoin is %s! $%,.2f, (%f in the last hour) %s", direction, currentPrice, variation, emoji);
         }
         return message;
+    }
+
+    public void updateCurrentPrice(String cryptoPrice) {
+        double newPrice = parsePrice(cryptoPrice);
+        lastPrice = currentPrice;
+        currentPrice = newPrice;
     }
 
     public void sendNotificationMessage(String message) {
@@ -87,6 +78,14 @@ public class BitcoinPriceTracker implements CommandHandlerInterface{
         }
         channel.sendMessage(message).queue();
         isActive = false;
+    }
+
+    public double priceVariationCalculator(){
+        /*Formula to get the
+          variation e.g. The price was 100,
+          now it's 120 -> (120 - 100) / 100 = 0.2 * 100 = 20%
+        */
+        return ((currentPrice - lastPrice) / lastPrice) * 100;
     }
 
     private double parsePrice(String cryptoPrice) {

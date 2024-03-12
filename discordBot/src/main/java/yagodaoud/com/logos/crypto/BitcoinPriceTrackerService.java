@@ -8,23 +8,23 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Configuration
 @EnableScheduling
 public class BitcoinPriceTrackerService {
-    private final BitcoinPriceTracker bitcoinPriceTracker;
+    private final BitcoinPriceTrackerCommand bitcoinPriceTrackerCommand;
     private final CoinMarketCapApiService coinMarketCapApiService;
 
     @Autowired
-    public BitcoinPriceTrackerService(BitcoinPriceTracker bitcoinPriceTracker, CoinMarketCapApiService coinMarketCapApiService) {
-        this.bitcoinPriceTracker = bitcoinPriceTracker;
+    public BitcoinPriceTrackerService(BitcoinPriceTrackerCommand bitcoinPriceTrackerCommand, CoinMarketCapApiService coinMarketCapApiService) {
+        this.bitcoinPriceTrackerCommand = bitcoinPriceTrackerCommand;
         this.coinMarketCapApiService = coinMarketCapApiService;
     }
 
-    @Scheduled(fixedRate = 5 * 60000)
+    @Scheduled(fixedRate = 3 * 60000)
     public void trackBitcoinPrice() {
-        bitcoinPriceTracker.updateCurrentPrice(coinMarketCapApiService.getCryptoPrice("BTC"));
-        bitcoinPriceTracker.updatePriceTrend();
-        String message = bitcoinPriceTracker.generateNotificationMessage();
+        bitcoinPriceTrackerCommand.updateCurrentPrice(coinMarketCapApiService.getCryptoPrice("BTC"));
+        bitcoinPriceTrackerCommand.updatePriceTrend();
+        String message = bitcoinPriceTrackerCommand.generateNotificationMessage();
 
         if (message != null) {
-            bitcoinPriceTracker.sendNotificationMessage(message);
+            bitcoinPriceTrackerCommand.sendNotificationMessage(message);
         }
     }
 }

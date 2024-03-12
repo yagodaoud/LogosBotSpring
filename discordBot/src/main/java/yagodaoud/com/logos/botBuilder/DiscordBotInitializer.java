@@ -10,8 +10,9 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.crypto.BitcoinPercentageAlertCommand;
 import yagodaoud.com.logos.crypto.BitcoinPriceSchedulerCommand;
-import yagodaoud.com.logos.crypto.BitcoinPriceTracker;
+import yagodaoud.com.logos.crypto.BitcoinPriceTrackerCommand;
 import yagodaoud.com.logos.crypto.FetchCryptoPriceCommand;
 import yagodaoud.com.logos.listeners.BotCommandsListener;
 import yagodaoud.com.logos.listeners.LoadCommandsListener;
@@ -61,7 +62,8 @@ public class DiscordBotInitializer {
         CommandRegistryService commandRegistry = context.getBean(CommandRegistryService.class);
         FetchCryptoPriceCommand fetchCryptoPriceCommand = context.getBean(FetchCryptoPriceCommand.class);
         BitcoinPriceSchedulerCommand bitcoinPriceSchedulerCommand = context.getBean(BitcoinPriceSchedulerCommand.class);
-        BitcoinPriceTracker bitcoinPriceTracker = context.getBean(BitcoinPriceTracker.class);
+        BitcoinPriceTrackerCommand bitcoinPriceTrackerCommand = context.getBean(BitcoinPriceTrackerCommand.class);
+        BitcoinPercentageAlertCommand bitcoinPercentageAlertCommand = context.getBean(BitcoinPercentageAlertCommand.class);
         builder.addEventListeners(new LoadCommandsListener(commandRegistry), new BotCommandsListener(commandRegistry));
     }
 
