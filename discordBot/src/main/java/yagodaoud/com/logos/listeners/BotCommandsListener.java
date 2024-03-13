@@ -35,9 +35,8 @@ public class BotCommandsListener extends ListenerAdapter {
         CommandHandlerInterface handler = commandHandlers.get(commandName);
         if (handler != null) {
             handler.handleCommand(event);
-        } else {
-            // Handle unknown command
-            event.reply("Unknown command: " + commandName).queue();
+            return;
         }
+        event.reply("Unknown command: " + commandName).queue();
     }
 }
