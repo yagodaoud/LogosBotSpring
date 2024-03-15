@@ -1,6 +1,7 @@
 package yagodaoud.com.logos.music;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 
@@ -14,16 +15,16 @@ public class PlayCommand implements CommandHandlerInterface {
 
     @Override
     public String getName() {
-        return "Play";
+        return "play";
     }
 
     @Override
     public String getDescription() {
-        return null;
+        return "Play a song or playlist from YouTube";
     }
 
     @Override
     public List<OptionData> getOptions() {
-        return null;
+        return List.of(new OptionData(OptionType.STRING, "query", "Song name/playlist/link", true));
     }
 }

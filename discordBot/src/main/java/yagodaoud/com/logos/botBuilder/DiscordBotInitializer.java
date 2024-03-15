@@ -16,6 +16,8 @@ import yagodaoud.com.logos.crypto.BitcoinPriceTrackerCommand;
 import yagodaoud.com.logos.crypto.FetchCryptoPriceCommand;
 import yagodaoud.com.logos.listeners.BotCommandsListener;
 import yagodaoud.com.logos.listeners.LoadCommandsListener;
+import yagodaoud.com.logos.music.JoinChannelCommand;
+import yagodaoud.com.logos.music.LeaveChannelCommand;
 
 import java.util.EnumSet;
 
@@ -60,10 +62,12 @@ public class DiscordBotInitializer {
 
     private static void configureEventListeners(JDABuilder builder, ApplicationContext context) {
         CommandRegistryService commandRegistry = context.getBean(CommandRegistryService.class);
-        FetchCryptoPriceCommand fetchCryptoPriceCommand = context.getBean(FetchCryptoPriceCommand.class);
-        BitcoinPriceSchedulerCommand bitcoinPriceSchedulerCommand = context.getBean(BitcoinPriceSchedulerCommand.class);
-        BitcoinPriceTrackerCommand bitcoinPriceTrackerCommand = context.getBean(BitcoinPriceTrackerCommand.class);
-        BitcoinPercentageAlertCommand bitcoinPercentageAlertCommand = context.getBean(BitcoinPercentageAlertCommand.class);
+        context.getBean(FetchCryptoPriceCommand.class);
+        context.getBean(BitcoinPriceSchedulerCommand.class);
+        context.getBean(BitcoinPriceTrackerCommand.class);
+        context.getBean(BitcoinPercentageAlertCommand.class);
+        context.getBean(JoinChannelCommand.class);
+        context.getBean(LeaveChannelCommand.class);
         builder.addEventListeners(new LoadCommandsListener(commandRegistry), new BotCommandsListener(commandRegistry));
     }
 
