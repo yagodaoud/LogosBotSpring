@@ -1,4 +1,4 @@
-package yagodaoud.com.logos.crypto;
+package yagodaoud.com.logos.crypto.commands;
 
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.crypto.services.CoinMarketCapApiService;
 
 import java.util.List;
 
@@ -16,8 +17,8 @@ import java.util.List;
 @Scope("singleton")
 public class BitcoinPriceSchedulerCommand implements CommandHandlerInterface {
     private final CoinMarketCapApiService coinMarketCapApiService = new CoinMarketCapApiService(new RestTemplate());
-    protected boolean isActive = false;
-    protected TextChannel textChannel;
+    public boolean isActive = false;
+    public TextChannel textChannel;
 
     @Autowired
     public BitcoinPriceSchedulerCommand(CommandRegistryService commandRegistryService) {

@@ -10,16 +10,16 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import yagodaoud.com.logos.commands.CommandRegistryService;
-import yagodaoud.com.logos.crypto.BitcoinPercentageAlertCommand;
-import yagodaoud.com.logos.crypto.BitcoinPriceSchedulerCommand;
-import yagodaoud.com.logos.crypto.BitcoinPriceTrackerCommand;
-import yagodaoud.com.logos.crypto.FetchCryptoPriceCommand;
+import yagodaoud.com.logos.crypto.commands.BitcoinPercentageAlertCommand;
+import yagodaoud.com.logos.crypto.commands.BitcoinPriceSchedulerCommand;
+import yagodaoud.com.logos.crypto.commands.BitcoinPriceTrackerCommand;
+import yagodaoud.com.logos.crypto.commands.FetchCryptoPriceCommand;
 import yagodaoud.com.logos.listeners.BotCommandsListener;
 import yagodaoud.com.logos.listeners.LoadCommandsListener;
-import yagodaoud.com.logos.music.JoinChannelCommand;
-import yagodaoud.com.logos.music.LeaveChannelCommand;
-import yagodaoud.com.logos.music.PlayCommand;
-import yagodaoud.com.logos.music.VolumeCommand;
+import yagodaoud.com.logos.music.commands.JoinChannelCommand;
+import yagodaoud.com.logos.music.commands.LeaveChannelCommand;
+import yagodaoud.com.logos.music.commands.PlayCommand;
+import yagodaoud.com.logos.music.commands.VolumeCommand;
 
 import java.util.EnumSet;
 

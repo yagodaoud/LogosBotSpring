@@ -1,4 +1,4 @@
-package yagodaoud.com.logos.crypto;
+package yagodaoud.com.logos.crypto.commands;
 
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -24,7 +24,6 @@ public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
     @Autowired
     public BitcoinPercentageAlertCommand(CommandRegistryService commandRegistry) {
         commandRegistry.registerCommand(this);
-
     }
 
     @Override

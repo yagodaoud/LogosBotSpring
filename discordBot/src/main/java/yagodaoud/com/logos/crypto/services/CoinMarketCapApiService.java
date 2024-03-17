@@ -1,24 +1,20 @@
-package yagodaoud.com.logos.crypto;
+package yagodaoud.com.logos.crypto.services;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.Collections;
-import java.util.Locale;
+import yagodaoud.com.logos.crypto.JsonCryptoParser;
 
 @Service
 public class CoinMarketCapApiService {
     private static final String apiKey = Dotenv.configure().load().get("TOKENCMC");
 
     private final RestTemplate restTemplate;
-    private static final Logger logger = LoggerFactory.getLogger(CoinMarketCapApiService.class);
 
     @Autowired
     public CoinMarketCapApiService(RestTemplate restTemplate) {

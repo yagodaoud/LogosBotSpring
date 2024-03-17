@@ -1,4 +1,4 @@
-package yagodaoud.com.logos.music;
+package yagodaoud.com.logos.music.commands;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.music.audio.AudioManager;
+import yagodaoud.com.logos.music.services.VolumeService;
 
 import java.util.List;
 
@@ -23,8 +25,7 @@ public class VolumeCommand implements CommandHandlerInterface {
         int volume = event.getOption("volume").getAsInt();
         AudioManager audioManager = AudioManager.getInstance();
 
-        VolumeService.setVolume(audioManager.audioPlayer, volume);
-        event.reply("Volume set to " + volume + ".").queue();
+        event.reply(VolumeService.setVolume(audioManager.audioPlayer, volume)).queue();
     }
 
     @Override

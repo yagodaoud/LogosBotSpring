@@ -1,4 +1,4 @@
-package yagodaoud.com.logos.crypto;
+package yagodaoud.com.logos.crypto.commands;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.crypto.services.CoinMarketCapApiService;
 
 import java.util.List;
 

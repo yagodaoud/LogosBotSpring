@@ -1,40 +1,42 @@
-package yagodaoud.com.logos.music;
+package yagodaoud.com.logos.music.commands;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.music.audio.PlayerManager;
 
 import java.util.List;
 
 @Component
-public class LeaveChannelCommand implements CommandHandlerInterface {
+public class PlayCommand implements CommandHandlerInterface {
 
     @Autowired
-    public LeaveChannelCommand(CommandRegistryService commandRegistry) {
+    public PlayCommand(CommandRegistryService commandRegistry) {
         commandRegistry.registerCommand(this);
     }
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        AudioEventHandler audioEventHandler = new AudioEventHandler(event.getMember().getVoiceState());
-        event.reply(audioEventHandler.leaveVoiceChannel()).queue();
+        PlayerManager playerManager = PlayerManager.getInstance();
+        playerManager.loadAndPlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("query").getAsString());
     }
 
     @Override
     public String getName() {
-        return "leave";
+        return "play";
     }
 
     @Override
     public String getDescription() {
-        return "Leave the voice channel.";
+        return "Play a song or playlist from YouTube";
     }
 
     @Override
     public List<OptionData> getOptions() {
-        return null;
+        return List.of(new OptionData(OptionType.STRING, "query", "Song name/playlist/link", true));
     }
 }

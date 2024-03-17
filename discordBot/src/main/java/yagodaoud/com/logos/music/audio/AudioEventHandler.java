@@ -1,4 +1,4 @@
-package yagodaoud.com.logos.music;
+package yagodaoud.com.logos.music.audio;
 
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
