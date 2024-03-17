@@ -11,31 +11,34 @@ import yagodaoud.com.logos.commands.CommandRegistryService;
 import java.util.List;
 
 @Component
-public class PlayCommand implements CommandHandlerInterface {
+public class VolumeCommand implements CommandHandlerInterface {
 
     @Autowired
-    public PlayCommand(CommandRegistryService commandRegistry) {
+    public VolumeCommand(CommandRegistryService commandRegistry) {
         commandRegistry.registerCommand(this);
     }
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        PlayerManager playerManager = PlayerManager.getInstance();
-        playerManager.loadAndPlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("query").getAsString());
+        int volume = event.getOption("volume").getAsInt();
+        AudioManager audioManager = AudioManager.getInstance();
+
+        VolumeService.setVolume(audioManager.audioPlayer, volume);
+        event.reply("Volume set to " + volume + ".").queue();
     }
 
     @Override
     public String getName() {
-        return "play";
+        return "volume";
     }
 
     @Override
     public String getDescription() {
-        return "Play a song or playlist from YouTube";
+        return "Change the volume of the player.";
     }
 
     @Override
     public List<OptionData> getOptions() {
-        return List.of(new OptionData(OptionType.STRING, "query", "Song name/playlist/link", true));
+        return List.of(new OptionData(OptionType.STRING, "volume", "Volume between 0 - 100", true));
     }
 }

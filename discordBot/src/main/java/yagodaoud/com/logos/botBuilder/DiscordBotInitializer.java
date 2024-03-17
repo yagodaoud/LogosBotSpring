@@ -18,6 +18,8 @@ import yagodaoud.com.logos.listeners.BotCommandsListener;
 import yagodaoud.com.logos.listeners.LoadCommandsListener;
 import yagodaoud.com.logos.music.JoinChannelCommand;
 import yagodaoud.com.logos.music.LeaveChannelCommand;
+import yagodaoud.com.logos.music.PlayCommand;
+import yagodaoud.com.logos.music.VolumeCommand;
 
 import java.util.EnumSet;
 
@@ -68,6 +70,8 @@ public class DiscordBotInitializer {
         context.getBean(BitcoinPercentageAlertCommand.class);
         context.getBean(JoinChannelCommand.class);
         context.getBean(LeaveChannelCommand.class);
+        context.getBean(PlayCommand.class);
+        context.getBean(VolumeCommand.class);
         builder.addEventListeners(new LoadCommandsListener(commandRegistry), new BotCommandsListener(commandRegistry));
     }
 
