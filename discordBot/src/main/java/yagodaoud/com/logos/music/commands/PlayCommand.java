@@ -22,7 +22,7 @@ public class PlayCommand implements CommandHandlerInterface {
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         PlayerManager playerManager = PlayerManager.getInstance();
-        playerManager.loadAndPlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("query").getAsString());
+        event.reply(playerManager.loadAndPlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("query").getAsString())).queue();
     }
 
     @Override

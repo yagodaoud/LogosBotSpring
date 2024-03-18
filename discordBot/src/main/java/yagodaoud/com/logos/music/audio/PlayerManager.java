@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,14 +37,22 @@ public class PlayerManager {
 
         AudioEventHandler audioEventHandler = new AudioEventHandler(guildVoiceState);
         audioEventHandler.joinVoiceChannel();
-        urlOrName = "ytsearch:" + urlOrName;
+
+         if (urlOrName != null) {
+             if (!isUrl(urlOrName)) {
+                 urlOrName = "ytsearch:" + urlOrName;
+             }
+         }
+
         this.audioPlayerManager.loadItemOrdered(musicManager, urlOrName, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
+                audioManager.scheduler.queue(track);
             }
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
+                //TO-DO add playlist feature
                 audioManager.scheduler.queue(playlist.getTracks().get(0));
             }
 
@@ -66,6 +75,15 @@ public class PlayerManager {
             guild.getAudioManager().setSendingHandler(audioManager.getSendHandler());
             return audioManager;
         });
+    }
+
+    private boolean isUrl(String url) {
+        try {
+            new URL(url);
+            return true;
+        } catch (Exception e){
+            return false;
+        }
     }
 
     public static PlayerManager getInstance() {
