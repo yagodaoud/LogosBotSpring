@@ -18,11 +18,9 @@ import java.util.Map;
 public class PlayerManager {
 
     private static PlayerManager INSTANCE;
-
     private final Map<Long, AudioManager> musicManagers = new HashMap<>();
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
     private final AudioManager audioManager = AudioManager.getInstance(this.audioPlayerManager);
-
 
     public PlayerManager() {
         AudioSourceManagers.registerRemoteSources(this.audioPlayerManager);
@@ -38,13 +36,16 @@ public class PlayerManager {
         AudioEventHandler audioEventHandler = new AudioEventHandler(guildVoiceState);
         audioEventHandler.joinVoiceChannel();
 
-         if (urlOrName != null) {
-             if (!isUrl(urlOrName)) {
-                 urlOrName = "ytsearch:" + urlOrName;
-             }
+        if (urlOrName == null) {
+            return "Something went wrong.";
+        }
+
+         if (!isUrl(urlOrName)) {
+             urlOrName = "ytsearch:" + urlOrName;
          }
 
-        this.audioPlayerManager.loadItemOrdered(musicManager, urlOrName, new AudioLoadResultHandler() {
+        String finalUrlOrName = urlOrName;
+        this.audioPlayerManager.loadItemOrdered(musicManager, finalUrlOrName, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
                 audioManager.scheduler.queue(track);
@@ -52,8 +53,14 @@ public class PlayerManager {
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
-                //TO-DO add playlist feature
-                audioManager.scheduler.queue(playlist.getTracks().get(0));
+    //                playlist.getTracks().forEach(System.out::println);
+                audioManager.scheduler.queue(playlist.getTracks().remove(0));
+
+                if (finalUrlOrName.contains("/playlist")) {
+                    for (AudioTrack track : playlist.getTracks()) {
+                        audioManager.scheduler.queue(track);
+                    }
+                }
             }
 
             @Override
@@ -68,6 +75,10 @@ public class PlayerManager {
             }
         });
         return "a";
+    }
+
+    public String skipTrack(AudioManager audioManager) {
+        return audioManager.scheduler.nextTrack();
     }
 
     public AudioManager getMusicManager(Guild guild) {

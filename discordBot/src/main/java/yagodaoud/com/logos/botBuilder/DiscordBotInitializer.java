@@ -16,10 +16,7 @@ import yagodaoud.com.logos.crypto.commands.BitcoinPriceTrackerCommand;
 import yagodaoud.com.logos.crypto.commands.FetchCryptoPriceCommand;
 import yagodaoud.com.logos.listeners.BotCommandsListener;
 import yagodaoud.com.logos.listeners.LoadCommandsListener;
-import yagodaoud.com.logos.music.commands.JoinChannelCommand;
-import yagodaoud.com.logos.music.commands.LeaveChannelCommand;
-import yagodaoud.com.logos.music.commands.PlayCommand;
-import yagodaoud.com.logos.music.commands.VolumeCommand;
+import yagodaoud.com.logos.music.commands.*;
 
 import java.util.EnumSet;
 
@@ -72,6 +69,7 @@ public class DiscordBotInitializer {
         context.getBean(LeaveChannelCommand.class);
         context.getBean(PlayCommand.class);
         context.getBean(VolumeCommand.class);
+        context.getBean(SkipCommand.class);
         builder.addEventListeners(new LoadCommandsListener(commandRegistry), new BotCommandsListener(commandRegistry));
     }
 
