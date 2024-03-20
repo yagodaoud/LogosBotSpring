@@ -10,6 +10,7 @@ import yagodaoud.com.logos.commands.CommandRegistryService;
 import yagodaoud.com.logos.music.audio.PlayerManager;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class PlayCommand implements CommandHandlerInterface {
@@ -22,7 +23,8 @@ public class PlayCommand implements CommandHandlerInterface {
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         PlayerManager playerManager = PlayerManager.getInstance();
-        event.reply(playerManager.loadAndPlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("query").getAsString())).queue();
+        CompletableFuture<String> loadResultFuture = (playerManager.loadAndPlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("query").getAsString()));
+        loadResultFuture.thenAccept(result -> event.reply(result).queue());
     }
 
     @Override

@@ -37,8 +37,8 @@ public class TrackScheduler extends AudioEventAdapter {
         }
 
         if (nextTrack == null) {
-//            player.stopTrack();
-//            queue.clear();
+            player.stopTrack();
+            queue.clear();
             return "Skipped current track, the queue is now empty.";
         }
 
