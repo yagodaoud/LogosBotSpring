@@ -67,16 +67,13 @@ public class PlayerManager {
                 AudioTrack firstTrack = playlist.getTracks().remove(0);
                 audioManager.scheduler.queue(firstTrack);
 
-
                 if (finalUrlOrName.contains("/playlist")) {
                     for (AudioTrack track : playlist.getTracks()) {
                         audioManager.scheduler.queue(track);
                     }
                     completeFutureWithMessage(futureMessage, messageContainer, this.songMessageBuilder(firstTrack, playlist.getTracks().size()));
                 }
-
                 completeFutureWithMessage(futureMessage, messageContainer, this.songMessageBuilder(firstTrack, 0));
-
             }
 
             private String songMessageBuilder(AudioTrack track, int size) {
@@ -91,8 +88,8 @@ public class PlayerManager {
 
                 if (size > 0) {
                     message +=  " and `" +
-                                size +
-                                "` more";
+                        size +
+                        "` more";
                 }
                 return message;
             }
