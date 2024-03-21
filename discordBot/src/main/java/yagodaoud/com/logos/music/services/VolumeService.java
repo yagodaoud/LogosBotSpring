@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 public class VolumeService {
     public static String setVolume(AudioPlayer player, int volume) {
 
-        if (volume > 200) {
-            volume = 200;
+        if (volume > 100) {
+            volume = 100;
         }
 
         player.setVolume(volume);

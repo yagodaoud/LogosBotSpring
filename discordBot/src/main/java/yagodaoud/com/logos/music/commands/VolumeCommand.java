@@ -23,9 +23,8 @@ public class VolumeCommand implements CommandHandlerInterface {
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         int volume = event.getOption("volume").getAsInt();
-        AudioManager audioManager = AudioManager.getInstance();
 
-        event.reply(VolumeService.setVolume(audioManager.audioPlayer, volume)).queue();
+        event.reply(VolumeService.setVolume(AudioManager.getInstance().audioPlayer, volume)).queue();
     }
 
     @Override
