@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.stream.Collectors;
 
 public class TrackScheduler extends AudioEventAdapter {
 
@@ -56,16 +57,39 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public String nowPlaying() {
-        return "Now playing: " + this.getNowPlayingMessage(this.player.getPlayingTrack());
+        return this.getNowPlayingMessage(this.player.getPlayingTrack(), false);
     }
 
-    public String getNowPlayingMessage(AudioTrack audioTrack) {
-        return "`" + audioTrack.getInfo().title +
-                " (" +
-                formatDuration(audioTrack.getDuration()) +
-                ")` by `" +
-                audioTrack.getInfo().author +
-                "`";
+    public String getQueue() {
+        return this.getQueueTracksMessage(this.player.getPlayingTrack(), this.queue);
+    }
+
+    public String getNowPlayingMessage(AudioTrack audioTrack, boolean removeNowPlaying) {
+        if (audioTrack == null) {
+            return "Nothing is being played right now.";
+        }
+
+        return (removeNowPlaying ? "" : "Now playing: ") +
+                "`" + audioTrack.getInfo().title +
+                " (" + formatDuration(audioTrack.getDuration()) +
+                ")` by `" + audioTrack.getInfo().author + "`";
+    }
+
+    public String getQueueTracksMessage(AudioTrack firstTrack, BlockingQueue<AudioTrack> queue) {
+        if (firstTrack == null) {
+            return "Nothing is being played right now";
+        }
+
+        if (queue.isEmpty()) {
+            return "The queue is empty";
+        }
+
+        return "Queue: Now playing - `" + firstTrack.getInfo().title + "`\n" +
+                "Next tracks - \n" +
+                queue.stream()
+                        .limit(20)
+                        .map(track -> getNowPlayingMessage(track, true))
+                        .collect(Collectors.joining("\n"));
     }
 
     private String formatDuration(long durationMs) {
@@ -78,5 +102,4 @@ public class TrackScheduler extends AudioEventAdapter {
         }
         return String.format("%02d:%02d", minutes, seconds);
     }
-
 }

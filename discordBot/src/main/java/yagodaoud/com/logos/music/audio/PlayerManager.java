@@ -121,6 +121,13 @@ public class PlayerManager {
         return audioManager.scheduler.nowPlaying();
     }
 
+    public String getQueue(AudioManager audioManager, GuildVoiceState voiceState) {
+        if (!voiceState.inAudioChannel()) {
+            return "You must be in a voice channel first.";
+        }
+        return audioManager.scheduler.getQueue();
+    }
+
     public AudioManager getMusicManager(Guild guild) {
         return this.musicManagers.computeIfAbsent(guild.getIdLong(), (guildId) -> {
             guild.getAudioManager().setSendingHandler(audioManager.getSendHandler());
