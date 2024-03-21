@@ -34,7 +34,7 @@ public class PlayCommand implements CommandHandlerInterface {
 
     @Override
     public String getDescription() {
-        return "Play a song or playlist from YouTube";
+        return "Play a song or playlist from YouTube.";
     }
 
     @Override

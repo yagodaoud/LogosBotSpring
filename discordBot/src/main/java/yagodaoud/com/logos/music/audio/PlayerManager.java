@@ -107,8 +107,18 @@ public class PlayerManager {
         return futureMessage;
     }
 
-    public String skipTrack(AudioManager audioManager) {
+    public String skipTrack(AudioManager audioManager, GuildVoiceState voiceState) {
+        if (!voiceState.inAudioChannel()) {
+            return "You must be in a voice channel first.";
+        }
         return audioManager.scheduler.nextTrack();
+    }
+
+    public String nowPlaying(AudioManager audioManager, GuildVoiceState voiceState) {
+        if (!voiceState.inAudioChannel()) {
+            return "You must be in a voice channel first.";
+        }
+        return audioManager.scheduler.nowPlaying();
     }
 
     public AudioManager getMusicManager(Guild guild) {

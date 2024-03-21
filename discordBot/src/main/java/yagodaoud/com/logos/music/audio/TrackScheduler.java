@@ -54,4 +54,29 @@ public class TrackScheduler extends AudioEventAdapter {
             this.player.startTrack(queue.poll(), false);
         }
     }
+
+    public String nowPlaying() {
+        return "Now playing: " + this.getNowPlayingMessage(this.player.getPlayingTrack());
+    }
+
+    public String getNowPlayingMessage(AudioTrack audioTrack) {
+        return "`" + audioTrack.getInfo().title +
+                " (" +
+                formatDuration(audioTrack.getDuration()) +
+                ")` by `" +
+                audioTrack.getInfo().author +
+                "`";
+    }
+
+    private String formatDuration(long durationMs) {
+        long seconds = (durationMs / 1000) % 60;
+        long minutes = (durationMs / (1000 * 60)) % 60;
+        long hours = (durationMs / (1000 * 60 * 60)) % 24;
+
+        if (hours > 0) {
+            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        }
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
 }

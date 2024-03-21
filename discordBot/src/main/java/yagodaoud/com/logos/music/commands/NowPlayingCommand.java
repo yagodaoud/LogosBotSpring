@@ -12,26 +12,26 @@ import yagodaoud.com.logos.music.audio.PlayerManager;
 import java.util.List;
 
 @Component
-public class SkipCommand implements CommandHandlerInterface {
+public class NowPlayingCommand implements CommandHandlerInterface {
 
     @Autowired
-    public SkipCommand(CommandRegistryService commandRegistry) {
+    public NowPlayingCommand(CommandRegistryService commandRegistry) {
         commandRegistry.registerCommand(this);
     }
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        event.reply(PlayerManager.getInstance().skipTrack(AudioManager.getInstance(), event.getMember().getVoiceState())).queue();
+        event.reply(PlayerManager.getInstance().nowPlaying(AudioManager.getInstance(), event.getMember().getVoiceState())).queue();
     }
 
     @Override
     public String getName() {
-        return "skip";
+        return "now-playing";
     }
 
     @Override
     public String getDescription() {
-        return "Skip to next track.";
+        return "Show the current track being played.";
     }
 
     @Override

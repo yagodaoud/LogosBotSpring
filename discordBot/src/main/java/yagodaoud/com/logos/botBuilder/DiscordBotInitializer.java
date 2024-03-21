@@ -70,6 +70,7 @@ public class DiscordBotInitializer {
         context.getBean(PlayCommand.class);
         context.getBean(VolumeCommand.class);
         context.getBean(SkipCommand.class);
+        context.getBean(NowPlayingCommand.class);
         builder.addEventListeners(new LoadCommandsListener(commandRegistry), new BotCommandsListener(commandRegistry));
     }
 
