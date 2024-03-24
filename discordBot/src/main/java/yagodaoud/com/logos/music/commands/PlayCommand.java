@@ -1,5 +1,6 @@
 package yagodaoud.com.logos.music.commands;
 
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -23,8 +24,8 @@ public class PlayCommand implements CommandHandlerInterface {
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         PlayerManager playerManager = new PlayerManager();
-        CompletableFuture<String> loadResultFuture = (playerManager.loadAndPlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("query").getAsString()));
-        loadResultFuture.thenAccept(result -> event.reply(result).queue());
+        CompletableFuture<MessageEmbed> loadResultFuture = (playerManager.loadAndPlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("query").getAsString()));
+        loadResultFuture.thenAccept(result -> event.replyEmbeds(result).queue());
     }
 
     @Override

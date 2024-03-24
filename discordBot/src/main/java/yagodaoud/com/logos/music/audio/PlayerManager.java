@@ -7,10 +7,13 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,12 +33,12 @@ public class PlayerManager {
         INSTANCE = this;
     }
 
-    public CompletableFuture<String> loadAndPlay(TextChannel channel, GuildVoiceState guildVoiceState, String urlOrName) {
-        CompletableFuture<String> futureMessage = new CompletableFuture<>();
-        final AtomicReference<String> messageContainer = new AtomicReference<>();
+    public CompletableFuture<MessageEmbed> loadAndPlay(TextChannel channel, GuildVoiceState guildVoiceState, String urlOrName) {
+        CompletableFuture<MessageEmbed> futureMessage = new CompletableFuture<>();
+        final AtomicReference<MessageEmbed> messageContainer = new AtomicReference<>();
 
         if (!guildVoiceState.inAudioChannel()) {
-            completeFutureWithMessage(futureMessage, messageContainer, "You must be in a voice channel first.");
+            completeFutureWithMessage(futureMessage, messageContainer, this.messageEmbedBuilder("You must be in a voice channel first."));
             return futureMessage;
         }
 
@@ -45,7 +48,7 @@ public class PlayerManager {
         audioEventHandler.joinVoiceChannel();
 
         if (urlOrName == null) {
-            completeFutureWithMessage(futureMessage, messageContainer, "Something went wrong.");
+            completeFutureWithMessage(futureMessage, messageContainer,  this.messageEmbedBuilder("Something went wrong."));
             return futureMessage;
         }
 
@@ -58,7 +61,7 @@ public class PlayerManager {
             @Override
             public void trackLoaded(AudioTrack track) {
                 audioManager.scheduler.queue(track);
-                completeFutureWithMessage(futureMessage, messageContainer, this.songMessageBuilder(track, 0));
+                completeFutureWithMessage(futureMessage, messageContainer, songMessageBuilder(track, 0));
             }
 
             @Override
@@ -72,37 +75,19 @@ public class PlayerManager {
                     for (AudioTrack track : playlist.getTracks()) {
                         audioManager.scheduler.queue(track);
                     }
-                    completeFutureWithMessage(futureMessage, messageContainer, this.songMessageBuilder(firstTrack, playlist.getTracks().size()));
+                    completeFutureWithMessage(futureMessage, messageContainer, songMessageBuilder(firstTrack, playlist.getTracks().size()));
                 }
-                completeFutureWithMessage(futureMessage, messageContainer, this.songMessageBuilder(firstTrack, 0));
-            }
-
-            private String songMessageBuilder(AudioTrack track, int size) {
-
-                String message = "Added to queue: `" +
-                        track.getInfo().title +
-                        " (" +
-                        formatDuration(track.getDuration()) +
-                        ")` by `" +
-                        track.getInfo().author +
-                        "`";
-
-                if (size > 0) {
-                    message +=  " and `" +
-                        size +
-                        "` more";
-                }
-                return message;
+                completeFutureWithMessage(futureMessage, messageContainer, songMessageBuilder(firstTrack, 0));
             }
 
             @Override
             public void noMatches() {
-                completeFutureWithMessage(futureMessage, messageContainer, "No matches found.");
+                completeFutureWithMessage(futureMessage, messageContainer,  messageEmbedBuilder("No matches found."));
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-                completeFutureWithMessage(futureMessage, messageContainer, "Failed to load: " + exception.getMessage());
+                completeFutureWithMessage(futureMessage, messageContainer, messageEmbedBuilder("Failed to load: " + exception.getMessage()));
             }
         });
         return futureMessage;
@@ -145,9 +130,38 @@ public class PlayerManager {
         }
     }
 
-    private void completeFutureWithMessage(CompletableFuture<String> future, AtomicReference<String> messageContainer, String message) {
+    private void completeFutureWithMessage(CompletableFuture<MessageEmbed> future, AtomicReference<MessageEmbed> messageContainer, MessageEmbed message) {
         messageContainer.set(message);
         future.complete(messageContainer.get());
+    }
+
+    public MessageEmbed messageEmbedBuilder(String message) {
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setDescription(message);
+        embedBuilder.setColor(new Color(215, 50, 63));
+
+        return embedBuilder.build();
+    }
+
+    public MessageEmbed songMessageBuilder(AudioTrack track, int size) {
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+
+        String message = "Added: [" +
+                track.getInfo().title +
+                "](" + track.getInfo().uri + ")  -  `" +
+                formatDuration(track.getDuration()) +
+                "`";
+
+        if (size > 0) {
+            message +=  " and `" +
+                    size +
+                    "` more";
+        }
+
+        embedBuilder.setDescription(message);
+        embedBuilder.setColor(new Color(11, 111, 211));
+
+        return embedBuilder.build();
     }
 
     private String formatDuration(long durationMs) {
