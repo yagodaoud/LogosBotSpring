@@ -81,7 +81,7 @@ public class TrackScheduler extends AudioEventAdapter {
         }
 
         if (queue.isEmpty()) {
-            return "The queue is empty";
+            return "The queue is empty.";
         }
 
         return "Queue: Now playing - `" + firstTrack.getInfo().title + "`\n" +

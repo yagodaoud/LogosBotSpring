@@ -22,11 +22,12 @@ public class PlayerManager {
     private static PlayerManager INSTANCE;
     private final Map<Long, AudioManager> musicManagers = new HashMap<>();
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
-    private final AudioManager audioManager = AudioManager.getInstance(this.audioPlayerManager);
+    private final AudioManager audioManager = new AudioManager(this.audioPlayerManager);
 
     public PlayerManager() {
         AudioSourceManagers.registerRemoteSources(this.audioPlayerManager);
         AudioSourceManagers.registerLocalSource(this.audioPlayerManager);
+        INSTANCE = this;
     }
 
     public CompletableFuture<String> loadAndPlay(TextChannel channel, GuildVoiceState guildVoiceState, String urlOrName) {

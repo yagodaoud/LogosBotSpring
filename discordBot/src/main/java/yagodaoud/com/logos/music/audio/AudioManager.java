@@ -15,6 +15,7 @@ public class AudioManager {
         this.scheduler = new TrackScheduler(this.audioPlayer);
         this.audioPlayer.addListener(this.scheduler);
         this.sendHandler = new AudioPlayerSendHandler(this.audioPlayer);
+        INSTANCE = this;
     }
 
     public AudioPlayerSendHandler getSendHandler() {
@@ -24,12 +25,4 @@ public class AudioManager {
     public static AudioManager getInstance() {
         return INSTANCE;
     }
-
-    public static AudioManager getInstance(AudioPlayerManager audioPlayerManager) {
-        if (INSTANCE == null) {
-            INSTANCE = new AudioManager(audioPlayerManager);
-        }
-        return INSTANCE;
-    }
-
 }

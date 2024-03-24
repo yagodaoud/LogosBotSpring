@@ -22,7 +22,8 @@ public class PlayCommand implements CommandHandlerInterface {
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        CompletableFuture<String> loadResultFuture = (PlayerManager.getInstance().loadAndPlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("query").getAsString()));
+        PlayerManager playerManager = new PlayerManager();
+        CompletableFuture<String> loadResultFuture = (playerManager.loadAndPlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("query").getAsString()));
         loadResultFuture.thenAccept(result -> event.reply(result).queue());
     }
 
