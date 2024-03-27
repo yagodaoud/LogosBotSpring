@@ -12,25 +12,31 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import yagodaoud.com.logos.music.commands.GuildMusicManager;
 
 import java.awt.*;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PlayerManager {
-
-    private static PlayerManager INSTANCE;
-    private final Map<Long, AudioManager> musicManagers = new HashMap<>();
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
-    private final AudioManager audioManager = new AudioManager(this.audioPlayerManager);
+//    private final Map<String, AudioPlayerManager> audioPlayerManagers = new HashMap<>();
 
-    public PlayerManager() {
-        AudioSourceManagers.registerRemoteSources(this.audioPlayerManager);
-        AudioSourceManagers.registerLocalSource(this.audioPlayerManager);
-        INSTANCE = this;
+    public PlayerManager(Guild guild) {
+
+//        if (audioPlayerManagers.get(guild.getId()) == null) {
+//            audioPlayerManagers.put(guild.getId(), new DefaultAudioPlayerManager());
+//        }
+//
+//        AudioPlayerManager audioPlayerManager = audioPlayerManagers.get(guild.getId());
+//
+//        if (musicManagers.get(guild.getId()) == null) {
+//            musicManagers.put(guild.getId(), new AudioManager(audioPlayerManager));
+//        }
+
+        AudioSourceManagers.registerRemoteSources(audioPlayerManager);
+        AudioSourceManagers.registerLocalSource(audioPlayerManager);
     }
 
     public CompletableFuture<MessageEmbed> loadAndPlay(TextChannel channel, GuildVoiceState guildVoiceState, String urlOrName) {
@@ -42,9 +48,10 @@ public class PlayerManager {
             return futureMessage;
         }
 
-        final AudioManager musicManager = this.getMusicManager(channel.getGuild());
+        final GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(channel.getGuild(), this.audioPlayerManager);
 
         AudioEventHandler audioEventHandler = new AudioEventHandler(guildVoiceState);
+
         audioEventHandler.joinVoiceChannel();
 
         if (urlOrName == null) {
@@ -57,10 +64,13 @@ public class PlayerManager {
          }
 
         String finalUrlOrName = urlOrName;
-        this.audioPlayerManager.loadItemOrdered(musicManager, finalUrlOrName, new AudioLoadResultHandler() {
+
+        AudioPlayerManager audioPlayerManager = this.audioPlayerManager;
+
+        audioPlayerManager.loadItemOrdered(musicManager, finalUrlOrName, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                audioManager.scheduler.queue(track);
+                musicManager.scheduler.queue(track);
                 completeFutureWithMessage(futureMessage, messageContainer, songMessageBuilder(track, 0));
             }
 
@@ -69,11 +79,11 @@ public class PlayerManager {
     //                playlist.getTracks().forEach(System.out::println);
 
                 AudioTrack firstTrack = playlist.getTracks().remove(0);
-                audioManager.scheduler.queue(firstTrack);
+                musicManager.scheduler.queue(firstTrack);
 
                 if (finalUrlOrName.contains("/playlist")) {
                     for (AudioTrack track : playlist.getTracks()) {
-                        audioManager.scheduler.queue(track);
+                        musicManager.scheduler.queue(track);
                     }
                     completeFutureWithMessage(futureMessage, messageContainer, songMessageBuilder(firstTrack, playlist.getTracks().size()));
                 }
@@ -93,32 +103,25 @@ public class PlayerManager {
         return futureMessage;
     }
 
-    public String skipTrack(AudioManager audioManager, GuildVoiceState voiceState) {
+    public String skipTrack(GuildMusicManager musicManager, GuildVoiceState voiceState) {
         if (!voiceState.inAudioChannel()) {
             return "You must be in a voice channel first.";
         }
-        return audioManager.scheduler.nextTrack();
+        return musicManager.scheduler.nextTrack();
     }
 
-    public String nowPlaying(AudioManager audioManager, GuildVoiceState voiceState) {
+    public String nowPlaying(GuildMusicManager musicManager, GuildVoiceState voiceState) {
         if (!voiceState.inAudioChannel()) {
             return "You must be in a voice channel first.";
         }
-        return audioManager.scheduler.nowPlaying();
+        return musicManager.scheduler.nowPlaying();
     }
 
-    public String getQueue(AudioManager audioManager, GuildVoiceState voiceState) {
+    public String getQueue(GuildMusicManager musicManager, GuildVoiceState voiceState) {
         if (!voiceState.inAudioChannel()) {
             return "You must be in a voice channel first.";
         }
-        return audioManager.scheduler.getQueue();
-    }
-
-    public AudioManager getMusicManager(Guild guild) {
-        return this.musicManagers.computeIfAbsent(guild.getIdLong(), (guildId) -> {
-            guild.getAudioManager().setSendingHandler(audioManager.getSendHandler());
-            return audioManager;
-        });
+        return musicManager.scheduler.getQueue();
     }
 
     private boolean isUrl(String url) {
@@ -175,10 +178,4 @@ public class PlayerManager {
         return String.format("%02d:%02d", minutes, seconds);
     }
 
-    public static PlayerManager getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new PlayerManager();
-        }
-        return INSTANCE;
-    }
 }
