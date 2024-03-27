@@ -21,22 +21,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class PlayerManager {
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
-//    private final Map<String, AudioPlayerManager> audioPlayerManagers = new HashMap<>();
+    private static PlayerManager INSTANCE;
 
     public PlayerManager(Guild guild) {
-
-//        if (audioPlayerManagers.get(guild.getId()) == null) {
-//            audioPlayerManagers.put(guild.getId(), new DefaultAudioPlayerManager());
-//        }
-//
-//        AudioPlayerManager audioPlayerManager = audioPlayerManagers.get(guild.getId());
-//
-//        if (musicManagers.get(guild.getId()) == null) {
-//            musicManagers.put(guild.getId(), new AudioManager(audioPlayerManager));
-//        }
-
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
+
+        INSTANCE = this;
     }
 
     public CompletableFuture<MessageEmbed> loadAndPlay(TextChannel channel, GuildVoiceState guildVoiceState, String urlOrName) {
@@ -103,24 +94,27 @@ public class PlayerManager {
         return futureMessage;
     }
 
-    public String skipTrack(GuildMusicManager musicManager, GuildVoiceState voiceState) {
+    public String skipTrack(Guild guild, GuildVoiceState voiceState) {
         if (!voiceState.inAudioChannel()) {
             return "You must be in a voice channel first.";
         }
+        GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
         return musicManager.scheduler.nextTrack();
     }
 
-    public String nowPlaying(GuildMusicManager musicManager, GuildVoiceState voiceState) {
+    public String nowPlaying(Guild guild, GuildVoiceState voiceState) {
         if (!voiceState.inAudioChannel()) {
             return "You must be in a voice channel first.";
         }
+        GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
         return musicManager.scheduler.nowPlaying();
     }
 
-    public String getQueue(GuildMusicManager musicManager, GuildVoiceState voiceState) {
+    public String getQueue(Guild guild, GuildVoiceState voiceState) {
         if (!voiceState.inAudioChannel()) {
             return "You must be in a voice channel first.";
         }
+        GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
         return musicManager.scheduler.getQueue();
     }
 
@@ -176,6 +170,10 @@ public class PlayerManager {
             return String.format("%02d:%02d:%02d", hours, minutes, seconds);
         }
         return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    public static PlayerManager getInstance() {
+        return INSTANCE;
     }
 
 }

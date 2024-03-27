@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
-import yagodaoud.com.logos.music.audio.AudioManager;
 import yagodaoud.com.logos.music.audio.PlayerManager;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class QueueCommand implements CommandHandlerInterface {
     }
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        event.reply(PlayerManager.getInstance().getQueue(AudioManager.getInstance(), event.getMember().getVoiceState())).queue();
+        event.reply(PlayerManager.getInstance().getQueue(event.getGuild(), event.getMember().getVoiceState())).queue();
     }
 
     @Override
