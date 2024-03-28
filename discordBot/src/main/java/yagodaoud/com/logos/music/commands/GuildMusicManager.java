@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GuildMusicManager {
     private static final Map<Guild, GuildMusicManager> guilds = new ConcurrentHashMap<>();
     private final Guild guild;
-    private final AudioPlayer player;
+    public final AudioPlayer player;
     public final TrackScheduler scheduler;
     private final AudioPlayerSendHandler sendHandler;
 

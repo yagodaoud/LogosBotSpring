@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
-import yagodaoud.com.logos.music.audio.AudioManager;
+import yagodaoud.com.logos.music.audio.PlayerManager;
 import yagodaoud.com.logos.music.services.VolumeService;
 
 import java.util.List;
@@ -23,8 +23,7 @@ public class VolumeCommand implements CommandHandlerInterface {
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         int volume = event.getOption("volume").getAsInt();
-
-        event.reply(VolumeService.setVolume(AudioManager.getInstance().audioPlayer, volume)).queue();
+        event.reply(PlayerManager.getInstance().setVolume(event.getGuild(), event.getMember().getVoiceState(), volume)).queue();
     }
 
     @Override

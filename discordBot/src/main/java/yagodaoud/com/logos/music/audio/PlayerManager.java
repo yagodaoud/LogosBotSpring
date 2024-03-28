@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import yagodaoud.com.logos.music.commands.GuildMusicManager;
+import yagodaoud.com.logos.music.services.VolumeService;
 
 import java.awt.*;
 import java.net.URL;
@@ -116,6 +117,14 @@ public class PlayerManager {
         }
         GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
         return musicManager.scheduler.getQueue();
+    }
+
+    public String setVolume(Guild guild, GuildVoiceState voiceState, int volume) {
+        if (!voiceState.inAudioChannel()) {
+            return "You must be in a voice channel first.";
+        }
+        GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
+        return VolumeService.setVolume(musicManager.player, volume);
     }
 
     private boolean isUrl(String url) {
