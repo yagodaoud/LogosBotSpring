@@ -63,12 +63,15 @@ public class BitcoinPriceTrackerCommand implements CommandHandlerInterface{
     public void updatePriceTrend() {
         double previousPrice = currentPrice;
 
+        priceTrend = -1; // No change
+
+        if (currentPrice < previousPrice) {
+            priceTrend = 0; // Downtrend
+            return;
+        }
+
         if (currentPrice > previousPrice) {
             priceTrend = 1; // Uptrend
-        } else if (currentPrice < previousPrice) {
-            priceTrend = 0; // Downtrend
-        } else {
-            priceTrend = -1; // No change
         }
     }
 
