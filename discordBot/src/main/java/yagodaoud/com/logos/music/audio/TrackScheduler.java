@@ -68,10 +68,11 @@ public class TrackScheduler extends AudioEventAdapter {
             return "Nothing is being played right now.";
         }
 
-        return (removeNowPlaying ? "" : "Now playing: ") +
-                "`" + audioTrack.getInfo().title +
-                " (" + formatDuration(audioTrack.getDuration()) +
-                ")` by `" + audioTrack.getInfo().author + "`";
+        return (removeNowPlaying ? "[" : "Now playing: [") +
+                audioTrack.getInfo().title +
+                "](" + audioTrack.getInfo().uri + ")  -  `" +
+                formatDuration(audioTrack.getDuration()) +
+                "`";
     }
 
     public String getQueueTracksMessage(AudioTrack firstTrack, BlockingQueue<AudioTrack> queue) {
@@ -83,8 +84,8 @@ public class TrackScheduler extends AudioEventAdapter {
             return "The queue is empty.";
         }
 
-        return "Queue: Now playing - `" + firstTrack.getInfo().title + "`\n" +
-                "Next tracks - \n" +
+        return "Queue\n\n Now playing - [" + firstTrack.getInfo().title + "](" + firstTrack.getInfo().uri + ") - `" + formatDuration(firstTrack.getDuration()) +
+                "`\n\n Next tracks: \n" +
                 queue.stream()
                         .limit(20)
                         .map(track -> getNowPlayingMessage(track, true))
