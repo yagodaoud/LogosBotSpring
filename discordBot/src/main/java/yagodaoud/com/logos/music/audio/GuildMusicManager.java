@@ -1,10 +1,8 @@
-package yagodaoud.com.logos.music.commands;
+package yagodaoud.com.logos.music.audio;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.api.entities.Guild;
-import yagodaoud.com.logos.music.audio.AudioPlayerSendHandler;
-import yagodaoud.com.logos.music.audio.TrackScheduler;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
