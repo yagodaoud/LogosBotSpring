@@ -8,9 +8,10 @@ import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
 import yagodaoud.com.logos.music.audio.PlayerManager;
-import yagodaoud.com.logos.music.services.VolumeService;
 
 import java.util.List;
+
+import static yagodaoud.com.logos.music.commands.helper.PlayerNotStartedEmbedMessageBuilder.getPlayerNotStartedEmbedMessage;
 
 @Component
 public class VolumeCommand implements CommandHandlerInterface {
@@ -22,6 +23,10 @@ public class VolumeCommand implements CommandHandlerInterface {
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
+        if (PlayerManager.getInstance() == null) {
+            event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
+            return;
+        }
         int volume = event.getOption("volume").getAsInt();
         event.replyEmbeds(PlayerManager.getInstance().setVolume(event.getGuild(), event.getMember().getVoiceState(), volume)).queue();
     }

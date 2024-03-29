@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import yagodaoud.com.logos.helper.Colors;
-import yagodaoud.com.logos.music.commands.GuildMusicManager;
 import yagodaoud.com.logos.music.services.VolumeService;
 
 import java.net.URL;
@@ -26,7 +25,7 @@ public class PlayerManager {
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
     private static PlayerManager INSTANCE;
 
-    public PlayerManager(Guild guild) {
+    public PlayerManager() {
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
 
