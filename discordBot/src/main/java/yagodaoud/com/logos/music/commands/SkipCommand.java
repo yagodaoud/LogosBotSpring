@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.helper.Colors;
 import yagodaoud.com.logos.music.audio.PlayerManager;
 
 import java.util.List;
+
+import static yagodaoud.com.logos.helper.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component
 public class SkipCommand implements CommandHandlerInterface {
@@ -20,7 +23,11 @@ public class SkipCommand implements CommandHandlerInterface {
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        event.reply(PlayerManager.getInstance().skipTrack(event.getGuild(), event.getMember().getVoiceState())).queue();
+        if (PlayerManager.getInstance() == null) {
+            event.replyEmbeds(messageEmbedBuilder("You must start the player first", Colors.ADVERT)).queue();
+            return;
+        }
+        event.replyEmbeds(PlayerManager.getInstance().skipTrack(event.getGuild(), event.getMember().getVoiceState())).queue();
     }
 
     @Override

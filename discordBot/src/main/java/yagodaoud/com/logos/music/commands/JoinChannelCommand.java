@@ -21,7 +21,7 @@ public class JoinChannelCommand implements CommandHandlerInterface {
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         AudioEventHandler audioEventHandler = new AudioEventHandler(event.getMember().getVoiceState());
-        event.reply(audioEventHandler.joinVoiceChannel()).queue();
+        event.replyEmbeds(audioEventHandler.joinVoiceChannel()).queue();
     }
 
     @Override

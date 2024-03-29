@@ -12,13 +12,15 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import yagodaoud.com.logos.helper.Colors;
 import yagodaoud.com.logos.music.commands.GuildMusicManager;
 import yagodaoud.com.logos.music.services.VolumeService;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static yagodaoud.com.logos.helper.MessageEmbedBuilder.messageEmbedBuilder;
 
 public class PlayerManager {
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
@@ -36,7 +38,7 @@ public class PlayerManager {
         final AtomicReference<MessageEmbed> messageContainer = new AtomicReference<>();
 
         if (!guildVoiceState.inAudioChannel()) {
-            completeFutureWithMessage(futureMessage, messageContainer, this.messageEmbedBuilder("You must be in a voice channel first."));
+            completeFutureWithMessage(futureMessage, messageContainer, messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT));
             return futureMessage;
         }
 
@@ -47,7 +49,7 @@ public class PlayerManager {
         audioEventHandler.joinVoiceChannel();
 
         if (urlOrName == null) {
-            completeFutureWithMessage(futureMessage, messageContainer,  this.messageEmbedBuilder("Something went wrong."));
+            completeFutureWithMessage(futureMessage, messageContainer,  messageEmbedBuilder("Something went wrong.", Colors.ADVERT));
             return futureMessage;
         }
 
@@ -84,47 +86,47 @@ public class PlayerManager {
 
             @Override
             public void noMatches() {
-                completeFutureWithMessage(futureMessage, messageContainer,  messageEmbedBuilder("No matches found."));
+                completeFutureWithMessage(futureMessage, messageContainer,  messageEmbedBuilder("No matches found.", Colors.ADVERT));
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-                completeFutureWithMessage(futureMessage, messageContainer, messageEmbedBuilder("Failed to load: " + exception.getMessage()));
+                completeFutureWithMessage(futureMessage, messageContainer, messageEmbedBuilder("Failed to load: " + exception.getMessage(), Colors.ADVERT));
             }
         });
         return futureMessage;
     }
 
-    public String skipTrack(Guild guild, GuildVoiceState voiceState) {
+    public MessageEmbed skipTrack(Guild guild, GuildVoiceState voiceState) {
         if (!voiceState.inAudioChannel()) {
-            return "You must be in a voice channel first.";
+            return messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
         }
         GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
-        return musicManager.scheduler.nextTrack();
+        return messageEmbedBuilder(musicManager.scheduler.nextTrack(), Colors.SUCCESS);
     }
 
-    public String nowPlaying(Guild guild, GuildVoiceState voiceState) {
+    public MessageEmbed nowPlaying(Guild guild, GuildVoiceState voiceState) {
         if (!voiceState.inAudioChannel()) {
-            return "You must be in a voice channel first.";
+            return messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
         }
         GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
-        return musicManager.scheduler.nowPlaying();
+        return messageEmbedBuilder(musicManager.scheduler.nowPlaying(), Colors.QUEUE_OR_NOW_PLAYING);
     }
 
-    public String getQueue(Guild guild, GuildVoiceState voiceState) {
+    public MessageEmbed getQueue(Guild guild, GuildVoiceState voiceState) {
         if (!voiceState.inAudioChannel()) {
-            return "You must be in a voice channel first.";
+            return messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
         }
         GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
-        return musicManager.scheduler.getQueue();
+        return messageEmbedBuilder(musicManager.scheduler.getQueue(), Colors.QUEUE_OR_NOW_PLAYING);
     }
 
-    public String setVolume(Guild guild, GuildVoiceState voiceState, int volume) {
+    public MessageEmbed setVolume(Guild guild, GuildVoiceState voiceState, int volume) {
         if (!voiceState.inAudioChannel()) {
-            return "You must be in a voice channel first.";
+            return messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
         }
         GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
-        return VolumeService.setVolume(musicManager.player, volume);
+        return messageEmbedBuilder(VolumeService.setVolume(musicManager.player, volume), Colors.SUCCESS);
     }
 
     private boolean isUrl(String url) {
@@ -139,14 +141,6 @@ public class PlayerManager {
     private void completeFutureWithMessage(CompletableFuture<MessageEmbed> future, AtomicReference<MessageEmbed> messageContainer, MessageEmbed message) {
         messageContainer.set(message);
         future.complete(messageContainer.get());
-    }
-
-    public MessageEmbed messageEmbedBuilder(String message) {
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setDescription(message);
-        embedBuilder.setColor(new Color(215, 50, 63));
-
-        return embedBuilder.build();
     }
 
     public MessageEmbed songMessageBuilder(AudioTrack track, int size) {
@@ -165,7 +159,7 @@ public class PlayerManager {
         }
 
         embedBuilder.setDescription(message);
-        embedBuilder.setColor(new Color(11, 111, 211));
+        embedBuilder.setColor(Colors.SONG_OR_PLAYLIST_ADDED);
 
         return embedBuilder.build();
     }

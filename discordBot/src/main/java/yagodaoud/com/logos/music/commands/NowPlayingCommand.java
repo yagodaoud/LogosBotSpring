@@ -20,7 +20,7 @@ public class NowPlayingCommand implements CommandHandlerInterface {
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        event.reply(PlayerManager.getInstance().nowPlaying(event.getGuild(), event.getMember().getVoiceState())).queue();
+        event.replyEmbeds(PlayerManager.getInstance().nowPlaying(event.getGuild(), event.getMember().getVoiceState())).queue();
     }
 
     @Override

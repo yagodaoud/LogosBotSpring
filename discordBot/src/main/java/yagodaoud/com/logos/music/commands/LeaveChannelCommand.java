@@ -21,7 +21,7 @@ public class LeaveChannelCommand implements CommandHandlerInterface {
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         AudioEventHandler audioEventHandler = new AudioEventHandler(event.getMember().getVoiceState());
-        event.reply(audioEventHandler.leaveVoiceChannel()).queue();
+        event.replyEmbeds(audioEventHandler.leaveVoiceChannel()).queue();
     }
 
     @Override

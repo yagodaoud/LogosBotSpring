@@ -1,7 +1,11 @@
 package yagodaoud.com.logos.music.audio;
 
 import net.dv8tion.jda.api.entities.GuildVoiceState;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
+import yagodaoud.com.logos.helper.Colors;
+
+import static yagodaoud.com.logos.helper.MessageEmbedBuilder.messageEmbedBuilder;
 
 public class AudioEventHandler {
 
@@ -13,31 +17,31 @@ public class AudioEventHandler {
         this.audioChannel = guildVoiceState.getChannel();
     }
 
-    public String joinVoiceChannel() {
+    public MessageEmbed joinVoiceChannel() {
         if (!guildVoiceState.inAudioChannel()) {
-            return "You must be in a voice channel first.";
+            return  messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
         }
 
         if (audioChannel == null) {
-            return "Failed to join voice channel.";
+            return  messageEmbedBuilder("Failed to join voice channel.", Colors.ADVERT);
         }
 
         guildVoiceState.getGuild().getAudioManager().openAudioConnection(guildVoiceState.getChannel());
 
-        return "Joining: `" + audioChannel.getName() + "`.";
+        return messageEmbedBuilder("Joining: `" + audioChannel.getName() + "`.", Colors.SUCCESS);
     }
 
-    public String leaveVoiceChannel() {
+    public MessageEmbed leaveVoiceChannel() {
         if (!guildVoiceState.inAudioChannel()) {
-            return "You must be in a voice channel first.";
+            return messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
         }
 
         if (audioChannel == null) {
-            return "Failed to leave voice channel.";
+            return messageEmbedBuilder("Failed to leave voice channel.", Colors.ADVERT);
         }
 
         guildVoiceState.getGuild().getAudioManager().closeAudioConnection();
 
-        return "Left the voice channel.";
+        return messageEmbedBuilder("Left the voice channel.", Colors.SUCCESS);
     }
 }
