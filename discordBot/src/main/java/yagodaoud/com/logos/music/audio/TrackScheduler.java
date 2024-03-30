@@ -63,6 +63,28 @@ public class TrackScheduler extends AudioEventAdapter {
         return this.getQueueTracksMessage(this.player.getPlayingTrack(), this.queue);
     }
 
+    public String stopPlayer() {
+        if (this.player.getPlayingTrack() == null) {
+            return "Nothing is being played right now.";
+        }
+        if (this.player.isPaused()) {
+            return "The player is already paused.";
+        }
+        this.player.setPaused(true);
+        return "Stopped the player.";
+    }
+
+    public String resumePlayer() {
+        if (this.player.getPlayingTrack() == null) {
+            return "Nothing is being played right now.";
+        }
+        if (!this.player.isPaused()) {
+            return "The player is already resumed.";
+        }
+        this.player.setPaused(false);
+        return "Resumed the player.";
+    }
+
     public String getNowPlayingMessage(AudioTrack audioTrack, boolean removeNowPlaying) {
         if (audioTrack == null) {
             return "Nothing is being played right now.";

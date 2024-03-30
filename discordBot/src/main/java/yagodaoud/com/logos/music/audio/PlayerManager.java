@@ -16,6 +16,7 @@ import yagodaoud.com.logos.helper.Colors;
 import yagodaoud.com.logos.music.services.VolumeService;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -126,6 +127,22 @@ public class PlayerManager {
         }
         GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
         return messageEmbedBuilder(VolumeService.setVolume(musicManager.player, volume), Colors.SUCCESS);
+    }
+
+    public MessageEmbed stopPlayer(Guild guild, GuildVoiceState voiceState) {
+        if (!voiceState.inAudioChannel()) {
+            return messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
+        }
+        GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
+        return messageEmbedBuilder(musicManager.scheduler.stopPlayer(), Colors.SUCCESS);
+    }
+
+    public MessageEmbed resumePlayer(Guild guild, GuildVoiceState voiceState) {
+        if (!voiceState.inAudioChannel()) {
+            return messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
+        }
+        GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
+        return messageEmbedBuilder(musicManager.scheduler.resumePlayer(), Colors.SUCCESS);
     }
 
     private boolean isUrl(String url) {
