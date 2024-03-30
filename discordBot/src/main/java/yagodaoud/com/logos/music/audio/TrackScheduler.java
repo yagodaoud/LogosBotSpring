@@ -79,6 +79,21 @@ public class TrackScheduler extends AudioEventAdapter {
         return "Resumed the player.";
     }
 
+    public String jumpTo(int trackNumber) {
+        if (this.player.getPlayingTrack() == null) {
+            return "Nothing is being played right now.";
+        }
+        if (trackNumber > queue.size()) {
+            return "Track number out of range.";
+        }
+        for (int i = 1; i < trackNumber; i++) {
+            queue.poll();
+        }
+        AudioTrack skippedToTrack = queue.poll();
+        this.player.startTrack(skippedToTrack, false);
+        return "Skipped to: " + getNowPlayingMessage(skippedToTrack, true);
+    }
+
     public String getNowPlayingMessage(AudioTrack audioTrack, boolean removeNowPlaying) {
         if (audioTrack == null) {
             return "Nothing is being played right now.";
