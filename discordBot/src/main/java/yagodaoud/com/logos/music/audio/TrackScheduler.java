@@ -83,10 +83,10 @@ public class TrackScheduler extends AudioEventAdapter {
         if (this.player.getPlayingTrack() == null) {
             return "Nothing is being played right now.";
         }
-        if (trackNumber > queue.size()) {
+        if (trackNumber <= 0 || trackNumber > queue.size()) {
             return "Track number out of range.";
         }
-        for (int i = 1; i < trackNumber; i++) {
+        for (int i = 1; i < trackNumber - 1; i++) {
             queue.poll();
         }
         AudioTrack skippedToTrack = queue.poll();
