@@ -25,18 +25,23 @@ Learn how to use the bot's commands in just a few simple steps!
 ## 🧾 | Commands
 ### 💸 Related to crypto price and price alerts
 - Crypto-Price [crypto tag {e.g. BTC, ETH, etc}]
-- Bitcoin-Alert (every hour)
+- Bitcoin-Alert (in %) (every hour)
 - Bitcoin-Scheduled-Alert (every day at 12 am UTC)
 - Bitcoin Price Trigger
 
-### 💿 Music Search (`YouTube`) and Player - Powered by [lavaplayer](https://github.com/sedmelluq/lavaplayer)
+### 💿 Music Search and Player - Powered by [lavaplayer](https://github.com/sedmelluq/lavaplayer)
 - Join
-- Play (search name or link)
+- Play (search name or link) (YouTube, SoundCloud)
 - Skip
 - Stop
+- Resume
 - Loop
 - Leave
 - Clear
+- Now Playing
+- Queue
+- Force Play
+- Jump To
 - Shuffle
 
 ## 🔧 | Support Server
