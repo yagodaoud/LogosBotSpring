@@ -7,7 +7,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.stream.Collectors;
 
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
@@ -101,12 +100,22 @@ public class TrackScheduler extends AudioEventAdapter {
             return "The queue is empty.";
         }
 
-        return "Queue\n\n Now playing - [" + firstTrack.getInfo().title + "](" + firstTrack.getInfo().uri + ") - `" + formatDuration(firstTrack.getDuration()) +
-                "`\n\n Next tracks: \n" +
-                queue.stream()
-                        .limit(20)
-                        .map(track -> getNowPlayingMessage(track, true))
-                        .collect(Collectors.joining("\n"));
+        StringBuilder message = new StringBuilder();
+        message.append("Queue\n\n Now playing - [").append(firstTrack.getInfo().title).append("](").append(firstTrack.getInfo().uri).append(") - `").append(formatDuration(firstTrack.getDuration())).append("`\n\n Next tracks: \n");
+
+        int trackNumber = 1;
+        for (AudioTrack track : queue) {
+            if (trackNumber > 10) {
+                break;
+            }
+            message.append(trackNumber)
+                    .append(" - ")
+                    .append(getNowPlayingMessage(track, true))
+                    .append("\n");
+            trackNumber++;
+        }
+
+        return message.toString();
     }
 
     private String formatDuration(long durationMs) {
