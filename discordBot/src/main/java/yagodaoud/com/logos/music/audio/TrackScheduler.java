@@ -26,26 +26,21 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public String nextTrack() {
-//        if (player.isPaused()){
-//            player.setPaused(false);
-//        }
-
+        if (player.isPaused()){
+            player.setPaused(false);
+        }
         AudioTrack nextTrack = queue.poll();
 
         if (player.getPlayingTrack() == null) {
             return "The queue is empty.";
         }
-
         if (nextTrack == null) {
             player.stopTrack();
             queue.clear();
             return "Skipped current track, the queue is now empty.";
         }
-
         this.player.startTrack(nextTrack, false);
         return "Skipped to the next track.";
-
-
     }
 
     @Override
