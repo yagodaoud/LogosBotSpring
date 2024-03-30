@@ -1,4 +1,4 @@
-package yagodaoud.com.logos.crypto;
+package yagodaoud.com.logos.crypto.helper;
 
 import org.json.JSONObject;
 

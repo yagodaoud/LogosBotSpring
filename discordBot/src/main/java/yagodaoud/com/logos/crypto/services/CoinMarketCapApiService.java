@@ -8,7 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import yagodaoud.com.logos.crypto.JsonCryptoParser;
+import yagodaoud.com.logos.crypto.helper.JsonCryptoParser;
 
 @Service
 public class CoinMarketCapApiService {
