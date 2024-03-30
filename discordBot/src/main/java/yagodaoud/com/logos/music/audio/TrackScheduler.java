@@ -83,6 +83,19 @@ public class TrackScheduler extends AudioEventAdapter {
         return "Resumed the player.";
     }
 
+    public String clearQueue() {
+        if (this.player.getPlayingTrack() == null) {
+            return "Nothing is being played right now.";
+        }
+        if (this.queue.isEmpty()) {
+            return "Queue already empty.";
+        }
+        this.player.stopTrack();
+        this.queue.clear();
+        return "The queue is now empty.";
+    }
+
+
     public String jumpTo(int trackNumber) {
         if (this.player.getPlayingTrack() == null) {
             return "Nothing is being played right now.";
