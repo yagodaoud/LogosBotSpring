@@ -6,12 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
-import yagodaoud.com.logos.helper.Colors;
 import yagodaoud.com.logos.music.audio.PlayerManager;
 
 import java.util.List;
 
-import static yagodaoud.com.logos.helper.MessageEmbedBuilder.messageEmbedBuilder;
 import static yagodaoud.com.logos.music.commands.helper.PlayerNotStartedEmbedMessageBuilder.getPlayerNotStartedEmbedMessage;
 
 @Component
