@@ -13,33 +13,40 @@ import yagodaoud.com.logos.music.audio.PlayerManager;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import static yagodaoud.com.logos.music.commands.helper.PlayerNotStartedEmbedMessageBuilder.getPlayerNotStartedEmbedMessage;
+
 @Component
-public class PlayCommand implements CommandHandlerInterface {
+public class ForcePlayCommand implements CommandHandlerInterface {
 
     @Autowired
-    public PlayCommand(CommandRegistryService commandRegistry) {
+    public ForcePlayCommand(CommandRegistryService commandRegistry) {
         commandRegistry.registerCommand(this);
     }
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        PlayerManager playerManager = new PlayerManager();
-        CompletableFuture<MessageEmbed> loadResultFuture = (playerManager.loadAndPlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("query").getAsString(), false));
+        if (PlayerManager.getInstance() == null) {
+            event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
+            return;
+        }
+
+        CompletableFuture<MessageEmbed> loadResultFuture = (PlayerManager.getInstance().forcePlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("force-play-query").getAsString()));
         loadResultFuture.thenAccept(result -> event.replyEmbeds(result).queue());
     }
 
     @Override
     public String getName() {
-        return "play";
+        return "force-play";
     }
 
     @Override
     public String getDescription() {
-        return "Play a song or playlist from YouTube.";
+        return "Play a song immediately, regardless the queue.";
     }
 
     @Override
     public List<OptionData> getOptions() {
-        return List.of(new OptionData(OptionType.STRING, "query", "Song name/playlist/link", true));
+        return List.of(new OptionData(OptionType.STRING, "force-play-query", "Song name/playlist/link", true));
     }
 }
+

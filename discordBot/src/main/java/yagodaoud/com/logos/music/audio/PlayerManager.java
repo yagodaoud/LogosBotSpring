@@ -16,7 +16,6 @@ import yagodaoud.com.logos.helper.Colors;
 import yagodaoud.com.logos.music.services.VolumeService;
 
 import java.net.URL;
-import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -33,7 +32,7 @@ public class PlayerManager {
         INSTANCE = this;
     }
 
-    public CompletableFuture<MessageEmbed> loadAndPlay(TextChannel channel, GuildVoiceState guildVoiceState, String urlOrName) {
+    public CompletableFuture<MessageEmbed> loadAndPlay(TextChannel channel, GuildVoiceState guildVoiceState, String urlOrName, boolean forcePlay) {
         CompletableFuture<MessageEmbed> futureMessage = new CompletableFuture<>();
         final AtomicReference<MessageEmbed> messageContainer = new AtomicReference<>();
 
@@ -64,7 +63,7 @@ public class PlayerManager {
         audioPlayerManager.loadItemOrdered(musicManager, finalUrlOrName, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                musicManager.scheduler.queue(track);
+                musicManager.scheduler.queue(track, forcePlay);
                 completeFutureWithMessage(futureMessage, messageContainer, songMessageBuilder(track, 0));
             }
 
@@ -73,11 +72,11 @@ public class PlayerManager {
     //                playlist.getTracks().forEach(System.out::println);
 
                 AudioTrack firstTrack = playlist.getTracks().remove(0);
-                musicManager.scheduler.queue(firstTrack);
+                musicManager.scheduler.queue(firstTrack, forcePlay);
 
-                if (finalUrlOrName.contains("/playlist")) {
+                if (finalUrlOrName.contains("/playlist") && !forcePlay) {
                     for (AudioTrack track : playlist.getTracks()) {
-                        musicManager.scheduler.queue(track);
+                        musicManager.scheduler.queue(track, forcePlay); //TO-DO change blockingQueue to linkedBlockingDeque to support playlist in force play
                     }
                     completeFutureWithMessage(futureMessage, messageContainer, songMessageBuilder(firstTrack, playlist.getTracks().size()));
                 }
@@ -151,6 +150,10 @@ public class PlayerManager {
         }
         GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
         return messageEmbedBuilder(musicManager.scheduler.jumpTo(trackNumber), Colors.SUCCESS);
+    }
+
+    public CompletableFuture<MessageEmbed> forcePlay(TextChannel channel, GuildVoiceState voiceState, String urlOrName) {
+        return this.loadAndPlay(channel, voiceState, urlOrName, true);
     }
 
     private boolean isUrl(String url) {

@@ -16,9 +16,13 @@ public class TrackScheduler extends AudioEventAdapter {
         this.player = player;
     }
 
-    public void queue(AudioTrack track) {
+    public void queue(AudioTrack track, boolean forcePlay) {
         System.out.println(track.getInfo().title);
 
+        if (forcePlay) {
+            this.player.startTrack(track, false);
+            return;
+        }
         if (!this.player.startTrack(track, true)) {
             this.queue.add(track);
         }
