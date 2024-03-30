@@ -1,9 +1,9 @@
 <h1 align="center">
-  <img src="./assets/cd.gif" width="30px"> Logos Discord Bot 
-  <img src="./assets/bitcoin.gif" width="35" style="vertical-align: middle; margin-top: -15px;">
+  <img src="assets/cd.gif" width="30px"> Logos Discord Bot 
+  <img src="assets/bitcoin.gif" width="35" style="vertical-align: middle; margin-top: -15px;">
 </h1>
 <p align="center">
-  <img src="./assets/infinity.png" alt="Logos" width="100" height="100" style="">
+  <img src="assets/infinity.png" alt="Logos" width="100" height="100" style="">
 </p>
 
 ### Discord bot built with Java offering `Music commands`, `Crypto tracking` tools and more.
