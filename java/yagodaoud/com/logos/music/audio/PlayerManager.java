@@ -164,6 +164,15 @@ public class PlayerManager {
         return this.loadAndPlay(channel, voiceState, urlOrName, true);
     }
 
+    public MessageEmbed loopQueue(Guild guild, GuildVoiceState voiceState) {
+        if (!voiceState.inAudioChannel()) {
+            return messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
+        }
+        GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
+        return messageEmbedBuilder(musicManager.scheduler.loopQueue(), Colors.SUCCESS);
+
+    }
+
     private boolean isUrl(String url) {
         try {
             new URL(url);

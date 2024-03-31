@@ -11,6 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     private final BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
+    private boolean loop = false;
 
     public TrackScheduler(AudioPlayer player) {
         this.player = player;
@@ -29,17 +30,24 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public String nextTrack() {
-        if (player.isPaused()){
-            player.setPaused(false);
+        if (this.player.isPaused()){
+            this.player.setPaused(false);
         }
-        AudioTrack nextTrack = queue.poll();
 
-        if (player.getPlayingTrack() == null) {
+        AudioTrack nextTrack;
+
+        nextTrack = this.player.getPlayingTrack().makeClone();
+
+        if (!this.loop) {
+            nextTrack = this.queue.poll();
+        }
+
+        if (this.player.getPlayingTrack() == null) {
             return "The queue is empty.";
         }
         if (nextTrack == null) {
-            player.stopTrack();
-            queue.clear();
+            this.player.stopTrack();
+            this.queue.clear();
             return "Skipped current track, the queue is now empty.";
         }
         this.player.startTrack(nextTrack, false);
@@ -49,7 +57,13 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (endReason.toString().equals("FINISHED") || endReason.mayStartNext) {
-            this.player.startTrack(queue.poll(), false);
+            AudioTrack nextTrack;
+
+            nextTrack = track.makeClone();
+            if (!loop) {
+                nextTrack = queue.poll();
+            }
+            this.player.startTrack(nextTrack, false);
         }
     }
 
@@ -95,7 +109,6 @@ public class TrackScheduler extends AudioEventAdapter {
         return "The queue is now empty.";
     }
 
-
     public String jumpTo(int trackNumber) {
         if (this.player.getPlayingTrack() == null) {
             return "Nothing is being played right now.";
@@ -109,6 +122,20 @@ public class TrackScheduler extends AudioEventAdapter {
         AudioTrack skippedToTrack = queue.poll();
         this.player.startTrack(skippedToTrack, false);
         return "Skipped to: " + getNowPlayingMessage(skippedToTrack, true);
+    }
+
+    public String loopQueue() {
+        if (this.player.getPlayingTrack() == null) {
+            return "Nothing is being played right now.";
+        }
+
+        if (loop) {
+            loop = false;
+            return "Loop is off!";
+        }
+
+        loop = true;
+        return "Loop is on!";
     }
 
     public String getNowPlayingMessage(AudioTrack audioTrack, boolean removeNowPlaying) {
