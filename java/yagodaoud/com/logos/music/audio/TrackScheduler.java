@@ -116,7 +116,7 @@ public class TrackScheduler extends AudioEventAdapter {
         if (trackNumber <= 0 || trackNumber > queue.size()) {
             return "Track number out of range.";
         }
-        for (int i = 1; i < trackNumber - 1; i++) {
+        for (int i = 1; i < trackNumber; i++) {
             queue.poll();
         }
         AudioTrack skippedToTrack = queue.poll();

@@ -74,7 +74,7 @@ public class PlayerManager {
                 AudioTrack firstTrack = playlist.getTracks().remove(0);
                 musicManager.scheduler.queue(firstTrack, forcePlay);
 
-                if (finalUrlOrName.contains("/playlist") && !forcePlay) {
+                if ((finalUrlOrName.contains("/playlist") || finalUrlOrName.contains("/sets")) && !forcePlay) {
                     for (AudioTrack track : playlist.getTracks()) {
                         musicManager.scheduler.queue(track, forcePlay); //TO-DO change blockingQueue to linkedBlockingDeque to support playlist in force play
                     }
