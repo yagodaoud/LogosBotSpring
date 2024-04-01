@@ -3,9 +3,9 @@ package yagodaoud.com.logos.music.audio;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
-import yagodaoud.com.logos.helper.Colors;
+import yagodaoud.com.logos.tools.Colors;
 
-import static yagodaoud.com.logos.helper.MessageEmbedBuilder.messageEmbedBuilder;
+import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 public class AudioEventHandler {
 

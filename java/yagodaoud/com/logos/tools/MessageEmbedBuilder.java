@@ -1,4 +1,4 @@
-package yagodaoud.com.logos.helper;
+package yagodaoud.com.logos.tools;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;

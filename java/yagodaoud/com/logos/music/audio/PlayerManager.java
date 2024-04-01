@@ -12,14 +12,14 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import yagodaoud.com.logos.helper.Colors;
+import yagodaoud.com.logos.tools.Colors;
 import yagodaoud.com.logos.music.services.VolumeService;
 
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static yagodaoud.com.logos.helper.MessageEmbedBuilder.messageEmbedBuilder;
+import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 public class PlayerManager {
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
