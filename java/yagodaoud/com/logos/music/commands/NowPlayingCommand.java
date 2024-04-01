@@ -10,7 +10,7 @@ import yagodaoud.com.logos.music.audio.PlayerManager;
 
 import java.util.List;
 
-import static yagodaoud.com.logos.music.commands.helper.PlayerNotStartedEmbedMessageBuilder.getPlayerNotStartedEmbedMessage;
+import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getPlayerNotStartedEmbedMessage;
 
 @Component
 public class NowPlayingCommand implements CommandHandlerInterface {

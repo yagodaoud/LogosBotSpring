@@ -5,9 +5,12 @@ import yagodaoud.com.logos.helper.Colors;
 
 import static yagodaoud.com.logos.helper.MessageEmbedBuilder.messageEmbedBuilder;
 
-public abstract class PlayerNotStartedEmbedMessageBuilder {
+public abstract class EmbedErrorMessageBuilder {
 
     public static MessageEmbed getPlayerNotStartedEmbedMessage() {
-        return messageEmbedBuilder("You must start the player first", Colors.ADVERT);
+        return messageEmbedBuilder("You must start the player first.", Colors.ADVERT);
+    }
+    public static MessageEmbed getNotAdminEmbedMessage() {
+        return messageEmbedBuilder("You must be an admin to use this command.", Colors.ADVERT);
     }
 }
