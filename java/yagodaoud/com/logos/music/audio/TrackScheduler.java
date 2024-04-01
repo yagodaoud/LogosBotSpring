@@ -5,6 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -12,6 +13,8 @@ public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     private final BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
     private boolean loop = false;
+    private boolean shuffle = false;
+    private BlockingQueue<AudioTrack> originalQueue = new LinkedBlockingQueue<>();
 
     public TrackScheduler(AudioPlayer player) {
         this.player = player;
@@ -129,13 +132,51 @@ public class TrackScheduler extends AudioEventAdapter {
             return "Nothing is being played right now.";
         }
 
-        if (loop) {
-            loop = false;
+        if (this.loop) {
+            this.loop = false;
             return "Loop is off!";
         }
 
-        loop = true;
+        this.loop = true;
         return "Loop is on!";
+    }
+
+    public String shuffleQueue() {
+        if (this.queue.isEmpty() || this.player.getPlayingTrack() == null) {
+            this.shuffle = false;
+            return "The queue is empty.";
+        }
+
+        if (this.shuffle) {
+            this.queue.clear();
+
+            Queue<AudioTrack> tempQueue = new LinkedList<>();
+
+            while (!this.originalQueue.isEmpty() && this.originalQueue.peek() != this.player.getPlayingTrack()) {
+                tempQueue.add(this.originalQueue.poll());
+            }
+
+            this.originalQueue.remove(this.player.getPlayingTrack());
+
+            this.originalQueue.addAll(tempQueue);
+
+            this.queue.addAll(this.originalQueue);
+
+            this.shuffle = false;
+            return "Shuffle is off!";
+        }
+
+        this.originalQueue.clear();
+        this.originalQueue.addAll(this.queue);
+
+        List<AudioTrack> tempList = new ArrayList<>();
+
+        this.queue.drainTo(tempList);
+        Collections.shuffle(tempList);
+        this.queue.addAll(tempList);
+
+        this.shuffle = true;
+        return "Shuffle is on!";
     }
 
     public String getNowPlayingMessage(AudioTrack audioTrack, boolean removeNowPlaying) {
