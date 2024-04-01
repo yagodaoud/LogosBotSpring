@@ -2,6 +2,7 @@ package yagodaoud.com.logos.music.commands;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,9 @@ public class ForcePlayCommand implements CommandHandlerInterface {
             event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
             return;
         }
+        String providerOption = event.getOption("force-play-provider") == null ? "yt" : event.getOption("force-play-provider").getAsString();
 
-        CompletableFuture<MessageEmbed> loadResultFuture = (PlayerManager.getInstance().forcePlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("force-play-query").getAsString()));
+        CompletableFuture<MessageEmbed> loadResultFuture = (PlayerManager.getInstance().forcePlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("force-play-query").getAsString(), providerOption));
         loadResultFuture.thenAccept(result -> event.replyEmbeds(result).queue());
     }
 
@@ -46,7 +48,7 @@ public class ForcePlayCommand implements CommandHandlerInterface {
 
     @Override
     public List<OptionData> getOptions() {
-        return List.of(new OptionData(OptionType.STRING, "force-play-query", "Song name/playlist/link", true));
+        return List.of(new OptionData(OptionType.STRING, "force-play-query", "Song name/playlist/link", true), new OptionData(OptionType.STRING, "force-play-provider", "Youtube, Soundcloud, etc", false).addChoices(new Command.Choice("Youtube (default)", "yt"), new Command.Choice("SoundCloud", "sc")));
     }
 }
 

@@ -32,7 +32,7 @@ public class PlayerManager {
         INSTANCE = this;
     }
 
-    public CompletableFuture<MessageEmbed> loadAndPlay(TextChannel channel, GuildVoiceState guildVoiceState, String urlOrName, boolean forcePlay) {
+    public CompletableFuture<MessageEmbed> loadAndPlay(TextChannel channel, GuildVoiceState guildVoiceState, String urlOrName, String provider, boolean forcePlay) {
         CompletableFuture<MessageEmbed> futureMessage = new CompletableFuture<>();
         final AtomicReference<MessageEmbed> messageContainer = new AtomicReference<>();
 
@@ -53,7 +53,16 @@ public class PlayerManager {
         }
 
          if (!isUrl(urlOrName)) {
-             urlOrName = "ytsearch:" + urlOrName;
+             // ytsearch / scsearch
+
+             String webProvider = "ytsearch:";
+
+             if (provider.equals("sc")) {
+                 webProvider = "scsearch:";
+             }
+
+             urlOrName = webProvider + urlOrName;
+
          }
 
         String finalUrlOrName = urlOrName;
@@ -70,6 +79,10 @@ public class PlayerManager {
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
     //                playlist.getTracks().forEach(System.out::println);
+                if (playlist.getTracks().size() == 0) {
+                    noMatches();
+                    return;
+                }
 
                 AudioTrack firstTrack = playlist.getTracks().remove(0);
                 musicManager.scheduler.queue(firstTrack, forcePlay);
@@ -168,8 +181,8 @@ public class PlayerManager {
         return messageEmbedBuilder(musicManager.scheduler.jumpTo(trackNumber), Colors.SUCCESS);
     }
 
-    public CompletableFuture<MessageEmbed> forcePlay(TextChannel channel, GuildVoiceState voiceState, String urlOrName) {
-        return this.loadAndPlay(channel, voiceState, urlOrName, true);
+    public CompletableFuture<MessageEmbed> forcePlay(TextChannel channel, GuildVoiceState voiceState, String urlOrName, String provider) {
+        return this.loadAndPlay(channel, voiceState, urlOrName, provider, true);
     }
 
     public MessageEmbed loopQueue(Guild guild, GuildVoiceState voiceState) {

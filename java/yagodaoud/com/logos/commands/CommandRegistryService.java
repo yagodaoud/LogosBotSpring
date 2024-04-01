@@ -6,10 +6,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,13 +14,14 @@ public class CommandRegistryService {
 
     private final Map<String, String> commandMap = new HashMap<>();
     private final List<CommandHandlerInterface> commandHandlerlist = new ArrayList<>();
-    private final Map<String, OptionData> optionsMap = new HashMap<>();
+    private final Map<String, List<OptionData>> optionsMap = new HashMap<>();
 
     public void registerCommand(CommandHandlerInterface command) {
         commandMap.put(command.getName(), command.getDescription());
         commandHandlerlist.add(command);
-        if (command.getOptions() != null) {
-            command.getOptions().forEach(option -> optionsMap.put(command.getName(), option));
+        List<OptionData> options = command.getOptions();
+        if (options != null && !options.isEmpty()) {
+            optionsMap.put(command.getName(), options);
         }
     }
 
@@ -31,10 +29,8 @@ public class CommandRegistryService {
         return commandMap.entrySet().stream()
                 .map(entry -> {
                     SlashCommandData slashCommandData = Commands.slash(entry.getKey(), entry.getValue());
-                    slashCommandData.addOptions(optionsMap.entrySet().stream()
-                            .filter(optionEntry -> optionEntry.getKey().equals(entry.getKey()))
-                            .map(Map.Entry::getValue)
-                            .toArray(OptionData[]::new));
+                    List<OptionData> options = optionsMap.getOrDefault(entry.getKey(), Collections.emptyList());
+                    slashCommandData.addOptions(options.toArray(new OptionData[0]));
                     return slashCommandData;
                 })
                 .collect(Collectors.toList());

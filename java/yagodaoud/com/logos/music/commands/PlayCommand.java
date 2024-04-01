@@ -2,6 +2,7 @@ package yagodaoud.com.logos.music.commands;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,9 @@ public class PlayCommand implements CommandHandlerInterface {
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         PlayerManager playerManager = new PlayerManager();
-        CompletableFuture<MessageEmbed> loadResultFuture = (playerManager.loadAndPlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("query").getAsString(), false));
+        String providerOption = event.getOption("provider") == null ? "yt" : event.getOption("provider").getAsString();
+
+        CompletableFuture<MessageEmbed> loadResultFuture = (playerManager.loadAndPlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("query").getAsString(), providerOption, false));
         loadResultFuture.thenAccept(result -> event.replyEmbeds(result).queue());
     }
 
@@ -40,6 +43,6 @@ public class PlayCommand implements CommandHandlerInterface {
 
     @Override
     public List<OptionData> getOptions() {
-        return List.of(new OptionData(OptionType.STRING, "query", "Song name/playlist/link", true));
+        return List.of(new OptionData(OptionType.STRING, "query", "Song name/playlist/link", true), new OptionData(OptionType.STRING, "provider", "Youtube, Soundcloud, etc", false).addChoices(new Command.Choice("Youtube (default)", "yt"), new Command.Choice("SoundCloud", "sc")));
     }
 }
