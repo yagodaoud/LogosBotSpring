@@ -34,13 +34,6 @@ public class DiscordBotInitializer {
 
         JDABuilder builder = JDABuilder.createDefault(token)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
-                .disableCache(EnumSet.of(
-                        CacheFlag.CLIENT_STATUS,
-                        CacheFlag.ACTIVITY,
-                        CacheFlag.EMOJI,
-                        CacheFlag.STICKER,
-                        CacheFlag.SCHEDULED_EVENTS
-                ))
                 .setChunkingFilter(ChunkingFilter.ALL)
                 .enableCache(CacheFlag.VOICE_STATE)
                 .setAutoReconnect(true);
