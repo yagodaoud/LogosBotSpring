@@ -69,7 +69,7 @@ public class DiscordBotInitializer {
         context.getBean(QueueCommand.class);
         context.getBean(StopCommand.class);
         context.getBean(ResumeCommand.class);
-        context.getBean(JumpToCommand.class);
+        context.getBean(SkipToCommand.class);
         context.getBean(ForcePlayCommand.class);
         context.getBean(ClearCommand.class);
         context.getBean(LoopCommand.class);

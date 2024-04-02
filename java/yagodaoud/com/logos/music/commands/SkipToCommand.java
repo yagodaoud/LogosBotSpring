@@ -14,10 +14,10 @@ import java.util.List;
 import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getPlayerNotStartedEmbedMessage;
 
 @Component
-public class JumpToCommand implements CommandHandlerInterface {
+public class SkipToCommand implements CommandHandlerInterface {
 
     @Autowired
-    public JumpToCommand(CommandRegistryService commandRegistry) {
+    public SkipToCommand(CommandRegistryService commandRegistry) {
         commandRegistry.registerCommand(this);
     }
 
@@ -33,7 +33,7 @@ public class JumpToCommand implements CommandHandlerInterface {
 
     @Override
     public String getName() {
-        return "jump-to";
+        return "skip-to";
     }
 
     @Override
