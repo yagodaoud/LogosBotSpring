@@ -14,6 +14,7 @@ import yagodaoud.com.logos.crypto.commands.BitcoinPercentageAlertCommand;
 import yagodaoud.com.logos.crypto.commands.BitcoinPriceSchedulerCommand;
 import yagodaoud.com.logos.crypto.commands.BitcoinPriceTrackerCommand;
 import yagodaoud.com.logos.crypto.commands.FetchCryptoPriceCommand;
+import yagodaoud.com.logos.help.commands.HelpCommand;
 import yagodaoud.com.logos.listeners.BotCommandsListener;
 import yagodaoud.com.logos.listeners.LoadCommandsListener;
 import yagodaoud.com.logos.music.commands.*;
@@ -41,7 +42,8 @@ public class DiscordBotInitializer {
                         CacheFlag.SCHEDULED_EVENTS
                 ))
                 .setChunkingFilter(ChunkingFilter.ALL)
-                .enableCache(CacheFlag.VOICE_STATE);
+                .enableCache(CacheFlag.VOICE_STATE)
+                .setAutoReconnect(true);
 
         disableCache(builder);
         addGatewayIntents(builder);
@@ -79,6 +81,7 @@ public class DiscordBotInitializer {
         context.getBean(ClearCommand.class);
         context.getBean(LoopCommand.class);
         context.getBean(ShuffleCommand.class);
+        context.getBean(HelpCommand.class);
         builder.addEventListeners(new LoadCommandsListener(commandRegistry), new BotCommandsListener(commandRegistry));
     }
 

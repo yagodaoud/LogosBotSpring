@@ -1,6 +1,7 @@
 package yagodaoud.com.logos.listeners;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,9 @@ import yagodaoud.com.logos.commands.CommandRegistryService;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static yagodaoud.com.logos.help.view.HelpCryptoView.getCryptoView;
+import static yagodaoud.com.logos.help.view.HelpMusicView.getMusicView;
 
 @Component
 public class BotCommandsListener extends ListenerAdapter {
@@ -38,5 +42,16 @@ public class BotCommandsListener extends ListenerAdapter {
             return;
         }
         event.reply("Unknown command: " + commandName).queue();
+    }
+
+    @Override
+    public void onStringSelectInteraction(StringSelectInteractionEvent event) {
+        if (event.getComponentId().equals("menu:help")) {
+            if (event.getValues().contains("music")) {
+                event.reply(getMusicView()).setEphemeral(true).queue();
+                return;
+            }
+            event.reply(getCryptoView()).setEphemeral(true).queue();
+        }
     }
 }
