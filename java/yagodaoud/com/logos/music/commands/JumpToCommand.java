@@ -14,10 +14,10 @@ import java.util.List;
 import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getPlayerNotStartedEmbedMessage;
 
 @Component
-public class SkipToCommand implements CommandHandlerInterface {
+public class JumpToCommand implements CommandHandlerInterface {
 
     @Autowired
-    public SkipToCommand(CommandRegistryService commandRegistry) {
+    public JumpToCommand(CommandRegistryService commandRegistry) {
         commandRegistry.registerCommand(this);
     }
 
@@ -27,22 +27,23 @@ public class SkipToCommand implements CommandHandlerInterface {
             event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
             return;
         }
-        int trackNumber = event.getOption("track-number").getAsInt();
-        event.replyEmbeds(PlayerManager.getInstance().skipTo(event.getGuild(), event.getMember().getVoiceState(), trackNumber)).queue();
+        String trackNumber = event.getOption("track-time").getAsString();
+        event.replyEmbeds(PlayerManager.getInstance().jumpTo(event.getGuild(), event.getMember().getVoiceState(), trackNumber)).queue();
     }
 
     @Override
     public String getName() {
-        return "skip-to";
+        return "jump-to";
     }
 
     @Override
     public String getDescription() {
-        return "Skip to a certain track in the queue.";
+        return "Jump to a specific time in the track.";
     }
 
     @Override
     public List<OptionData> getOptions() {
-        return List.of(new OptionData(OptionType.STRING, "track-number", "Track number to skip to", true));
+        return List.of(new OptionData(OptionType.STRING, "track-time", "Time to jump to (mm:ss or hh:mm:ss)", true));
     }
 }
+

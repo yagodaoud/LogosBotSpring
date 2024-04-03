@@ -75,6 +75,7 @@ public class DiscordBotInitializer {
         context.getBean(LoopCommand.class);
         context.getBean(ShuffleCommand.class);
         context.getBean(HelpCommand.class);
+        context.getBean(JumpToCommand.class);
         builder.addEventListeners(new LoadCommandsListener(commandRegistry), new BotCommandsListener(commandRegistry));
     }
 

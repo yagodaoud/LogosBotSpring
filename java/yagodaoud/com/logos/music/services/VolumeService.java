@@ -11,6 +11,10 @@ public class VolumeService {
             volume = 100;
         }
 
+        if (volume < 1) {
+            volume = 1;
+        }
+
         player.setVolume(volume);
         return "Volume set to " + volume + ".";
     }

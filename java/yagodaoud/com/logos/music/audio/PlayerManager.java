@@ -12,8 +12,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import yagodaoud.com.logos.tools.Colors;
 import yagodaoud.com.logos.music.services.VolumeService;
+import yagodaoud.com.logos.tools.Colors;
 
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
@@ -48,22 +48,22 @@ public class PlayerManager {
         audioEventHandler.joinVoiceChannel();
 
         if (urlOrName == null) {
-            completeFutureWithMessage(futureMessage, messageContainer,  messageEmbedBuilder("Something went wrong.", Colors.ADVERT));
+            completeFutureWithMessage(futureMessage, messageContainer, messageEmbedBuilder("Something went wrong.", Colors.ADVERT));
             return futureMessage;
         }
 
-         if (!isUrl(urlOrName)) {
-             // ytsearch / scsearch
+        if (!isUrl(urlOrName)) {
+            // ytsearch / scsearch
 
-             String webProvider = "ytsearch:";
+            String webProvider = "ytsearch:";
 
-             if (provider.equals("sc")) {
-                 webProvider = "scsearch:";
-             }
+            if (provider.equals("sc")) {
+                webProvider = "scsearch:";
+            }
 
-             urlOrName = webProvider + urlOrName;
+            urlOrName = webProvider + urlOrName;
 
-         }
+        }
 
         String finalUrlOrName = urlOrName;
 
@@ -78,7 +78,7 @@ public class PlayerManager {
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
-    //                playlist.getTracks().forEach(System.out::println);
+                //                playlist.getTracks().forEach(System.out::println);
                 if (playlist.getTracks().size() == 0) {
                     noMatches();
                     return;
@@ -98,7 +98,7 @@ public class PlayerManager {
 
             @Override
             public void noMatches() {
-                completeFutureWithMessage(futureMessage, messageContainer,  messageEmbedBuilder("No matches found.", Colors.ADVERT));
+                completeFutureWithMessage(futureMessage, messageContainer, messageEmbedBuilder("No matches found.", Colors.ADVERT));
             }
 
             @Override
@@ -173,12 +173,12 @@ public class PlayerManager {
         return messageEmbedBuilder(musicManager.scheduler.shuffleQueue(), Colors.SUCCESS);
     }
 
-    public MessageEmbed jumpTo(Guild guild, GuildVoiceState voiceState, int trackNumber) {
+    public MessageEmbed skipTo(Guild guild, GuildVoiceState voiceState, int trackNumber) {
         if (!voiceState.inAudioChannel()) {
             return messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
         }
         GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
-        return messageEmbedBuilder(musicManager.scheduler.jumpTo(trackNumber), Colors.SUCCESS);
+        return messageEmbedBuilder(musicManager.scheduler.skipTo(trackNumber), Colors.SUCCESS);
     }
 
     public CompletableFuture<MessageEmbed> forcePlay(TextChannel channel, GuildVoiceState voiceState, String urlOrName, String provider) {
@@ -194,11 +194,20 @@ public class PlayerManager {
 
     }
 
+    public MessageEmbed jumpTo(Guild guild, GuildVoiceState voiceState, String trackTime) {
+        if (!voiceState.inAudioChannel()) {
+            return messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
+        }
+        GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
+        return messageEmbedBuilder(musicManager.scheduler.jumpTo(trackTime), Colors.SUCCESS);
+
+    }
+
     private boolean isUrl(String url) {
         try {
             new URL(url);
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -218,7 +227,7 @@ public class PlayerManager {
                 "`";
 
         if (size > 0) {
-            message +=  " and `" +
+            message += " and `" +
                     size +
                     "` more";
         }
@@ -243,5 +252,4 @@ public class PlayerManager {
     public static PlayerManager getInstance() {
         return INSTANCE;
     }
-
 }

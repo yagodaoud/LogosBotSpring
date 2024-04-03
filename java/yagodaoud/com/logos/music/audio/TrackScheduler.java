@@ -5,6 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
+import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -112,7 +113,7 @@ public class TrackScheduler extends AudioEventAdapter {
         return "The queue is now empty.";
     }
 
-    public String jumpTo(int trackNumber) {
+    public String skipTo(int trackNumber) {
         if (this.player.getPlayingTrack() == null) {
             return "Nothing is being played right now.";
         }
@@ -179,6 +180,39 @@ public class TrackScheduler extends AudioEventAdapter {
         return "Shuffle is on!";
     }
 
+    public String jumpTo(String trackTime) {
+        String[] parts = trackTime.split(":");
+
+        if (parts.length < 2 || parts.length > 3) {
+            return "Check the input format.";
+        }
+
+        int minutes = Integer.parseInt(parts[0]);
+        int seconds = Integer.parseInt(parts[1]);
+        int hours = 0;
+
+        if (parts.length == 3) {
+            hours = Integer.parseInt(parts[0]);
+            minutes = Integer.parseInt(parts[1]);
+            seconds = Integer.parseInt(parts[2]);
+        }
+
+        long jumpTimeMillis = (hours * 3600L + minutes * 60L + seconds) * 1000;
+
+        if (jumpTimeMillis > this.player.getPlayingTrack().getDuration()) {
+            return "Time longer than track's duration.";
+        }
+        Duration duration = Duration.ofMillis(jumpTimeMillis);
+
+        this.player.getPlayingTrack().setPosition(jumpTimeMillis);
+
+        String message = duration.toMinutes() + ":" + duration.toSeconds();
+        if (duration.toHours() > 0) {
+            message = duration.toHours() + ":" + duration.toMinutes() + ":" + duration.toSeconds();
+        }
+        return "Jumped to: " + message;
+    }
+
     public String getNowPlayingMessage(AudioTrack audioTrack, boolean removeNowPlaying) {
         if (audioTrack == null) {
             return "Nothing is being played right now.";
@@ -228,4 +262,5 @@ public class TrackScheduler extends AudioEventAdapter {
         }
         return String.format("%02d:%02d", minutes, seconds);
     }
+
 }
