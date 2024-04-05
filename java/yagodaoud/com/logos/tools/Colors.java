@@ -2,7 +2,7 @@ package yagodaoud.com.logos.tools;
 
 import java.awt.*;
 
-public class Colors {
+public abstract class Colors {
 
     public static Color ADVERT = new Color(215, 50, 63);
     public static Color SUCCESS = new Color(28, 166, 12);
