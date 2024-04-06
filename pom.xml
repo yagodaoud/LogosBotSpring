@@ -16,6 +16,11 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+<!--        <repository>Snapshot repository-->
+<!--            <id>arbjergDev-snapshots</id>-->
+<!--            <name>Lavalink Repository</name>-->
+<!--            <url>https://maven.lavalink.dev/snapshots</url>-->
+<!--        </repository>-->
     </repositories>
     <dependencies>
         <dependency>
@@ -65,6 +70,11 @@
             <artifactId>lavaplayer</artifactId>
             <version>2.1.1</version>
         </dependency>
+<!--        <dependency>Snapshot dependency-->
+<!--            <groupId>dev.arbjerg</groupId>-->
+<!--            <artifactId>lavaplayer</artifactId>-->
+<!--            <version>00d5258dea97b2ca623eaa8e7c251543c4f17b71-SNAPSHOT</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>dotenv-java</artifactId>
@@ -79,6 +89,11 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20230227</version>
+        </dependency>
+        <dependency>
+            <groupId>se.michaelthelin.spotify</groupId>
+            <artifactId>spotify-web-api-java</artifactId>
+            <version>8.3.6</version>
         </dependency>
     </dependencies>
 

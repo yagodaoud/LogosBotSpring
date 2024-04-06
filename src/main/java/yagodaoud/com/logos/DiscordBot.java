@@ -12,8 +12,7 @@ public class DiscordBot {
 
 	public static void main(String[] args) {
 		ApplicationContext context = SpringApplication.run(DiscordBot.class, args);
-		String token = Dotenv.configure().load().get("TOKENDISCORD");
-
+		String token = Dotenv.configure().load().get("TOKENDISCORDTEST");
 		JDA discordBot = DiscordBotInitializer.initBot(token, context);
 		DiscordBotInitializer.setActivity(discordBot);
 	}
