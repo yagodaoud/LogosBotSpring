@@ -1,13 +1,8 @@
 package yagodaoud.com.logos.music.audio;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -68,44 +63,11 @@ public class PlayerManager {
         String finalUrlOrName = urlOrName;
 
         AudioPlayerManager audioPlayerManager = this.audioPlayerManager;
+        CustomAudioLoadResultHandler loadResultHandlerImplementation = new CustomAudioLoadResultHandler(musicManager, finalUrlOrName, forcePlay, futureMessage, messageContainer);
 
-        audioPlayerManager.loadItemOrdered(musicManager, finalUrlOrName, new AudioLoadResultHandler() {
-            @Override
-            public void trackLoaded(AudioTrack track) {
-                musicManager.scheduler.queue(track, forcePlay);
-                completeFutureWithMessage(futureMessage, messageContainer, songMessageBuilder(track, 0));
-            }
+        audioPlayerManager.loadItemOrdered(musicManager, finalUrlOrName, loadResultHandlerImplementation);
 
-            @Override
-            public void playlistLoaded(AudioPlaylist playlist) {
-                //                playlist.getTracks().forEach(System.out::println);
-                if (playlist.getTracks().size() == 0) {
-                    noMatches();
-                    return;
-                }
-
-                AudioTrack firstTrack = playlist.getTracks().remove(0);
-                musicManager.scheduler.queue(firstTrack, forcePlay);
-
-                if ((finalUrlOrName.contains("/playlist") || finalUrlOrName.contains("/sets")) && !forcePlay) {
-                    for (AudioTrack track : playlist.getTracks()) {
-                        musicManager.scheduler.queue(track, forcePlay); //TO-DO change blockingQueue to linkedBlockingDeque to support playlist in force play
-                    }
-                    completeFutureWithMessage(futureMessage, messageContainer, songMessageBuilder(firstTrack, playlist.getTracks().size()));
-                }
-                completeFutureWithMessage(futureMessage, messageContainer, songMessageBuilder(firstTrack, 0));
-            }
-
-            @Override
-            public void noMatches() {
-                completeFutureWithMessage(futureMessage, messageContainer, messageEmbedBuilder("No matches found.", Colors.ADVERT));
-            }
-
-            @Override
-            public void loadFailed(FriendlyException exception) {
-                completeFutureWithMessage(futureMessage, messageContainer, messageEmbedBuilder("Failed to load: " + exception.getMessage(), Colors.ADVERT));
-            }
-        });
+        futureMessage = loadResultHandlerImplementation.getFutureMessage();
         return futureMessage;
     }
 
@@ -215,38 +177,6 @@ public class PlayerManager {
     private void completeFutureWithMessage(CompletableFuture<MessageEmbed> future, AtomicReference<MessageEmbed> messageContainer, MessageEmbed message) {
         messageContainer.set(message);
         future.complete(messageContainer.get());
-    }
-
-    public MessageEmbed songMessageBuilder(AudioTrack track, int size) {
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-
-        String message = "Added: [" +
-                track.getInfo().title +
-                "](" + track.getInfo().uri + ")  -  `" +
-                formatDuration(track.getDuration()) +
-                "`";
-
-        if (size > 0) {
-            message += " and `" +
-                    size +
-                    "` more";
-        }
-
-        embedBuilder.setDescription(message);
-        embedBuilder.setColor(Colors.SONG_OR_PLAYLIST_ADDED);
-
-        return embedBuilder.build();
-    }
-
-    private String formatDuration(long durationMs) {
-        long seconds = (durationMs / 1000) % 60;
-        long minutes = (durationMs / (1000 * 60)) % 60;
-        long hours = (durationMs / (1000 * 60 * 60)) % 24;
-
-        if (hours > 0) {
-            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-        }
-        return String.format("%02d:%02d", minutes, seconds);
     }
 
     public static PlayerManager getInstance() {
