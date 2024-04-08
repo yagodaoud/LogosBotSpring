@@ -5,8 +5,7 @@ import org.springframework.stereotype.Component;
 import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
 import yagodaoud.com.logos.music.spotify.services.SpotifyApiService;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.TreeMap;
 
 @Component
 public class SpotifyHandler {
@@ -18,11 +17,11 @@ public class SpotifyHandler {
         this.spotifyApiService = spotifyApiService;
     }
 
-    public List<String> getPlaylistData(String playlistUrl) {
-        List<String> trackNames = new ArrayList<>();
+    public TreeMap<String, String> getPlaylistData(String playlistUrl) {
+        TreeMap<String, String> trackNames = new TreeMap<>();
 
         for(PlaylistTrack track : this.spotifyApiService.getPlaylist(playlistUrl).getTracks().getItems()) {
-            trackNames.add(track.getTrack().getName());
+            trackNames.put(this.spotifyApiService.getTrackArtist(track.getTrack().getId()), track.getTrack().getName());
         }
         return trackNames;
     }

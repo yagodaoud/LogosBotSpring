@@ -7,10 +7,17 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.music.services.VolumeService;
+import yagodaoud.com.logos.music.spotify.handlers.SpotifyAudioTrack;
+import yagodaoud.com.logos.music.spotify.handlers.SpotifyHandler;
+import yagodaoud.com.logos.music.spotify.services.SpotifyApiConnection;
+import yagodaoud.com.logos.music.spotify.services.SpotifyApiService;
 import yagodaoud.com.logos.tools.Colors;
 
 import java.net.URL;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -18,6 +25,7 @@ import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 public class PlayerManager {
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
+    private SpotifyHandler spotifyHandler;
     private static PlayerManager INSTANCE;
 
     public PlayerManager() {
@@ -57,7 +65,15 @@ public class PlayerManager {
             }
 
             urlOrName = webProvider + urlOrName;
+        }
 
+        if (urlOrName.contains("open.spotify")) {
+            spotifyHandler = new SpotifyHandler(new SpotifyApiService(new SpotifyApiConnection(new RestTemplate())));
+            TreeMap<String, String> trackInfo = spotifyHandler.getPlaylistData(urlOrName);
+
+            for (Map.Entry<String, String> entry : trackInfo.entrySet()) {
+                urlOrName = new SpotifyAudioTrack(entry.getKey(), entry.getValue()).getQuery();
+            }
         }
 
         String finalUrlOrName = urlOrName;

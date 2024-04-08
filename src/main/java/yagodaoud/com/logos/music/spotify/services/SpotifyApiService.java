@@ -18,15 +18,15 @@ public class SpotifyApiService {
     }
 
     @SneakyThrows
-    public String getArtistName(String artistId) {
+    public String getTrackArtist(String trackId) {
         String accessToken = this.spotifyApiConnection.getAccessToken();
         this.spotifyApi.setAccessToken(accessToken);
 
-        return this.spotifyApi.getArtist(artistId).build().execute().getName();
+        return this.spotifyApi.getTrack(trackId).build().execute().getArtists()[0].getName();
     }
 
     @SneakyThrows
-    public Playlist getPlaylist(String track) {
+    public Playlist getPlaylist(String playlist) {
         String accessToken = spotifyApiConnection.getAccessToken();
         this.spotifyApi.setAccessToken(accessToken);
 
