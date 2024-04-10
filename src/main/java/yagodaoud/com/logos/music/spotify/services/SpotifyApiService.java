@@ -4,7 +4,8 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.michaelthelin.spotify.SpotifyApi;
-import se.michaelthelin.spotify.model_objects.specification.Playlist;
+import se.michaelthelin.spotify.model_objects.specification.Paging;
+import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
 
 @Component
 public class SpotifyApiService {
@@ -18,19 +19,12 @@ public class SpotifyApiService {
     }
 
     @SneakyThrows
-    public String getTrackArtist(String trackId) {
-        String accessToken = this.spotifyApiConnection.getAccessToken();
-        this.spotifyApi.setAccessToken(accessToken);
-
-        return this.spotifyApi.getTrack(trackId).build().execute().getArtists()[0].getName();
-    }
-
-    @SneakyThrows
-    public Playlist getPlaylist(String playlist) {
+    public Paging<PlaylistTrack> getPlaylist(String playlist) {
+        String playlistId = playlist.replaceAll(".*/(\\w+).*", "$1");
         String accessToken = spotifyApiConnection.getAccessToken();
-        this.spotifyApi.setAccessToken(accessToken);
 
-        return this.spotifyApi.getPlaylist("61m70lFXWxdxPRMr9GTJHi").build().execute();
+        this.spotifyApi.setAccessToken(accessToken);
+        return this.spotifyApi.getPlaylistsItems(playlistId).fields("items(track)").build().execute();
     }
 
 }

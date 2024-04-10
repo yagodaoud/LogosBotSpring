@@ -68,12 +68,17 @@ public class PlayerManager {
         }
 
         if (urlOrName.contains("open.spotify")) {
+            StringBuilder songsQuery = new StringBuilder();
             spotifyHandler = new SpotifyHandler(new SpotifyApiService(new SpotifyApiConnection(new RestTemplate())));
             TreeMap<String, String> trackInfo = spotifyHandler.getPlaylistData(urlOrName);
 
             for (Map.Entry<String, String> entry : trackInfo.entrySet()) {
-                urlOrName = new SpotifyAudioTrack(entry.getKey(), entry.getValue()).getQuery();
+                songsQuery.append(new SpotifyAudioTrack(entry.getKey(), entry.getValue()).getQuery());
+                songsQuery.append("\\");
             }
+            spotifyHandler.handle(this.audioPlayerManager, musicManager, songsQuery.toString(), forcePlay, futureMessage, messageContainer);
+            completeFutureWithMessage(futureMessage, messageContainer, messageEmbedBuilder("Loaded Spotify Playlist Successfully.", Colors.SONG_OR_PLAYLIST_ADDED));
+            return futureMessage;
         }
 
         String finalUrlOrName = urlOrName;

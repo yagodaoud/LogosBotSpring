@@ -38,6 +38,9 @@ public class TrackScheduler extends AudioEventAdapter {
             this.player.setPaused(false);
         }
 
+        if (this.player.getPlayingTrack() == null) {
+            return "The queue is empty.";
+        }
         AudioTrack nextTrack;
 
         nextTrack = this.player.getPlayingTrack().makeClone();
@@ -46,9 +49,6 @@ public class TrackScheduler extends AudioEventAdapter {
             nextTrack = this.queue.poll();
         }
 
-        if (this.player.getPlayingTrack() == null) {
-            return "The queue is empty.";
-        }
         if (nextTrack == null) {
             this.player.stopTrack();
             this.queue.clear();

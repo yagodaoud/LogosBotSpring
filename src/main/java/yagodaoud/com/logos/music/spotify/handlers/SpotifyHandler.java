@@ -1,11 +1,18 @@
 package yagodaoud.com.logos.music.spotify.handlers;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
+import se.michaelthelin.spotify.model_objects.specification.Track;
+import yagodaoud.com.logos.music.audio.CustomAudioLoadResultHandler;
+import yagodaoud.com.logos.music.audio.GuildMusicManager;
 import yagodaoud.com.logos.music.spotify.services.SpotifyApiService;
 
 import java.util.TreeMap;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Component
 public class SpotifyHandler {
@@ -18,13 +25,27 @@ public class SpotifyHandler {
     }
 
     public TreeMap<String, String> getPlaylistData(String playlistUrl) {
-        TreeMap<String, String> trackNames = new TreeMap<>();
+        TreeMap<String, String> tracks = new TreeMap<>();
+        PlaylistTrack[] playlistItems = this.spotifyApiService.getPlaylist(playlistUrl).getItems();
 
-        for(PlaylistTrack track : this.spotifyApiService.getPlaylist(playlistUrl).getTracks().getItems()) {
-            trackNames.put(this.spotifyApiService.getTrackArtist(track.getTrack().getId()), track.getTrack().getName());
+        for (PlaylistTrack playlistTrack : playlistItems) {
+            Track track = (Track) playlistTrack.getTrack();
+            String artistName = track.getArtists()[0].getName();
+            String trackName = track.getName();
+            System.out.println(artistName + " " + trackName);
+            tracks.put(artistName, trackName);
         }
-        return trackNames;
+        return tracks;
     }
 
-    //    https://open.spotify.com/playlist/61m70lFXWxdxPRMr9GTJHi?si=b6445cac01374dfd
+    public CompletableFuture<MessageEmbed> handle(AudioPlayerManager audioPlayerManager, GuildMusicManager musicManager, String query, boolean forcePlay, CompletableFuture<MessageEmbed> futureMessage, AtomicReference<MessageEmbed> messageContainer) {
+        String[] elements = query.split("\\\\");
+
+        for (String element : elements) {
+            CustomAudioLoadResultHandler loadResultHandlerImplementation = new CustomAudioLoadResultHandler(musicManager, element, forcePlay, futureMessage, messageContainer);
+            audioPlayerManager.loadItemOrdered(musicManager, element, loadResultHandlerImplementation);
+        }
+
+        return futureMessage;
+    }
 }
