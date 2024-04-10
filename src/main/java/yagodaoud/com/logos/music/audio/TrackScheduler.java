@@ -235,7 +235,13 @@ public class TrackScheduler extends AudioEventAdapter {
         }
 
         StringBuilder message = new StringBuilder();
-        message.append("Queue\n\n Now playing - [").append(firstTrack.getInfo().title).append("](").append(firstTrack.getInfo().uri).append(") - `").append(formatDuration(firstTrack.getDuration())).append("`\n\n Next tracks: \n");
+        message.append("Queue\n\n Now playing - [")
+                .append(firstTrack.getInfo().title)
+                .append("](")
+                .append(firstTrack.getInfo().uri)
+                .append(") - `")
+                .append(formatDuration(firstTrack.getDuration()))
+                .append("`\n\n Next tracks: \n");
 
         int trackNumber = 1;
         for (AudioTrack track : queue) {
@@ -248,6 +254,10 @@ public class TrackScheduler extends AudioEventAdapter {
                     .append("\n");
             trackNumber++;
         }
+
+        message.append("and `")
+                .append(queue.size() - (trackNumber - 1))
+                .append("` more.");
 
         return message.toString();
     }
