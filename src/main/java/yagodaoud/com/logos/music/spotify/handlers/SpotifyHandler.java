@@ -38,7 +38,7 @@ public class SpotifyHandler {
         return tracks;
     }
 
-    public CompletableFuture<MessageEmbed> handle(AudioPlayerManager audioPlayerManager, GuildMusicManager musicManager, String query, boolean forcePlay, CompletableFuture<MessageEmbed> futureMessage, AtomicReference<MessageEmbed> messageContainer) {
+    public void handle(AudioPlayerManager audioPlayerManager, GuildMusicManager musicManager, String query, boolean forcePlay, CompletableFuture<MessageEmbed> futureMessage, AtomicReference<MessageEmbed> messageContainer) {
         String[] elements = query.split("\\\\");
 
         for (String element : elements) {
@@ -46,6 +46,5 @@ public class SpotifyHandler {
             audioPlayerManager.loadItemOrdered(musicManager, element, loadResultHandlerImplementation);
         }
 
-        return futureMessage;
     }
 }
