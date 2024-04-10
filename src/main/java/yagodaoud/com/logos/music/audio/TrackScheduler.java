@@ -213,6 +213,35 @@ public class TrackScheduler extends AudioEventAdapter {
         return "Jumped to: " + message;
     }
 
+    public String remove(int trackNumber) {
+        if (this.player.getPlayingTrack() == null) {
+            return "Nothing is being played right now.";
+        }
+        if (trackNumber <= 0 || trackNumber > queue.size()) {
+            return "Track number out of range.";
+        }
+
+        Iterator<AudioTrack> iterator = queue.iterator();
+        AudioTrack removedTrack = null;
+
+        int currentIndex = 1;
+        while (iterator.hasNext()) {
+            AudioTrack currentTrack = iterator.next();
+            if (currentIndex == trackNumber) {
+                removedTrack = currentTrack;
+                iterator.remove();
+                break;
+            }
+            currentIndex++;
+        }
+
+        if (removedTrack == null) {
+            return "An error occurred.";
+        }
+
+        return "Removed: " + getNowPlayingMessage(removedTrack, true);
+    }
+
     public String getNowPlayingMessage(AudioTrack audioTrack, boolean removeNowPlaying) {
         if (audioTrack == null) {
             return "Nothing is being played right now.";

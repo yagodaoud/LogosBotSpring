@@ -174,7 +174,6 @@ public class PlayerManager {
         }
         GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
         return messageEmbedBuilder(musicManager.scheduler.loopQueue(), Colors.SUCCESS);
-
     }
 
     public MessageEmbed jumpTo(Guild guild, GuildVoiceState voiceState, String trackTime) {
@@ -183,7 +182,14 @@ public class PlayerManager {
         }
         GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
         return messageEmbedBuilder(musicManager.scheduler.jumpTo(trackTime), Colors.SUCCESS);
+    }
 
+    public MessageEmbed remove(Guild guild, GuildVoiceState voiceState, int trackNumber) {
+        if (!voiceState.inAudioChannel()) {
+            return messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
+        }
+        GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
+        return messageEmbedBuilder(musicManager.scheduler.remove(trackNumber), Colors.SUCCESS);
     }
 
     private boolean isUrl(String url) {
