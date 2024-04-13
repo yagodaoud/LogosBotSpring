@@ -8,16 +8,14 @@ import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.springframework.web.client.RestTemplate;
+import yagodaoud.com.logos.music.audio.conversion.spotify.SpotifyAudioPlaylist;
 import yagodaoud.com.logos.music.services.VolumeService;
-import yagodaoud.com.logos.music.spotify.handlers.SpotifyAudioTrack;
-import yagodaoud.com.logos.music.spotify.handlers.SpotifyHandler;
-import yagodaoud.com.logos.music.spotify.services.SpotifyApiConnection;
-import yagodaoud.com.logos.music.spotify.services.SpotifyApiService;
+import yagodaoud.com.logos.music.audio.conversion.spotify.SpotifyHandler;
+import yagodaoud.com.logos.music.audio.conversion.spotify.services.SpotifyApiConnection;
+import yagodaoud.com.logos.music.audio.conversion.spotify.services.SpotifyApiService;
 import yagodaoud.com.logos.tools.Colors;
 
 import java.net.URL;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -68,16 +66,11 @@ public class PlayerManager {
         }
 
         if (urlOrName.contains("open.spotify")) {
-            StringBuilder songsQuery = new StringBuilder();
             spotifyHandler = new SpotifyHandler(new SpotifyApiService(new SpotifyApiConnection(new RestTemplate())));
-            TreeMap<String, String> trackInfo = spotifyHandler.getPlaylistData(urlOrName);
+            SpotifyAudioPlaylist spotifyAudioPlaylist = spotifyHandler.getPlaylistData(urlOrName);
 
-            for (Map.Entry<String, String> entry : trackInfo.entrySet()) {
-                songsQuery.append(new SpotifyAudioTrack(entry.getKey(), entry.getValue()).getQuery());
-                songsQuery.append("\\");
-            }
-            spotifyHandler.handle(this.audioPlayerManager, musicManager, songsQuery.toString(), forcePlay, futureMessage, messageContainer);
-            completeFutureWithMessage(futureMessage, messageContainer, messageEmbedBuilder("Loaded Spotify Playlist Successfully.", Colors.SONG_OR_PLAYLIST_ADDED));
+            spotifyHandler.handle(this.audioPlayerManager, musicManager, spotifyAudioPlaylist, forcePlay, futureMessage, messageContainer);
+            completeFutureWithMessage(futureMessage, messageContainer, messageEmbedBuilder("Loaded Spotify playlist successfully.", Colors.SONG_OR_PLAYLIST_ADDED));
             return futureMessage;
         }
 

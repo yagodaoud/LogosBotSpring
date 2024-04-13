@@ -1,4 +1,4 @@
-package yagodaoud.com.logos.music.spotify.services;
+package yagodaoud.com.logos.music.audio.conversion.spotify.services;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.SneakyThrows;

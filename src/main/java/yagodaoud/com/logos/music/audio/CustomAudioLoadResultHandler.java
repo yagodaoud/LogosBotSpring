@@ -16,6 +16,7 @@ import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 public class CustomAudioLoadResultHandler implements AudioLoadResultHandler {
     private final GuildMusicManager musicManager;
     private final String finalUrlOrName;
+    private final AudioPlaylist audioPlaylist;
     private final boolean forcePlay;
     private final CompletableFuture<MessageEmbed> futureMessage;
     private final AtomicReference<MessageEmbed> messageContainer;
@@ -23,6 +24,16 @@ public class CustomAudioLoadResultHandler implements AudioLoadResultHandler {
     public CustomAudioLoadResultHandler(GuildMusicManager musicManager, String finalUrlOrName, boolean forcePlay, CompletableFuture<MessageEmbed> futureMessage, AtomicReference<MessageEmbed> messageContainer) {
         this.musicManager = musicManager;
         this.finalUrlOrName = finalUrlOrName;
+        this.audioPlaylist = null;
+        this.forcePlay = forcePlay;
+        this.futureMessage = futureMessage;
+        this.messageContainer = messageContainer;
+    }
+
+    public CustomAudioLoadResultHandler(GuildMusicManager musicManager, AudioPlaylist audioPlaylist, boolean forcePlay, CompletableFuture<MessageEmbed> futureMessage, AtomicReference<MessageEmbed> messageContainer) {
+        this.musicManager = musicManager;
+        this.audioPlaylist = audioPlaylist;
+        this.finalUrlOrName = null;
         this.forcePlay = forcePlay;
         this.futureMessage = futureMessage;
         this.messageContainer = messageContainer;
@@ -40,11 +51,10 @@ public class CustomAudioLoadResultHandler implements AudioLoadResultHandler {
             noMatches();
             return;
         }
-
         AudioTrack firstTrack = playlist.getTracks().remove(0);
         musicManager.scheduler.queue(firstTrack, forcePlay);
 
-        if ((finalUrlOrName.contains("/playlist") || finalUrlOrName.contains("/sets")) && !forcePlay) {
+        if (finalUrlOrName != null && (finalUrlOrName.contains("/playlist") || finalUrlOrName.contains("/sets")) && !forcePlay) {
             for (AudioTrack track : playlist.getTracks()) {
                 musicManager.scheduler.queue(track, forcePlay);
             }
