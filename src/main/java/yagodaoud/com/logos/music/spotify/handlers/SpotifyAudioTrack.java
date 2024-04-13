@@ -5,7 +5,7 @@ public class SpotifyAudioTrack{
     private final String query;
 
     public SpotifyAudioTrack(String trackArtist, String trackTitle) {
-        this.query = "scsearch:" + " " + trackArtist + " " + trackTitle;
+        this.query = "ytsearch:" + " " + trackArtist + " " + trackTitle;
     }
 
     public String getQuery() {
