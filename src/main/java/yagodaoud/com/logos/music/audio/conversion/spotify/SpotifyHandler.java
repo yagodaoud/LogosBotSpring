@@ -16,7 +16,6 @@ import yagodaoud.com.logos.music.audio.conversion.spotify.services.SpotifyApiSer
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -47,7 +46,7 @@ public class SpotifyHandler {
         List<AudioTrack> spotifyTracks = new ArrayList<>();
         Track track = spotifyApiService.getTrack(trackUrl);
         spotifyTracks.add(new SpotifyAudioTrack(new AudioTrackInfo(track.getName(), track.getArtists()[0].getName(),track.getDurationMs().longValue(), track.getName(), false, track.getUri())));
-        return new SpotifyAudioPlaylist("spotify-track", spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, trackUrl, null, null, 0);
+        return new SpotifyTrack("spotify-track", spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, trackUrl, null, null, 0);
     }
 
     public SpotifyAudioObject getPlaylistData(String playlistUrl) {
@@ -60,7 +59,7 @@ public class SpotifyHandler {
             String trackName = track.getName();
             spotifyTracks.add(new SpotifyAudioTrack(new AudioTrackInfo(trackName, artistName, track.getDurationMs().longValue(), trackName, false, track.getUri())));
         }
-        return new SpotifyAudioPlaylist("spotify-playlist", spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, playlistUrl, null, null, 0);
+        return new SpotifyPlaylist("spotify-playlist", spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, playlistUrl, null, null, spotifyTracks.size());
     }
 
     private SpotifyAudioObject getArtistData(String artistUrl) {
@@ -72,7 +71,7 @@ public class SpotifyHandler {
             String trackName = artistTrack.getName();
             spotifyTracks.add(new SpotifyAudioTrack(new AudioTrackInfo(trackName, artistName, artistTrack.getDurationMs().longValue(), trackName, false, artistTrack.getUri())));
         }
-        return new SpotifyAudioPlaylist("spotify-playlist", spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, artistUrl, null, null, 0);
+        return new SpotifyArtist("spotify-artist", spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, artistUrl, null, null, spotifyTracks.size());
     }
 
     private SpotifyAudioObject getAlbumData(String albumUrl) {
@@ -84,13 +83,32 @@ public class SpotifyHandler {
             String trackName = albumTrack.getName();
             spotifyTracks.add(new SpotifyAudioTrack(new AudioTrackInfo(trackName, artistName, albumTrack.getDurationMs().longValue(), trackName, false, albumTrack.getUri())));
         }
-        return new SpotifyAudioPlaylist("spotify-playlist", spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, albumUrl, null, null, 0);
+        return new SpotifyAlbum("spotify-album", spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, albumUrl, null, null, spotifyTracks.size());
     }
 
-    public void handle(AudioPlayerManager audioPlayerManager, GuildMusicManager musicManager, SpotifyAudioObject spotifyAudioObject, boolean forcePlay, CompletableFuture<MessageEmbed> futureMessage, AtomicReference<MessageEmbed> messageContainer) {
+    public String handle(AudioPlayerManager audioPlayerManager, GuildMusicManager musicManager, SpotifyAudioObject spotifyAudioObject, boolean forcePlay, CompletableFuture<MessageEmbed> futureMessage, AtomicReference<MessageEmbed> messageContainer) {
         CustomAudioLoadResultHandler loadResultHandlerImplementation = new CustomAudioLoadResultHandler(musicManager, spotifyAudioObject, forcePlay, futureMessage, messageContainer);
         for (AudioTrack track : spotifyAudioObject.getSpotifyTracks()) {
             audioPlayerManager.loadItemOrdered(musicManager, "ytsearch: " + track.getInfo().title + " " + track.getInfo().author, loadResultHandlerImplementation);
         }
+        return getSpotifyMessage(spotifyAudioObject);
+    }
+
+    public String getSpotifyMessage(SpotifyAudioObject spotifyAudioObject) {
+        switch (spotifyAudioObject.getSpotifyType()) {
+            case TRACK -> {
+                return "Loading Spotify Track";
+            }
+            case PLAYLIST -> {
+                return "Loading Spotify Playlist";
+            }
+            case ALBUM -> {
+                return "Loading Spotify Album";
+            }
+            case ARTIST -> {
+                return "Loading Spotify Artist";
+            }
+        }
+        return "Loading...";
     }
 }

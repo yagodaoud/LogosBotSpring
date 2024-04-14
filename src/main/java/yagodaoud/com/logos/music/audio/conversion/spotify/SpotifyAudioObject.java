@@ -4,4 +4,5 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 public interface SpotifyAudioObject {
     AudioTrack[] getSpotifyTracks();
+    SpotifyObjectType getSpotifyType();
 }

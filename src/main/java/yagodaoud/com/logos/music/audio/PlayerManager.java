@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.music.audio.conversion.spotify.SpotifyAudioObject;
-import yagodaoud.com.logos.music.audio.conversion.spotify.SpotifyAudioPlaylist;
 import yagodaoud.com.logos.music.services.VolumeService;
 import yagodaoud.com.logos.music.audio.conversion.spotify.SpotifyHandler;
 import yagodaoud.com.logos.music.audio.conversion.spotify.services.SpotifyApiConnection;
@@ -70,8 +69,8 @@ public class PlayerManager {
             spotifyHandler = new SpotifyHandler(new SpotifyApiService(new SpotifyApiConnection(new RestTemplate())));
             SpotifyAudioObject spotifyAudioObject = spotifyHandler.getSpotifyObject(urlOrName);
 
-            spotifyHandler.handle(this.audioPlayerManager, musicManager, spotifyAudioObject, forcePlay, futureMessage, messageContainer);
-            completeFutureWithMessage(futureMessage, messageContainer, messageEmbedBuilder("Loaded Spotify playlist successfully.", Colors.SONG_OR_PLAYLIST_ADDED));
+            String response = spotifyHandler.handle(this.audioPlayerManager, musicManager, spotifyAudioObject, forcePlay, futureMessage, messageContainer);
+            completeFutureWithMessage(futureMessage, messageContainer, messageEmbedBuilder(response, Colors.SONG_OR_PLAYLIST_ADDED));
             return futureMessage;
         }
 

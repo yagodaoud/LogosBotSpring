@@ -5,7 +5,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor;
 import yagodaoud.com.logos.music.audio.conversion.mirror.ExtendedAudioTrack;
 
-public class SpotifyAudioTrack extends ExtendedAudioTrack implements SpotifyAudioObject {
+public class SpotifyAudioTrack extends ExtendedAudioTrack {
 
 
     public SpotifyAudioTrack(AudioTrackInfo trackInfo) {
@@ -19,10 +19,5 @@ public class SpotifyAudioTrack extends ExtendedAudioTrack implements SpotifyAudi
     @Override
     public void process(LocalAudioTrackExecutor localAudioTrackExecutor) {
 
-    }
-
-    @Override
-    public AudioTrack[] getSpotifyTracks() {
-        return new AudioTrack[] {this};
     }
 }
