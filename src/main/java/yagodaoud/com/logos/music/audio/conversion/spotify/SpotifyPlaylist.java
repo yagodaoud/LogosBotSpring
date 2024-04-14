@@ -6,7 +6,6 @@ import yagodaoud.com.logos.music.audio.conversion.mirror.ExtendedAudioPlaylist;
 import java.util.List;
 
 public class SpotifyPlaylist extends ExtendedAudioPlaylist implements SpotifyAudioObject {
-
     public SpotifyPlaylist(String name, List<AudioTrack> tracks, ExtendedAudioPlaylist.Type type, String url, String artworkURL, String author, Integer totalTracks) {
         super(name, tracks, type, url, artworkURL, author, totalTracks);
     }
@@ -20,5 +19,4 @@ public class SpotifyPlaylist extends ExtendedAudioPlaylist implements SpotifyAud
     public SpotifyObjectType getSpotifyType() {
         return SpotifyObjectType.PLAYLIST;
     }
-
 }

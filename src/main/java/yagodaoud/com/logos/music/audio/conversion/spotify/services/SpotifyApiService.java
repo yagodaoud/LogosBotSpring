@@ -5,10 +5,7 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.michaelthelin.spotify.SpotifyApi;
-import se.michaelthelin.spotify.model_objects.specification.Paging;
-import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
-import se.michaelthelin.spotify.model_objects.specification.Track;
-import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
+import se.michaelthelin.spotify.model_objects.specification.*;
 
 @Component
 public class SpotifyApiService {
@@ -27,7 +24,17 @@ public class SpotifyApiService {
         String accessToken = spotifyApiConnection.getAccessToken();
 
         spotifyApi.setAccessToken(accessToken);
+        spotifyApi.getPlaylist(playlistId).build().execute();
         return spotifyApi.getPlaylistsItems(playlistId).fields("items(track)").build().execute();
+    }
+
+    @SneakyThrows
+    public Playlist getPlaylistInfo(String playlist) {
+        String playlistId = playlist.replaceAll(".*/(\\w+).*", "$1");
+        String accessToken = spotifyApiConnection.getAccessToken();
+
+        spotifyApi.setAccessToken(accessToken);
+        return spotifyApi.getPlaylist(playlistId).build().execute();
     }
 
     @SneakyThrows
@@ -41,12 +48,21 @@ public class SpotifyApiService {
 
     @SneakyThrows
     public Paging<TrackSimplified> getAlbum(String album) {
-        String playlistId = album.replaceAll(".*/(\\w+).*", "$1");
+        String albumId = album.replaceAll(".*/(\\w+).*", "$1");
         String accessToken = spotifyApiConnection.getAccessToken();
 
         spotifyApi.setAccessToken(accessToken);
-        return spotifyApi.getAlbumsTracks(playlistId).build().execute();
+        return spotifyApi.getAlbumsTracks(albumId).build().execute();
     }
+    @SneakyThrows
+    public Album getAlbumInfo(String album) {
+        String albumId = album.replaceAll(".*/(\\w+).*", "$1");
+        String accessToken = spotifyApiConnection.getAccessToken();
+
+        spotifyApi.setAccessToken(accessToken);
+        return spotifyApi.getAlbum(albumId).build().execute();
+    }
+
 
     @SneakyThrows
     public Track[] getArtist(String artist) {
