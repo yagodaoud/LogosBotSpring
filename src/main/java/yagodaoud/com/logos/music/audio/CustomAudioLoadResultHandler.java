@@ -6,6 +6,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import yagodaoud.com.logos.music.audio.conversion.spotify.SpotifyAudioObject;
 import yagodaoud.com.logos.tools.Colors;
 
 import java.util.concurrent.CompletableFuture;
@@ -16,7 +17,7 @@ import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 public class CustomAudioLoadResultHandler implements AudioLoadResultHandler {
     private final GuildMusicManager musicManager;
     private final String finalUrlOrName;
-    private final AudioPlaylist audioPlaylist;
+    private final SpotifyAudioObject spotifyAudioObject;
     private final boolean forcePlay;
     private final CompletableFuture<MessageEmbed> futureMessage;
     private final AtomicReference<MessageEmbed> messageContainer;
@@ -24,15 +25,15 @@ public class CustomAudioLoadResultHandler implements AudioLoadResultHandler {
     public CustomAudioLoadResultHandler(GuildMusicManager musicManager, String finalUrlOrName, boolean forcePlay, CompletableFuture<MessageEmbed> futureMessage, AtomicReference<MessageEmbed> messageContainer) {
         this.musicManager = musicManager;
         this.finalUrlOrName = finalUrlOrName;
-        this.audioPlaylist = null;
+        this.spotifyAudioObject = null;
         this.forcePlay = forcePlay;
         this.futureMessage = futureMessage;
         this.messageContainer = messageContainer;
     }
 
-    public CustomAudioLoadResultHandler(GuildMusicManager musicManager, AudioPlaylist audioPlaylist, boolean forcePlay, CompletableFuture<MessageEmbed> futureMessage, AtomicReference<MessageEmbed> messageContainer) {
+    public CustomAudioLoadResultHandler(GuildMusicManager musicManager, SpotifyAudioObject spotifyAudioObject, boolean forcePlay, CompletableFuture<MessageEmbed> futureMessage, AtomicReference<MessageEmbed> messageContainer) {
         this.musicManager = musicManager;
-        this.audioPlaylist = audioPlaylist;
+        this.spotifyAudioObject = spotifyAudioObject;
         this.finalUrlOrName = null;
         this.forcePlay = forcePlay;
         this.futureMessage = futureMessage;
