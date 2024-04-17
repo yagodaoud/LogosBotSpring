@@ -3,16 +3,17 @@ package yagodaoud.com.logos.music.audio;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.music.audio.conversion.spotify.SpotifyAudioObject;
-import yagodaoud.com.logos.music.services.VolumeService;
 import yagodaoud.com.logos.music.audio.conversion.spotify.SpotifyHandler;
 import yagodaoud.com.logos.music.audio.conversion.spotify.services.SpotifyApiConnection;
 import yagodaoud.com.logos.music.audio.conversion.spotify.services.SpotifyApiService;
+import yagodaoud.com.logos.music.services.VolumeService;
 import yagodaoud.com.logos.tools.Colors;
 
 import java.net.URL;
@@ -33,6 +34,7 @@ public class PlayerManager {
         INSTANCE = this;
     }
 
+    @SneakyThrows
     public CompletableFuture<MessageEmbed> loadAndPlay(TextChannel channel, GuildVoiceState guildVoiceState, String urlOrName, String provider, boolean forcePlay) {
         CompletableFuture<MessageEmbed> futureMessage = new CompletableFuture<>();
         final AtomicReference<MessageEmbed> messageContainer = new AtomicReference<>();

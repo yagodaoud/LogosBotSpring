@@ -3,12 +3,12 @@ package yagodaoud.com.logos.music.audio.conversion.spotify;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
-import se.michaelthelin.spotify.model_objects.specification.Track;
-import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
+import se.michaelthelin.spotify.model_objects.specification.*;
 import yagodaoud.com.logos.music.audio.CustomAudioLoadResultHandler;
 import yagodaoud.com.logos.music.audio.GuildMusicManager;
 import yagodaoud.com.logos.music.audio.conversion.mirror.ExtendedAudioPlaylist;
@@ -29,9 +29,10 @@ public class SpotifyHandler {
         this.spotifyApiService = spotifyApiService;
     }
 
+    @SneakyThrows
     public SpotifyAudioObject getSpotifyObject(String url) {
         if (url.contains("playlist")) {
-            return getPlaylistData(url);
+            return getPlaylistDataAsync(url).get();
         }
         if (url.contains("track")) {
             return getTrackData(url);
@@ -49,17 +50,22 @@ public class SpotifyHandler {
         return new SpotifyTrack(track.getName(), spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, trackUrl, null, null, 0);
     }
 
-    public SpotifyAudioObject getPlaylistData(String playlistUrl) {
-        List<AudioTrack> spotifyTracks = new ArrayList<>();
-        PlaylistTrack[] playlistItems = spotifyApiService.getPlaylist(playlistUrl).getItems();
+    @Async
+    public CompletableFuture<SpotifyAudioObject> getPlaylistDataAsync(String playlistUrl) {
+        CompletableFuture<Paging<PlaylistTrack>> playlistItemsFuture = spotifyApiService.getPlaylistItemsAsync(playlistUrl);
+        CompletableFuture<Playlist> playlistInfoFuture = spotifyApiService.getPlaylistInfoAsync(playlistUrl);
 
-        for (PlaylistTrack playlistTrack : playlistItems) {
-            Track track = (Track) playlistTrack.getTrack();
-            String artistName = track.getArtists()[0].getName();
-            String trackName = track.getName();
-            spotifyTracks.add(new SpotifyAudioTrack(new AudioTrackInfo(trackName, artistName, track.getDurationMs().longValue(), trackName, false, track.getUri())));
-        }
-        return new SpotifyPlaylist(spotifyApiService.getPlaylistInfo(playlistUrl).getName(), spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, playlistUrl, null, null, spotifyTracks.size());
+        return playlistItemsFuture.thenCombine(playlistInfoFuture, (playlistItems, playlistInfo) -> {
+            List<AudioTrack> spotifyTracks = new ArrayList<>();
+            for (PlaylistTrack playlistTrack : playlistItems.getItems()) {
+                Track track = (Track) playlistTrack.getTrack();
+                String artistName = track.getArtists()[0].getName();
+                String trackName = track.getName();
+                spotifyTracks.add(new SpotifyAudioTrack(new AudioTrackInfo(trackName, artistName, track.getDurationMs().longValue(), trackName, false, track.getUri())));
+            }
+
+            return new SpotifyPlaylist(playlistInfo.getName(), spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, playlistUrl, null, null, spotifyTracks.size());
+        });
     }
 
     private SpotifyAudioObject getArtistData(String artistUrl) {
