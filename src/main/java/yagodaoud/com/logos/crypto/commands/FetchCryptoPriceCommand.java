@@ -9,10 +9,12 @@ import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
 import yagodaoud.com.logos.crypto.services.CoinMarketCapApiService;
+import yagodaoud.com.logos.tools.Colors;
 
 import java.util.List;
 
 import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
+import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component
 public class FetchCryptoPriceCommand implements CommandHandlerInterface {
@@ -26,7 +28,7 @@ public class FetchCryptoPriceCommand implements CommandHandlerInterface {
         String cryptoSymbol = event.getOption("crypto-symbol").getAsString().toUpperCase();
         try {
             String cryptoPrice = coinMarketCapApiService.getCryptoPrice(cryptoSymbol);
-            event.reply("The current price of " + cryptoSymbol + " is " + cryptoPrice).queue();
+            event.replyEmbeds(messageEmbedBuilder("The current price of " + cryptoSymbol + " is " + cryptoPrice, Colors.SUCCESS)).queue();
         } catch (JSONException exception) {
             event.replyEmbeds(getWrongOptionTypeMessage("ticker symbol")).queue();
         }

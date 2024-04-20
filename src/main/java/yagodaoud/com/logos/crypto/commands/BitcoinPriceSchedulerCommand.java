@@ -10,8 +10,11 @@ import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
 import yagodaoud.com.logos.crypto.services.CoinMarketCapApiService;
+import yagodaoud.com.logos.tools.Colors;
 
 import java.util.List;
+
+import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component
 @Scope("singleton")
@@ -28,13 +31,13 @@ public class BitcoinPriceSchedulerCommand implements CommandHandlerInterface {
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         if (!isActive) {
-            event.reply("The daily closing price of Bitcoin will be displayed from now on!").queue();
+            event.replyEmbeds(messageEmbedBuilder("The daily closing price of Bitcoin will be displayed from now on!", Colors.SUCCESS)).queue();
             textChannel = event.getChannel().asTextChannel();
             sendBitcoinPrice(textChannel);
             isActive = true;
             return;
         }
-        event.reply("Disabled the daily closing price of Bitcoin on this channel").queue();
+        event.replyEmbeds(messageEmbedBuilder("Disabled the daily closing price of Bitcoin on this channel", Colors.ADVERT)).queue();
     }
 
     @Override
@@ -57,6 +60,6 @@ public class BitcoinPriceSchedulerCommand implements CommandHandlerInterface {
             return;
         }
         String bitcoinPrice = coinMarketCapApiService.getCryptoPrice("BTC");
-        channel.sendMessage("The closing price of Bitcoin is " + bitcoinPrice).queue();
+        channel.sendMessageEmbeds(messageEmbedBuilder("The closing price of Bitcoin is " + bitcoinPrice, Colors.SUCCESS)).queue();
     }
 }

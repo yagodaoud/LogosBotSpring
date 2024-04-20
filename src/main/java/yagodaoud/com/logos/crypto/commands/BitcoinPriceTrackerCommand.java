@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.tools.Colors;
 
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
 import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
+import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component
 public class BitcoinPriceTrackerCommand implements CommandHandlerInterface{
@@ -34,7 +36,7 @@ public class BitcoinPriceTrackerCommand implements CommandHandlerInterface{
         if (!isActive) {
             try {
                 targetPrice = event.getOption("target-price").getAsDouble();
-                event.reply("Tracking bitcoin price when it reaches " + NumberFormat.getCurrencyInstance(Locale.US).format(targetPrice)).queue();
+                event.replyEmbeds(messageEmbedBuilder("Tracking bitcoin price when it reaches " + NumberFormat.getCurrencyInstance(Locale.US).format(targetPrice), Colors.SUCCESS)).queue();
                 userId = event.getUser().getId();
                 channel = event.getChannel().asTextChannel();
                 isActive = true;
@@ -44,7 +46,7 @@ public class BitcoinPriceTrackerCommand implements CommandHandlerInterface{
                 return;
             }
         }
-        event.reply("The command is already active.").queue();
+        event.replyEmbeds(messageEmbedBuilder("The command is already active.", Colors.ADVERT)).queue();
 
     }
 
@@ -96,7 +98,7 @@ public class BitcoinPriceTrackerCommand implements CommandHandlerInterface{
         if (!isActive || message == null) {
             return;
         }
-        channel.sendMessage(message).queue();
+        channel.sendMessageEmbeds(messageEmbedBuilder(message, Colors.SUCCESS)).queue();
         isActive = false;
     }
 

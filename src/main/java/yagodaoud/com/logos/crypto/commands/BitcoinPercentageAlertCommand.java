@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.tools.Colors;
 
 import java.util.List;
 
 import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
+import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component
 public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
@@ -33,7 +35,7 @@ public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
         if (!isActive) {
             try {
                 percentage = event.getOption("percentage").getAsDouble();
-                event.reply("Tracking Bitcoin price when its variation is greater than " + percentage + "%!").queue();
+                event.replyEmbeds(messageEmbedBuilder("Tracking Bitcoin price when its variation is greater than " + percentage + "%!", Colors.SUCCESS)).queue();
                 channel = event.getChannel().asTextChannel();
                 isActive = true;
                 return;
@@ -42,7 +44,7 @@ public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
                 return;
             }
         }
-        event.reply("The command is already active.").queue();
+        event.replyEmbeds(messageEmbedBuilder("The command is already active.", Colors.ADVERT)).queue();
     }
 
     @Override
@@ -81,7 +83,7 @@ public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
         if (!isActive || message == null) {
             return;
         }
-        channel.sendMessage(message).queue();
+        channel.sendMessageEmbeds(messageEmbedBuilder(message, Colors.SUCCESS)).queue();
         isActive = false;
     }
 
