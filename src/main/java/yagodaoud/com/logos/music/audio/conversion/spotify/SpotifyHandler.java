@@ -47,7 +47,7 @@ public class SpotifyHandler {
         List<AudioTrack> spotifyTracks = new ArrayList<>();
         Track track = spotifyApiService.getTrack(trackUrl);
         spotifyTracks.add(new SpotifyAudioTrack(new AudioTrackInfo(track.getName(), track.getArtists()[0].getName(),track.getDurationMs().longValue(), track.getName(), false, track.getUri())));
-        return new SpotifyTrack(track.getName(), spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, trackUrl, null, null, 0);
+        return new SpotifyTrack(track.getName() + "`", spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, trackUrl, null, null, 0);
     }
 
     @Async
@@ -64,7 +64,7 @@ public class SpotifyHandler {
                 spotifyTracks.add(new SpotifyAudioTrack(new AudioTrackInfo(trackName, artistName, track.getDurationMs().longValue(), trackName, false, track.getUri())));
             }
 
-            return new SpotifyPlaylist(playlistInfo.getName(), spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, playlistUrl, null, null, spotifyTracks.size());
+            return new SpotifyPlaylist(playlistInfo.getName() + "` by `" + playlistInfo.getOwner().getDisplayName() + "`", spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, playlistUrl, null, null, spotifyTracks.size());
         });
     }
 
@@ -77,7 +77,7 @@ public class SpotifyHandler {
             String trackName = artistTrack.getName();
             spotifyTracks.add(new SpotifyAudioTrack(new AudioTrackInfo(trackName, artistName, artistTrack.getDurationMs().longValue(), trackName, false, artistTrack.getUri())));
         }
-        return new SpotifyArtist(tracks[0].getArtists()[0].getName(), spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, artistUrl, null, null, spotifyTracks.size());
+        return new SpotifyArtist(tracks[0].getArtists()[0].getName() + "`", spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, artistUrl, null, null, spotifyTracks.size());
     }
 
     private SpotifyAudioObject getAlbumData(String albumUrl) {
@@ -89,7 +89,7 @@ public class SpotifyHandler {
             String trackName = albumTrack.getName();
             spotifyTracks.add(new SpotifyAudioTrack(new AudioTrackInfo(trackName, artistName, albumTrack.getDurationMs().longValue(), trackName, false, albumTrack.getUri())));
         }
-        return new SpotifyAlbum(spotifyApiService.getAlbumInfo(albumUrl).getName(), spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, albumUrl, null, null, spotifyTracks.size());
+        return new SpotifyAlbum(spotifyApiService.getAlbumInfo(albumUrl).getName() + "`", spotifyTracks, ExtendedAudioPlaylist.Type.PLAYLIST, albumUrl, null, null, spotifyTracks.size());
     }
 
     public String handle(AudioPlayerManager audioPlayerManager, GuildMusicManager musicManager, SpotifyAudioObject spotifyAudioObject, boolean forcePlay, CompletableFuture<MessageEmbed> futureMessage, AtomicReference<MessageEmbed> messageContainer) {
@@ -103,10 +103,10 @@ public class SpotifyHandler {
     public String getSpotifyMessage(SpotifyAudioObject spotifyAudioObject) {
         String message = "";
         switch (spotifyAudioObject.getSpotifyType()) {
-            case TRACK -> message = "Loading Spotify track: ";
-            case PLAYLIST -> message = "Loading Spotify playlist: ";
-            case ALBUM -> message = "Loading Spotify album: ";
-            case ARTIST -> message = "Loading Spotify tracks from ";
+            case TRACK -> message = "Loading Spotify track: `";
+            case PLAYLIST -> message = "Loading Spotify playlist: `";
+            case ALBUM -> message = "Loading Spotify album: `";
+            case ARTIST -> message = "Loading Spotify tracks from `";
         }
         return message + spotifyAudioObject.getName();
     }
