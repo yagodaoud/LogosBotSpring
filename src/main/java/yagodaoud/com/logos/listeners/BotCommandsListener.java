@@ -14,6 +14,8 @@ import java.util.Map;
 
 import static yagodaoud.com.logos.help.view.HelpCryptoView.getCryptoView;
 import static yagodaoud.com.logos.help.view.HelpMusicView.getMusicView;
+import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getSomethingWentWrongEmbedMessage;
+import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getUnknownCommandEmbedMessage;
 
 @Component
 public class BotCommandsListener extends ListenerAdapter {
@@ -37,11 +39,15 @@ public class BotCommandsListener extends ListenerAdapter {
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         String commandName = event.getName();
         CommandHandlerInterface handler = commandHandlers.get(commandName);
-        if (handler != null) {
-            handler.handleCommand(event);
-            return;
+        try {
+            if (handler != null) {
+                handler.handleCommand(event);
+                return;
+            }
+            event.replyEmbeds(getUnknownCommandEmbedMessage(commandName)).queue();
+        } catch (Exception exception) {
+            event.replyEmbeds(getSomethingWentWrongEmbedMessage()).queue();
         }
-        event.reply("Unknown command: " + commandName).queue();
     }
 
     @Override

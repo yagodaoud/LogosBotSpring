@@ -14,7 +14,7 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
+import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
 import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component

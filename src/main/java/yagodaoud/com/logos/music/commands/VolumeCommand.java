@@ -12,7 +12,7 @@ import yagodaoud.com.logos.music.audio.PlayerManager;
 
 import java.util.List;
 
-import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.*;
+import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.*;
 
 @Component
 public class VolumeCommand implements CommandHandlerInterface {

@@ -14,7 +14,7 @@ import yagodaoud.com.logos.music.audio.PlayerManager;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getPlayerNotStartedEmbedMessage;
+import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getPlayerNotStartedEmbedMessage;
 
 @Component
 public class ForcePlayCommand implements CommandHandlerInterface {
