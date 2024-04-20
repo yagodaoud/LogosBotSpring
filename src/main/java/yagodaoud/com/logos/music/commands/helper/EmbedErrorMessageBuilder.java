@@ -13,4 +13,7 @@ public abstract class EmbedErrorMessageBuilder {
     public static MessageEmbed getNotAdminEmbedMessage() {
         return messageEmbedBuilder("You must be an admin to use this command.", Colors.ADVERT);
     }
+    public static MessageEmbed getWrongOptionTypeMessage(String type) {
+        return messageEmbedBuilder("The command option must be a " + type + ".", Colors.ADVERT);
+    }
 }

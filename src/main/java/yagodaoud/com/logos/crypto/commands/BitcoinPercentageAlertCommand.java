@@ -11,6 +11,8 @@ import yagodaoud.com.logos.commands.CommandRegistryService;
 
 import java.util.List;
 
+import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
+
 @Component
 public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
 
@@ -29,11 +31,16 @@ public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         if (!isActive) {
-            percentage = event.getOption("percentage").getAsDouble();
-            event.reply("Tracking Bitcoin price when its variation is greater than " + percentage + "%!").queue();
-            channel = event.getChannel().asTextChannel();
-            isActive = true;
-            return;
+            try {
+                percentage = event.getOption("percentage").getAsDouble();
+                event.reply("Tracking Bitcoin price when its variation is greater than " + percentage + "%!").queue();
+                channel = event.getChannel().asTextChannel();
+                isActive = true;
+                return;
+            } catch (NumberFormatException exception) {
+                event.replyEmbeds(getWrongOptionTypeMessage("number")).queue();
+                return;
+            }
         }
         event.reply("The command is already active.").queue();
     }

@@ -12,8 +12,7 @@ import yagodaoud.com.logos.music.audio.PlayerManager;
 
 import java.util.List;
 
-import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getNotAdminEmbedMessage;
-import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getPlayerNotStartedEmbedMessage;
+import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.*;
 
 @Component
 public class VolumeCommand implements CommandHandlerInterface {
@@ -31,6 +30,10 @@ public class VolumeCommand implements CommandHandlerInterface {
         }
         if (PlayerManager.getInstance() == null) {
             event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
+            return;
+        }
+        if (event.getOption("volume").getType() != OptionType.INTEGER) {
+            event.replyEmbeds(getWrongOptionTypeMessage("number")).queue();
             return;
         }
         int volume = event.getOption("volume").getAsInt();

@@ -12,6 +12,7 @@ import yagodaoud.com.logos.music.audio.PlayerManager;
 import java.util.List;
 
 import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getPlayerNotStartedEmbedMessage;
+import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
 
 @Component
 public class SkipToCommand implements CommandHandlerInterface {
@@ -25,6 +26,10 @@ public class SkipToCommand implements CommandHandlerInterface {
     public void handleCommand(SlashCommandInteractionEvent event) {
         if (PlayerManager.getInstance() == null) {
             event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
+            return;
+        }
+        if (event.getOption("track-number").getType() != OptionType.INTEGER) {
+            event.replyEmbeds(getWrongOptionTypeMessage("number")).queue();
             return;
         }
         int trackNumber = event.getOption("track-number").getAsInt();

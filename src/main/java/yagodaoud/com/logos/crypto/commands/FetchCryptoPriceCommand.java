@@ -3,6 +3,7 @@ package yagodaoud.com.logos.crypto.commands;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.json.JSONException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
@@ -10,6 +11,8 @@ import yagodaoud.com.logos.commands.CommandRegistryService;
 import yagodaoud.com.logos.crypto.services.CoinMarketCapApiService;
 
 import java.util.List;
+
+import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
 
 @Component
 public class FetchCryptoPriceCommand implements CommandHandlerInterface {
@@ -21,8 +24,12 @@ public class FetchCryptoPriceCommand implements CommandHandlerInterface {
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         String cryptoSymbol = event.getOption("crypto-symbol").getAsString().toUpperCase();
-        String cryptoPrice = coinMarketCapApiService.getCryptoPrice(cryptoSymbol);
-        event.reply("The current price of " + cryptoSymbol + " is " + cryptoPrice).queue();
+        try {
+            String cryptoPrice = coinMarketCapApiService.getCryptoPrice(cryptoSymbol);
+            event.reply("The current price of " + cryptoSymbol + " is " + cryptoPrice).queue();
+        } catch (JSONException exception) {
+            event.replyEmbeds(getWrongOptionTypeMessage("ticker symbol")).queue();
+        }
     }
 
     @Override

@@ -13,6 +13,8 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
+import static yagodaoud.com.logos.music.commands.helper.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
+
 @Component
 public class BitcoinPriceTrackerCommand implements CommandHandlerInterface{
     private double targetPrice;
@@ -30,12 +32,17 @@ public class BitcoinPriceTrackerCommand implements CommandHandlerInterface{
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         if (!isActive) {
-            targetPrice = event.getOption("target-price").getAsDouble();
-            event.reply("Tracking bitcoin price when it reaches " + NumberFormat.getCurrencyInstance(Locale.US).format(targetPrice)).queue();
-            userId = event.getUser().getId();
-            channel = event.getChannel().asTextChannel();
-            isActive = true;
-            return;
+            try {
+                targetPrice = event.getOption("target-price").getAsDouble();
+                event.reply("Tracking bitcoin price when it reaches " + NumberFormat.getCurrencyInstance(Locale.US).format(targetPrice)).queue();
+                userId = event.getUser().getId();
+                channel = event.getChannel().asTextChannel();
+                isActive = true;
+                return;
+            } catch (NumberFormatException exception) {
+                event.replyEmbeds(getWrongOptionTypeMessage("number")).queue();
+                return;
+            }
         }
         event.reply("The command is already active.").queue();
 
