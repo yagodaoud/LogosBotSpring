@@ -27,8 +27,10 @@ public class PlayCommand implements CommandHandlerInterface {
         PlayerManager playerManager = new PlayerManager();
         String providerOption = event.getOption("provider") == null ? "yt" : event.getOption("provider").getAsString();
 
+        event.deferReply().queue();
+
         CompletableFuture<MessageEmbed> loadResultFuture = (playerManager.loadAndPlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("query").getAsString(), providerOption, false));
-        loadResultFuture.thenAccept(result -> event.deferReply().addEmbeds(result).queue());
+        loadResultFuture.thenAccept(result -> event.getHook().sendMessageEmbeds((result)).queue());
     }
 
     @Override
