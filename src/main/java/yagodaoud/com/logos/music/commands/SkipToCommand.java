@@ -28,10 +28,6 @@ public class SkipToCommand implements CommandHandlerInterface {
             event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
             return;
         }
-        if (event.getOption("track-number").getType() != OptionType.INTEGER) {
-            event.replyEmbeds(getWrongOptionTypeMessage("number")).queue();
-            return;
-        }
         int trackNumber = event.getOption("track-number").getAsInt();
         event.replyEmbeds(PlayerManager.getInstance().skipTo(event.getGuild(), event.getMember().getVoiceState(), trackNumber)).queue();
     }
