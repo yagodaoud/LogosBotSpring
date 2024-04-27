@@ -12,7 +12,6 @@ import yagodaoud.com.logos.music.audio.PlayerManager;
 import java.util.List;
 
 import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getPlayerNotStartedEmbedMessage;
-import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
 
 @Component
 public class SkipToCommand implements CommandHandlerInterface {
