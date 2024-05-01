@@ -44,8 +44,8 @@ public class BotCommandsListener extends ListenerAdapter {
         String commandName = event.getName();
         User user = event.getUser();
         CommandHandlerInterface handler = commandHandlers.get(commandName);
+        dbEventHandler.insertUser(user.getIdLong(), user.getGlobalName(), user.getName());
         try {
-            dbEventHandler.insertUser(user.getIdLong(), user.getGlobalName(), user.getName());
             if (handler != null) {
                 handler.handleCommand(event);
                 return;

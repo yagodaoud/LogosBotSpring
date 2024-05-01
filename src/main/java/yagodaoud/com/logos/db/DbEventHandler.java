@@ -16,10 +16,12 @@ public class DbEventHandler {
     }
 
     public void insertUser(Long discordId, String globalName, String guildName) {
-        User user = new User();
-        user.setDiscordId(discordId);
-        user.setGlobalName(globalName);
-        user.setGuildName(guildName);
-        userRepository.save(user);
+        if (userRepository.findByDiscordId(discordId) == null) {
+            User user = new User();
+            user.setDiscordId(discordId);
+            user.setGlobalName(globalName);
+            user.setGuildName(guildName);
+            userRepository.save(user);
+        }
     }
 }
