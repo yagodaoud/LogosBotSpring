@@ -4,8 +4,10 @@ import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandRegistryService;
 
+@Component
 public class LoadCommandsListener extends ListenerAdapter {
     private CommandRegistryService commandRegistry;
 

@@ -14,6 +14,7 @@ import yagodaoud.com.logos.crypto.commands.BitcoinPercentageAlertCommand;
 import yagodaoud.com.logos.crypto.commands.BitcoinPriceSchedulerCommand;
 import yagodaoud.com.logos.crypto.commands.BitcoinPriceTrackerCommand;
 import yagodaoud.com.logos.crypto.commands.FetchCryptoPriceCommand;
+import yagodaoud.com.logos.db.DbEventHandler;
 import yagodaoud.com.logos.help.commands.HelpCommand;
 import yagodaoud.com.logos.listeners.BotCommandsListener;
 import yagodaoud.com.logos.listeners.LoadCommandsListener;
@@ -56,6 +57,7 @@ public class DiscordBotInitializer {
 
     private static void configureEventListeners(JDABuilder builder, ApplicationContext context) {
         CommandRegistryService commandRegistry = context.getBean(CommandRegistryService.class);
+        DbEventHandler dbEventHandler = context.getBean(DbEventHandler.class);
         context.getBean(FetchCryptoPriceCommand.class);
         context.getBean(BitcoinPriceSchedulerCommand.class);
         context.getBean(BitcoinPriceTrackerCommand.class);
@@ -77,7 +79,7 @@ public class DiscordBotInitializer {
         context.getBean(HelpCommand.class);
         context.getBean(JumpToCommand.class);
         context.getBean(RemoveCommand.class);
-        builder.addEventListeners(new LoadCommandsListener(commandRegistry), new BotCommandsListener(commandRegistry));
+        builder.addEventListeners(new LoadCommandsListener(commandRegistry), new BotCommandsListener(commandRegistry, dbEventHandler));
     }
 
     private static void addGatewayIntents(JDABuilder builder) {
