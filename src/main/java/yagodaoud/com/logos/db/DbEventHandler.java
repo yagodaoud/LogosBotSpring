@@ -1,27 +1,59 @@
 package yagodaoud.com.logos.db;
 
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import yagodaoud.com.logos.db.entity.CommandHistory;
 import yagodaoud.com.logos.db.entity.User;
+import yagodaoud.com.logos.db.repository.CommandHistoryRepository;
 import yagodaoud.com.logos.db.repository.UserRepository;
 
-@Component
+import java.time.LocalDateTime;
+
+@Service
 public class DbEventHandler {
 
     private final UserRepository userRepository;
+    private final CommandHistoryRepository commandHistoryRepository;
 
     @Autowired
-    public DbEventHandler(UserRepository userRepository) {
+    public DbEventHandler(UserRepository userRepository, CommandHistoryRepository commandHistoryRepository) {
         this.userRepository = userRepository;
+        this.commandHistoryRepository = commandHistoryRepository;
     }
 
-    public void insertUser(Long discordId, String globalName, String guildName) {
-        if (userRepository.findByDiscordId(discordId) == null) {
+    @Async
+    public void insertDataAsync(SlashCommandInteractionEvent event) {
+        net.dv8tion.jda.api.entities.User user = event.getUser();
+        Guild guild = event.getGuild();
+        insertUserAsync(user);
+        insertCommandHistoryAsync(user, guild, event.getName());
+    }
+
+    @Async
+    public void insertUserAsync(net.dv8tion.jda.api.entities.User eventUser) {
+        if (userRepository.findByDiscordId(eventUser.getIdLong()) == null) {
             User user = new User();
-            user.setDiscordId(discordId);
-            user.setGlobalName(globalName);
-            user.setGuildName(guildName);
+            user.setDiscordId(eventUser.getIdLong());
+            user.setGlobalName(eventUser.getGlobalName());
+            user.setGuildName(eventUser.getName());
+            user.setDateAdded(LocalDateTime.now());
             userRepository.save(user);
         }
+    }
+
+    @Async
+    public void insertCommandHistoryAsync(net.dv8tion.jda.api.entities.User eventUser, Guild eventGuild, String commandName) {
+        CommandHistory commandHistory = new CommandHistory();
+        User user = userRepository.findByDiscordId(eventUser.getIdLong());
+        commandHistory.setUser(user);
+        commandHistory.setUserName(user.getGuildName());
+        commandHistory.setGuildId(eventGuild.getIdLong());
+        commandHistory.setGuildName(eventGuild.getName());
+        commandHistory.setCommandName(commandName);
+        commandHistory.setDateAdded(LocalDateTime.now());
+        commandHistoryRepository.save(commandHistory);
     }
 }

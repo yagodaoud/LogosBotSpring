@@ -2,12 +2,16 @@ package yagodaoud.com.logos.db.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.jetbrains.annotations.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 public class User {
+
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @GenericGenerator(name = "native")
     private Integer id;
 
@@ -17,6 +21,12 @@ public class User {
     private String guildName;
 
     private String globalName;
+
+    @OneToMany(mappedBy = "user")
+    private Set<CommandHistory> commandHistorySet;
+
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    private LocalDateTime dateAdded;
 
 
     public Integer getId() {
@@ -49,5 +59,21 @@ public class User {
 
     public void setGlobalName(String globalName) {
         this.globalName = globalName;
+    }
+
+    public Set<CommandHistory> getCommandHistorySet() {
+        return commandHistorySet;
+    }
+
+    public void setCommandHistorySet(Set<CommandHistory> commandHistorySet) {
+        this.commandHistorySet = commandHistorySet;
+    }
+
+    public LocalDateTime getDateAdded() {
+        return dateAdded;
+    }
+
+    public void setDateAdded(LocalDateTime dateAdded) {
+        this.dateAdded = dateAdded;
     }
 }

@@ -42,9 +42,8 @@ public class BotCommandsListener extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         String commandName = event.getName();
-        User user = event.getUser();
         CommandHandlerInterface handler = commandHandlers.get(commandName);
-        dbEventHandler.insertUser(user.getIdLong(), user.getGlobalName(), user.getName());
+        new Thread(() -> dbEventHandler.insertDataAsync(event)).start();
         try {
             if (handler != null) {
                 handler.handleCommand(event);

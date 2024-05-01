@@ -2,9 +2,9 @@ package yagodaoud.com.logos.db.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import yagodaoud.com.logos.db.entity.User;
+import yagodaoud.com.logos.db.entity.CommandHistory;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Integer> {
-    User findByDiscordId(Long discordId);
+public interface CommandHistoryRepository extends CrudRepository<CommandHistory, Integer> {
+
 }
