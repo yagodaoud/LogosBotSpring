@@ -70,11 +70,11 @@ public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
         String message = null;
         double variation =  this.priceVariationCalculator();
 
-        if (Math.abs(variation) > percentage) {
+        if (Math.abs(variation) >= percentage) {
             lastPrice = currentPrice;
-            String direction = percentage > 0 ? "up" : "down";
-            String emoji = percentage > 0 ? "📈" : "📉";
-            message = String.format("Bitcoin is %s! $%,.2f, (%f in the last hour) %s", direction, currentPrice, variation, emoji);
+            String direction = variation > 0 ? "up" : "down";
+            String emoji = variation > 0 ? "📈" : "📉";
+            message = String.format("Bitcoin is %s! $%,.2f, (%.2f%% in the last hour) %s", direction, currentPrice, variation, emoji);
         }
         return message;
     }
