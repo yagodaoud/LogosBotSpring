@@ -29,7 +29,11 @@ public class DbEventHandler {
         net.dv8tion.jda.api.entities.User user = event.getUser();
         Guild guild = event.getGuild();
         insertUserAsync(user);
-        insertCommandHistoryAsync(user, guild, event.getName());
+        String commandOption = null;
+        if (event.getOptions().size() > 0) {
+            commandOption = event.getOptions().get(0).getAsString();
+        }
+        insertCommandHistoryAsync(user, guild, event.getName(), commandOption);
     }
 
     @Async
@@ -45,7 +49,7 @@ public class DbEventHandler {
     }
 
     @Async
-    public void insertCommandHistoryAsync(net.dv8tion.jda.api.entities.User eventUser, Guild eventGuild, String commandName) {
+    public void insertCommandHistoryAsync(net.dv8tion.jda.api.entities.User eventUser, Guild eventGuild, String commandName, String commandOption) {
         CommandHistory commandHistory = new CommandHistory();
         User user = userRepository.findByDiscordId(eventUser.getIdLong());
         commandHistory.setUser(user);
@@ -54,6 +58,7 @@ public class DbEventHandler {
         commandHistory.setGuildName(eventGuild.getName());
         commandHistory.setCommandName(commandName);
         commandHistory.setDateAdded(LocalDateTime.now());
+        commandHistory.setCommandOption(commandOption);
         commandHistoryRepository.save(commandHistory);
     }
 }
