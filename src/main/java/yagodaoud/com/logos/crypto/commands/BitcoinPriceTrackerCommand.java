@@ -1,6 +1,6 @@
 package yagodaoud.com.logos.crypto.commands;
 
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -23,7 +23,7 @@ public class BitcoinPriceTrackerCommand implements CommandHandlerInterface{
     private double currentPrice;
     private int priceTrend;
     private String userId;
-    private TextChannel channel;
+    private MessageChannel channel;
     private boolean isActive = false;
 
     @Autowired
@@ -38,8 +38,12 @@ public class BitcoinPriceTrackerCommand implements CommandHandlerInterface{
                 targetPrice = event.getOption("target-price").getAsDouble();
                 event.replyEmbeds(messageEmbedBuilder("Tracking bitcoin price when it reaches " + NumberFormat.getCurrencyInstance(Locale.US).format(targetPrice), Colors.SUCCESS)).queue();
                 userId = event.getUser().getId();
-                channel = event.getChannel().asTextChannel();
                 isActive = true;
+                if (event.isFromGuild()) {
+                    channel = event.getChannel().asTextChannel();
+                    return;
+                }
+                channel = event.getChannel().asPrivateChannel();
                 return;
             } catch (NumberFormatException exception) {
                 event.replyEmbeds(getWrongOptionTypeMessage("number")).queue();

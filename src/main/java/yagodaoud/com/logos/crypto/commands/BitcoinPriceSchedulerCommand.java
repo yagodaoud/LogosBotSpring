@@ -1,6 +1,6 @@
 package yagodaoud.com.logos.crypto.commands;
 
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 public class BitcoinPriceSchedulerCommand implements CommandHandlerInterface {
     private final CoinMarketCapApiService coinMarketCapApiService = new CoinMarketCapApiService(new RestTemplate());
     public boolean isActive = false;
-    public TextChannel textChannel;
+    public MessageChannel channel;
 
     @Autowired
     public BitcoinPriceSchedulerCommand(CommandRegistryService commandRegistryService) {
@@ -32,9 +32,13 @@ public class BitcoinPriceSchedulerCommand implements CommandHandlerInterface {
     public void handleCommand(SlashCommandInteractionEvent event) {
         if (!isActive) {
             event.replyEmbeds(messageEmbedBuilder("The daily closing price of Bitcoin will be displayed from now on!", Colors.SUCCESS)).queue();
-            textChannel = event.getChannel().asTextChannel();
-            sendBitcoinPrice(textChannel);
+            sendBitcoinPrice(channel);
             isActive = true;
+            if (event.isFromGuild()) {
+                channel = event.getChannel().asTextChannel();
+                return;
+            }
+            channel = event.getChannel().asPrivateChannel();
             return;
         }
         event.replyEmbeds(messageEmbedBuilder("Disabled the daily closing price of Bitcoin on this channel", Colors.ADVERT)).queue();
@@ -55,7 +59,7 @@ public class BitcoinPriceSchedulerCommand implements CommandHandlerInterface {
         return null;
     }
 
-    public void sendBitcoinPrice(TextChannel channel) {
+    public void sendBitcoinPrice(MessageChannel channel) {
         if (!isActive) {
             return;
         }

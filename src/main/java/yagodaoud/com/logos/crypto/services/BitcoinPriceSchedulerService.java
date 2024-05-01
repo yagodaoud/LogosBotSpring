@@ -19,7 +19,7 @@ public class BitcoinPriceSchedulerService {
     @Scheduled(cron = "0 0 0 * * *", zone = "UTC")
     public void scheduleBitcoinPrice() {
         if (bitcoinPriceSchedulerCommand.isActive) {
-            bitcoinPriceSchedulerCommand.sendBitcoinPrice(bitcoinPriceSchedulerCommand.textChannel);
+            bitcoinPriceSchedulerCommand.sendBitcoinPrice(bitcoinPriceSchedulerCommand.channel);
         }
     }
 }

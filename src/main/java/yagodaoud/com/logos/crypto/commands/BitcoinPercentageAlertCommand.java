@@ -1,6 +1,6 @@
 package yagodaoud.com.logos.crypto.commands;
 
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -22,7 +22,7 @@ public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
     private double percentage;
     private double currentPrice;
     private double lastPrice;
-    private TextChannel channel;
+    private MessageChannel channel;
 
 
     @Autowired
@@ -36,8 +36,12 @@ public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
             try {
                 percentage = event.getOption("percentage").getAsDouble();
                 event.replyEmbeds(messageEmbedBuilder("Tracking Bitcoin price when its variation is greater than " + percentage + "%!", Colors.SUCCESS)).queue();
-                channel = event.getChannel().asTextChannel();
                 isActive = true;
+                if (event.isFromGuild()) {
+                    channel = event.getChannel().asTextChannel();
+                    return;
+                }
+                channel = event.getChannel().asPrivateChannel();
                 return;
             } catch (NumberFormatException exception) {
                 event.replyEmbeds(getWrongOptionTypeMessage("number")).queue();
