@@ -1,11 +1,9 @@
-package yagodaoud.com.logos.db;
+package yagodaoud.com.logos.db.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
-import java.util.UUID;
 
 @Entity
 public class User {
@@ -19,7 +17,6 @@ public class User {
 
     private String globalName;
 
-    private String email;
 
     public Integer getId() {
         return id;
@@ -51,13 +48,5 @@ public class User {
 
     public void setGlobalName(String globalName) {
         this.globalName = globalName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }

@@ -1,5 +1,6 @@
 package yagodaoud.com.logos.listeners;
 
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.db.DbEventHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,12 +22,14 @@ import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getUnknownComma
 @Component
 public class BotCommandsListener extends ListenerAdapter {
     private final CommandRegistryService commandRegistry;
+    private final DbEventHandler dbEventHandler;
     private final Map<String, CommandHandlerInterface> commandHandlers;
 
     @Autowired
-    public BotCommandsListener(CommandRegistryService commandRegistry) {
+    public BotCommandsListener(CommandRegistryService commandRegistry, DbEventHandler dbEventHandler) {
         this.commandRegistry = commandRegistry;
         this.commandHandlers = initializeCommandHandlers();
+        this.dbEventHandler = dbEventHandler;
     }
 
     private Map<String, CommandHandlerInterface> initializeCommandHandlers() {
@@ -38,8 +42,10 @@ public class BotCommandsListener extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         String commandName = event.getName();
+        User user = event.getUser();
         CommandHandlerInterface handler = commandHandlers.get(commandName);
         try {
+            dbEventHandler.insertUser(user.getIdLong(), user.getGlobalName(), user.getName());
             if (handler != null) {
                 handler.handleCommand(event);
                 return;
