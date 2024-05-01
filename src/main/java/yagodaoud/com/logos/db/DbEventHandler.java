@@ -28,11 +28,14 @@ public class DbEventHandler {
     public void insertDataAsync(SlashCommandInteractionEvent event) {
         net.dv8tion.jda.api.entities.User user = event.getUser();
         Guild guild = event.getGuild();
-        insertUserAsync(user);
         String commandOption = null;
+
+        insertUserAsync(user);
+
         if (event.getOptions().size() > 0) {
             commandOption = event.getOptions().get(0).getAsString();
         }
+
         insertCommandHistoryAsync(user, guild, event.getName(), commandOption);
     }
 
@@ -54,8 +57,12 @@ public class DbEventHandler {
         User user = userRepository.findByDiscordId(eventUser.getIdLong());
         commandHistory.setUser(user);
         commandHistory.setUserName(user.getGuildName());
-        commandHistory.setGuildId(eventGuild.getIdLong());
-        commandHistory.setGuildName(eventGuild.getName());
+
+        if (eventGuild != null) {
+            commandHistory.setGuildId(eventGuild.getIdLong());
+            commandHistory.setGuildName(eventGuild.getName());
+        }
+
         commandHistory.setCommandName(commandName);
         commandHistory.setDateAdded(LocalDateTime.now());
         commandHistory.setCommandOption(commandOption);
