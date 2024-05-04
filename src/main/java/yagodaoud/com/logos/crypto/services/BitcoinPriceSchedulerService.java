@@ -10,16 +10,20 @@ import yagodaoud.com.logos.crypto.commands.BitcoinPriceSchedulerCommand;
 @EnableScheduling
 public class BitcoinPriceSchedulerService {
     private final BitcoinPriceSchedulerCommand bitcoinPriceSchedulerCommand;
+    private final CoinMarketCapApiService coinMarketCapApiService;
+
 
     @Autowired
-    public BitcoinPriceSchedulerService(BitcoinPriceSchedulerCommand bitcoinPriceSchedulerCommand) {
+    public BitcoinPriceSchedulerService(BitcoinPriceSchedulerCommand bitcoinPriceSchedulerCommand, CoinMarketCapApiService coinMarketCapApiService) {
         this.bitcoinPriceSchedulerCommand = bitcoinPriceSchedulerCommand;
+        this.coinMarketCapApiService = coinMarketCapApiService;
     }
 
     @Scheduled(cron = "0 0 0 * * *", zone = "UTC")
     public void scheduleBitcoinPrice() {
-        if (bitcoinPriceSchedulerCommand.isActive) {
-            bitcoinPriceSchedulerCommand.sendBitcoinPrice(bitcoinPriceSchedulerCommand.channel);
-        }
+        String btcPrice = coinMarketCapApiService.getCryptoPrice("BTC");
+        bitcoinPriceSchedulerCommand.alertDataMap.forEach((channelId, alertData) -> {
+                alertData.sendBitcoinPrice(btcPrice);
+        });
     }
 }
