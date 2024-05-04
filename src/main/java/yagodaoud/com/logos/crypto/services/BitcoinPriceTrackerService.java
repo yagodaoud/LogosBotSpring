@@ -13,9 +13,6 @@ public class BitcoinPriceTrackerService {
     private final CoinMarketCapApiService coinMarketCapApiService;
 
     @Autowired
-
-
-
     public BitcoinPriceTrackerService(BitcoinPriceTrackerCommand bitcoinPriceTrackerCommand, CoinMarketCapApiService coinMarketCapApiService) {
         this.bitcoinPriceTrackerCommand = bitcoinPriceTrackerCommand;
         this.coinMarketCapApiService = coinMarketCapApiService;

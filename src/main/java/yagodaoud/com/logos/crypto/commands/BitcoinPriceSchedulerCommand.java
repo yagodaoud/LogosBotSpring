@@ -6,22 +6,21 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
-import yagodaoud.com.logos.crypto.services.CoinMarketCapApiService;
+import yagodaoud.com.logos.crypto.alertData.AlertDataScheduler;
 import yagodaoud.com.logos.tools.Colors;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component
 @Scope("singleton")
 public class BitcoinPriceSchedulerCommand implements CommandHandlerInterface {
-    private final CoinMarketCapApiService coinMarketCapApiService = new CoinMarketCapApiService(new RestTemplate());
-    public boolean isActive = false;
-    public MessageChannel channel;
+    public final Map<Long, AlertDataScheduler> alertDataMap = new HashMap<>();
 
     @Autowired
     public BitcoinPriceSchedulerCommand(CommandRegistryService commandRegistryService) {
@@ -30,18 +29,17 @@ public class BitcoinPriceSchedulerCommand implements CommandHandlerInterface {
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        if (!isActive) {
+        MessageChannel channel = event.isFromGuild() ? event.getChannel().asTextChannel() : event.getChannel().asPrivateChannel();
+
+        AlertDataScheduler alertDataScheduler = alertDataMap.get(channel.getIdLong());
+
+        if (alertDataScheduler == null || !alertDataScheduler.getActive()) {
+            alertDataScheduler = new AlertDataScheduler(channel);
+            alertDataMap.put(channel.getIdLong(), alertDataScheduler);
             event.replyEmbeds(messageEmbedBuilder("The daily closing price of Bitcoin will be displayed from now on!", Colors.SUCCESS)).queue();
-            sendBitcoinPrice(channel);
-            isActive = true;
-            if (event.isFromGuild()) {
-                channel = event.getChannel().asTextChannel();
-                return;
-            }
-            channel = event.getChannel().asPrivateChannel();
             return;
         }
-        event.replyEmbeds(messageEmbedBuilder("Disabled the daily closing price of Bitcoin on this channel", Colors.ADVERT)).queue();
+        event.replyEmbeds(messageEmbedBuilder("The command is already active.", Colors.ADVERT)).queue();
     }
 
     @Override
@@ -57,13 +55,5 @@ public class BitcoinPriceSchedulerCommand implements CommandHandlerInterface {
     @Override
     public List<OptionData> getOptions() {
         return null;
-    }
-
-    public void sendBitcoinPrice(MessageChannel channel) {
-        if (!isActive) {
-            return;
-        }
-        String bitcoinPrice = coinMarketCapApiService.getCryptoPrice("BTC");
-        channel.sendMessageEmbeds(messageEmbedBuilder("The closing price of Bitcoin is " + bitcoinPrice, Colors.SUCCESS)).queue();
     }
 }
