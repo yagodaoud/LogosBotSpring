@@ -13,6 +13,9 @@ public class BitcoinPriceTrackerService {
     private final CoinMarketCapApiService coinMarketCapApiService;
 
     @Autowired
+
+
+
     public BitcoinPriceTrackerService(BitcoinPriceTrackerCommand bitcoinPriceTrackerCommand, CoinMarketCapApiService coinMarketCapApiService) {
         this.bitcoinPriceTrackerCommand = bitcoinPriceTrackerCommand;
         this.coinMarketCapApiService = coinMarketCapApiService;
@@ -20,13 +23,15 @@ public class BitcoinPriceTrackerService {
 
     @Scheduled(fixedRate = 3 * 60000)
     public void trackBitcoinPrice() {
-        bitcoinPriceTrackerCommand.updateCurrentPrice(coinMarketCapApiService.getCryptoPrice("BTC"));
-        bitcoinPriceTrackerCommand.updatePriceTrend();
-        String message = bitcoinPriceTrackerCommand.generateNotificationMessage();
-
-        if (message != null) {
-            bitcoinPriceTrackerCommand.sendNotificationMessage(message);
-        }
+        String btcPrice = coinMarketCapApiService.getCryptoPrice("BTC");
+        bitcoinPriceTrackerCommand.alertDataMap.forEach((channelId, alertData) -> {
+            alertData.updateCurrentPrice(btcPrice);
+            String message = alertData.generateNotificationMessage();
+            if (message != null) {
+                alertData.sendNotificationMessage(message);
+                alertData.setActive(false);
+            }
+        });
     }
 }
 

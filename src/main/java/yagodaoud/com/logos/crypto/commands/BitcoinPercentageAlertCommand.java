@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.crypto.alertData.AlertDataPercentage;
 import yagodaoud.com.logos.tools.Colors;
 
 import java.util.HashMap;
@@ -19,8 +20,7 @@ import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component
 public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
-    public final Map<Long, AlertData> alertDataMap = new HashMap<>();
-
+    public final Map<Long, AlertDataPercentage> alertDataMap = new HashMap<>();
 
     @Autowired
     public BitcoinPercentageAlertCommand(CommandRegistryService commandRegistry) {
@@ -33,11 +33,11 @@ public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
             double percentage = event.getOption("percentage").getAsDouble();
             MessageChannel channel = event.isFromGuild() ? event.getChannel().asTextChannel() : event.getChannel().asPrivateChannel();
 
-            AlertData alertData = alertDataMap.get(channel.getIdLong());
+            AlertDataPercentage alertDataPercentage = alertDataMap.get(channel.getIdLong());
 
-            if (alertData == null || !alertData.getActive()) {
-                alertData = new AlertData(percentage, channel);
-                alertDataMap.put(channel.getIdLong(), alertData);
+            if (alertDataPercentage == null || !alertDataPercentage.getActive()) {
+                alertDataPercentage = new AlertDataPercentage(percentage, channel);
+                alertDataMap.put(channel.getIdLong(), alertDataPercentage);
                 event.replyEmbeds(messageEmbedBuilder("Tracking Bitcoin price when its variation is greater than " + percentage + "%!", Colors.SUCCESS)).queue();
                 return;
             }

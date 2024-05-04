@@ -1,18 +1,18 @@
-package yagodaoud.com.logos.crypto.commands;
+package yagodaoud.com.logos.crypto.alertData;
 
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import yagodaoud.com.logos.tools.Colors;
 
 import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
-public class AlertData {
+public class AlertDataPercentage {
     private boolean isActive;
     private double percentage;
     private double currentPrice;
     private double lastPrice;
     private final MessageChannel channel;
 
-    public AlertData(double percentage, MessageChannel channel) {
+    public AlertDataPercentage(double percentage, MessageChannel channel) {
         this.percentage = percentage;
         this.channel = channel;
         this.isActive = true;
@@ -43,7 +43,7 @@ public class AlertData {
         isActive = false;
     }
 
-    public double priceVariationCalculator(){
+    public double priceVariationCalculator() {
         /*Formula to get the
           variation e.g. The price was 100,
           now it's 120 -> (120 - 100) / 100 = 0.2 * 100 = 20%
