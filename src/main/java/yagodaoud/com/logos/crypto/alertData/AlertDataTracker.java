@@ -9,7 +9,7 @@ import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 public class AlertDataTracker {
     private boolean isActive;
-    private double targetPrice;
+    private final double targetPrice;
     private double currentPrice;
     private double priceTrend;
     private final String userId;
