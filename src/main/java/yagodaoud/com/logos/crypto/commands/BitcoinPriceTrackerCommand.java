@@ -12,17 +12,14 @@ import yagodaoud.com.logos.crypto.alertData.AlertDataTracker;
 import yagodaoud.com.logos.tools.Colors;
 
 import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
 import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component
 public class BitcoinPriceTrackerCommand implements CommandHandlerInterface{
-    public final Map<Long, AlertDataTracker> alertDataMap = new HashMap<>();
+    public final Map<String, Map<Long, AlertDataTracker>> alertDataMap = new HashMap<>();
 
     @Autowired
     public BitcoinPriceTrackerCommand(CommandRegistryService commandRegistry) {
@@ -36,11 +33,14 @@ public class BitcoinPriceTrackerCommand implements CommandHandlerInterface{
             MessageChannel channel = event.isFromGuild() ? event.getChannel().asTextChannel() : event.getChannel().asPrivateChannel();
             String userId = event.getUser().getId();
 
-            AlertDataTracker alertDataTracker = alertDataMap.get(channel.getIdLong());
+            Map<Long, AlertDataTracker> userAlertData = alertDataMap.computeIfAbsent(userId, k -> new HashMap<>());
+            AlertDataTracker alertDataTracker = alertDataMap.get(userId).get(channel.getIdLong());
 
             if (alertDataTracker == null || !alertDataTracker.getActive()) {
                 alertDataTracker = new AlertDataTracker(targetPrice, channel, userId);
-                alertDataMap.put(channel.getIdLong(), alertDataTracker);
+
+                userAlertData.put(channel.getIdLong(), alertDataTracker);
+                alertDataMap.put(userId, userAlertData);
                 event.replyEmbeds(messageEmbedBuilder("Tracking bitcoin price when it reaches " + NumberFormat.getCurrencyInstance(Locale.US).format(targetPrice), Colors.SUCCESS)).queue();
                 return;
             }

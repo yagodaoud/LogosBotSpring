@@ -21,13 +21,16 @@ public class BitcoinPercentageAlertService {
 
     @Scheduled(fixedRate = 60 * 60000, initialDelay = 0)
     public void trackBitcoinPercentage() {
-        bitcoinPercentageAlertCommand.alertDataMap.forEach((channelId, alertData) -> {
-            alertData.updateCurrentPrice(coinMarketCapApiService.getCryptoPrice("BTC"));
-            String message = alertData.generateNotificationMessage();
-            if (message != null) {
-                alertData.sendNotificationMessage(message);
-                alertData.setActive(false);
-            }
+        bitcoinPercentageAlertCommand.alertDataMap.forEach((channelId, userAlertData) -> {
+            userAlertData.values().forEach(alertData -> {
+                alertData.updateCurrentPrice(coinMarketCapApiService.getCryptoPrice("BTC"));
+                String message = alertData.generateNotificationMessage();
+                if (message != null) {
+                    alertData.sendNotificationMessage(message);
+                    alertData.setActive(false);
+                }
+            });
+
         });
     }
 }
