@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
 import yagodaoud.com.logos.crypto.alertData.AlertDataPercentage;
+import yagodaoud.com.logos.crypto.alertData.AlertDataTracker;
 import yagodaoud.com.logos.tools.Colors;
 
 import java.util.HashMap;
@@ -20,7 +21,8 @@ import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component
 public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
-    public final Map<Long, AlertDataPercentage> alertDataMap = new HashMap<>();
+    public final Map<String, Map<Long, AlertDataPercentage>> alertDataMap = new HashMap<>();
+
 
     @Autowired
     public BitcoinPercentageAlertCommand(CommandRegistryService commandRegistry) {
@@ -32,12 +34,16 @@ public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
         try {
             double percentage = event.getOption("percentage").getAsDouble();
             MessageChannel channel = event.isFromGuild() ? event.getChannel().asTextChannel() : event.getChannel().asPrivateChannel();
+            String userId = event.getUser().getId();
 
-            AlertDataPercentage alertDataPercentage = alertDataMap.get(channel.getIdLong());
+            Map<Long, AlertDataPercentage> userAlertData = alertDataMap.computeIfAbsent(userId, k -> new HashMap<>());
+            AlertDataPercentage alertDataPercentage = alertDataMap.get(userId).get(channel.getIdLong());
 
             if (alertDataPercentage == null || !alertDataPercentage.getActive()) {
                 alertDataPercentage = new AlertDataPercentage(percentage, channel);
-                alertDataMap.put(channel.getIdLong(), alertDataPercentage);
+
+                userAlertData.put(channel.getIdLong(), alertDataPercentage);
+                alertDataMap.put(userId, userAlertData);
                 event.replyEmbeds(messageEmbedBuilder("Tracking Bitcoin price when its variation is greater than " + percentage + "%!", Colors.SUCCESS)).queue();
                 return;
             }
