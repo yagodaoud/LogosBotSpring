@@ -16,9 +16,12 @@ import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getPlayerNotSta
 @Component
 public class SkipToCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public SkipToCommand(CommandRegistryService commandRegistry) {
+    public SkipToCommand(CommandRegistryService commandRegistry, PlayerManager playerManager) {
         commandRegistry.registerCommand(this);
+        this.playerManager = playerManager;
     }
 
     @Override

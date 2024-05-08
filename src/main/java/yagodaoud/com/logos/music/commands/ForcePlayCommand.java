@@ -19,9 +19,12 @@ import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getPlayerNotSta
 @Component
 public class ForcePlayCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public ForcePlayCommand(CommandRegistryService commandRegistry) {
+    public ForcePlayCommand(CommandRegistryService commandRegistry, PlayerManager playerManager) {
         commandRegistry.registerCommand(this);
+        this.playerManager = playerManager;
     }
 
     @Override

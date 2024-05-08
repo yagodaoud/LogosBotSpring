@@ -15,9 +15,12 @@ import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getPlayerNotSta
 @Component
 public class ClearCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public ClearCommand(CommandRegistryService commandRegistry) {
+    public ClearCommand(CommandRegistryService commandRegistry, PlayerManager playerManager) {
         commandRegistry.registerCommand(this);
+        this.playerManager = playerManager;
     }
 
     @Override

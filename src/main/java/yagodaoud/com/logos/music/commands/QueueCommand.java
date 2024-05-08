@@ -15,9 +15,12 @@ import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getPlayerNotSta
 @Component
 public class QueueCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public QueueCommand(CommandRegistryService commandRegistry) {
+    public QueueCommand(CommandRegistryService commandRegistry, PlayerManager playerManager) {
         commandRegistry.registerCommand(this);
+        this.playerManager = playerManager;
     }
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {

@@ -15,9 +15,12 @@ import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getPlayerNotSta
 @Component
 public class ResumeCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public ResumeCommand(CommandRegistryService commandRegistry) {
+    public ResumeCommand(CommandRegistryService commandRegistry, PlayerManager playerManager) {
         commandRegistry.registerCommand(this);
+        this.playerManager = playerManager;
     }
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {

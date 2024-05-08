@@ -15,9 +15,12 @@ import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getPlayerNotSta
 @Component
 public class ShuffleCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public ShuffleCommand(CommandRegistryService commandRegistryService) {
+    public ShuffleCommand(CommandRegistryService commandRegistryService, PlayerManager playerManager) {
         commandRegistryService.registerCommand(this);
+        this.playerManager = playerManager;
     }
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {

@@ -17,9 +17,12 @@ import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.*;
 @Component
 public class VolumeCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public VolumeCommand(CommandRegistryService commandRegistry) {
+    public VolumeCommand(CommandRegistryService commandRegistry, PlayerManager playerManager) {
         commandRegistry.registerCommand(this);
+        this.playerManager = playerManager;
     }
 
     @Override

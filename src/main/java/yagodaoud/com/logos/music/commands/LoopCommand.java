@@ -15,9 +15,12 @@ import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getPlayerNotSta
 @Component
 public class LoopCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public LoopCommand(CommandRegistryService commandRegistryService) {
+    public LoopCommand(CommandRegistryService commandRegistryService, PlayerManager playerManager) {
         commandRegistryService.registerCommand(this);
+        this.playerManager = playerManager;
     }
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {

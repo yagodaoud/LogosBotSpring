@@ -17,9 +17,12 @@ import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getWrongOptionT
 @Component
 public class RemoveCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public RemoveCommand(CommandRegistryService commandRegistry) {
+    public RemoveCommand(CommandRegistryService commandRegistry, PlayerManager playerManager) {
         commandRegistry.registerCommand(this);
+        this.playerManager = playerManager;
     }
 
     @Override

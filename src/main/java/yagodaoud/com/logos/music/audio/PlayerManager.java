@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.music.audio.conversion.spotify.SpotifyAudioObject;
 import yagodaoud.com.logos.music.audio.conversion.spotify.SpotifyHandler;
@@ -22,6 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
+@Service
 public class PlayerManager {
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
     private SpotifyHandler spotifyHandler;
