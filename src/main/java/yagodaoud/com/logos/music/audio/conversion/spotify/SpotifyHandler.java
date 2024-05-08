@@ -15,6 +15,7 @@ import yagodaoud.com.logos.music.audio.conversion.mirror.ExtendedAudioPlaylist;
 import yagodaoud.com.logos.music.audio.conversion.spotify.services.SpotifyApiService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
@@ -94,9 +95,11 @@ public class SpotifyHandler {
 
     public String handle(AudioPlayerManager audioPlayerManager, GuildMusicManager musicManager, SpotifyAudioObject spotifyAudioObject, boolean forcePlay, CompletableFuture<MessageEmbed> futureMessage, AtomicReference<MessageEmbed> messageContainer) {
         CustomAudioLoadResultHandler loadResultHandlerImplementation = new CustomAudioLoadResultHandler(musicManager, spotifyAudioObject, forcePlay, futureMessage, messageContainer);
-        for (AudioTrack track : spotifyAudioObject.getSpotifyTracks()) {
-            audioPlayerManager.loadItemOrdered(musicManager, "ytsearch: " + track.getInfo().title + " " + track.getInfo().author, loadResultHandlerImplementation);
-        }
+
+        Arrays.stream(spotifyAudioObject.getSpotifyTracks())
+                .map(track -> "ytsearch: " + track.getInfo().title + " " + track.getInfo().author)
+                .forEachOrdered(query -> audioPlayerManager.loadItemOrdered(musicManager, query, loadResultHandlerImplementation));
+
         return getSpotifyMessage(spotifyAudioObject);
     }
 
