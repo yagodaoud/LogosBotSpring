@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import yagodaoud.com.logos.commands.CommandRegistryService;
-import yagodaoud.com.logos.db.DbEventHandler;
 import yagodaoud.com.logos.listeners.BotCommandsListener;
 import yagodaoud.com.logos.listeners.LoadCommandsListener;
 
@@ -56,9 +55,9 @@ public class DiscordBotInitializer {
     }
 
     private static void configureEventListeners(JDABuilder builder, ApplicationContext context) {
-        CommandRegistryService commandRegistry = context.getBean(CommandRegistryService.class);
-        DbEventHandler dbEventHandler = context.getBean(DbEventHandler.class);
-        builder.addEventListeners(new LoadCommandsListener(commandRegistry), new BotCommandsListener(commandRegistry, dbEventHandler));
+        LoadCommandsListener loadCommandsListener = context.getBean(LoadCommandsListener.class);
+        BotCommandsListener botCommandsListener = context.getBean(BotCommandsListener.class);
+        builder.addEventListeners(loadCommandsListener, botCommandsListener);
     }
 
     private void addGatewayIntents(JDABuilder builder) {
