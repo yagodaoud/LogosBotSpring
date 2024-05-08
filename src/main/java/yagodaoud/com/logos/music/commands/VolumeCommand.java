@@ -31,10 +31,6 @@ public class VolumeCommand implements CommandHandlerInterface {
             event.replyEmbeds(getNotAdminEmbedMessage()).queue();
             return;
         }
-        if (PlayerManager.getInstance() == null) {
-            event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
-            return;
-        }
         if (event.getOption("volume").getType() != OptionType.INTEGER) {
             event.replyEmbeds(getWrongOptionTypeMessage("number")).queue();
             return;

@@ -26,10 +26,6 @@ public class JumpToCommand implements CommandHandlerInterface {
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        if (PlayerManager.getInstance() == null) {
-            event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
-            return;
-        }
         String trackNumber = event.getOption("track-time").getAsString();
         event.replyEmbeds(PlayerManager.getInstance().jumpTo(event.getGuild(), event.getMember().getVoiceState(), trackNumber)).queue();
     }

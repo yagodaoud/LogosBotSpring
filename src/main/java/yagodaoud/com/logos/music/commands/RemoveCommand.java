@@ -27,10 +27,6 @@ public class RemoveCommand implements CommandHandlerInterface {
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        if (PlayerManager.getInstance() == null) {
-            event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
-            return;
-        }
         if (event.getOption("track-index").getType() != OptionType.INTEGER) {
             event.replyEmbeds(getWrongOptionTypeMessage("number")).queue();
             return;
