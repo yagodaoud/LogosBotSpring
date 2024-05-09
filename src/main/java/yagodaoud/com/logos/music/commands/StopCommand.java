@@ -24,7 +24,7 @@ public class StopCommand implements CommandHandlerInterface {
     }
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        event.replyEmbeds(PlayerManager.getInstance().stopPlayer(event.getGuild(), event.getMember().getVoiceState())).queue();
+        event.replyEmbeds(playerManager.stopPlayer(event.getGuild(), event.getMember().getVoiceState())).queue();
     }
 
     @Override

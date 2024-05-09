@@ -24,7 +24,7 @@ public class ResumeCommand implements CommandHandlerInterface {
     }
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        event.replyEmbeds(PlayerManager.getInstance().resumePlayer(event.getGuild(), event.getMember().getVoiceState())).queue();
+        event.replyEmbeds(playerManager.resumePlayer(event.getGuild(), event.getMember().getVoiceState())).queue();
     }
 
     @Override

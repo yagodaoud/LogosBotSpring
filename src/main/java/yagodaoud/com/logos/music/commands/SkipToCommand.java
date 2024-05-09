@@ -27,7 +27,7 @@ public class SkipToCommand implements CommandHandlerInterface {
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
         int trackNumber = event.getOption("track-number").getAsInt();
-        event.replyEmbeds(PlayerManager.getInstance().skipTo(event.getGuild(), event.getMember().getVoiceState(), trackNumber)).queue();
+        event.replyEmbeds(playerManager.skipTo(event.getGuild(), event.getMember().getVoiceState(), trackNumber)).queue();
     }
 
     @Override

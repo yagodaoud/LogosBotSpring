@@ -24,7 +24,7 @@ public class ShuffleCommand implements CommandHandlerInterface {
     }
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        event.replyEmbeds(PlayerManager.getInstance().shuffleQueue(event.getGuild(), event.getMember().getVoiceState())).queue();
+        event.replyEmbeds(playerManager.shuffleQueue(event.getGuild(), event.getMember().getVoiceState())).queue();
     }
 
     @Override

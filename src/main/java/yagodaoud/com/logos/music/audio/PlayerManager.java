@@ -27,13 +27,10 @@ import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 public class PlayerManager {
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
     private SpotifyHandler spotifyHandler;
-    private static PlayerManager INSTANCE;
 
     public PlayerManager() {
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
-
-        INSTANCE = this;
     }
 
     @SneakyThrows
@@ -201,9 +198,5 @@ public class PlayerManager {
     private void completeFutureWithMessage(CompletableFuture<MessageEmbed> future, AtomicReference<MessageEmbed> messageContainer, MessageEmbed message) {
         messageContainer.set(message);
         future.complete(messageContainer.get());
-    }
-
-    public static PlayerManager getInstance() {
-        return INSTANCE;
     }
 }

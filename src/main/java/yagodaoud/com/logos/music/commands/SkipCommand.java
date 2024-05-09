@@ -25,7 +25,7 @@ public class SkipCommand implements CommandHandlerInterface {
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        event.replyEmbeds(PlayerManager.getInstance().skipTrack(event.getGuild(), event.getMember().getVoiceState())).queue();
+        event.replyEmbeds(playerManager.skipTrack(event.getGuild(), event.getMember().getVoiceState())).queue();
     }
 
     @Override

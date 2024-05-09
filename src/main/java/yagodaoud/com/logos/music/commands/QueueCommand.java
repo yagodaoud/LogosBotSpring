@@ -24,7 +24,7 @@ public class QueueCommand implements CommandHandlerInterface {
     }
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        event.replyEmbeds(PlayerManager.getInstance().getQueue(event.getGuild(), event.getMember().getVoiceState())).queue();
+        event.replyEmbeds(playerManager.getQueue(event.getGuild(), event.getMember().getVoiceState())).queue();
     }
 
     @Override

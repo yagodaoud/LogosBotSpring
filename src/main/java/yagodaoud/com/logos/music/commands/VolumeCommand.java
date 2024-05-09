@@ -39,7 +39,7 @@ public class VolumeCommand implements CommandHandlerInterface {
             event.replyEmbeds(getWrongOptionTypeMessage("number")).queue();
             return;
         }
-        event.replyEmbeds(PlayerManager.getInstance().setVolume(event.getGuild(), event.getMember().getVoiceState(), volume)).queue();
+        event.replyEmbeds(playerManager.setVolume(event.getGuild(), event.getMember().getVoiceState(), volume)).queue();
     }
 
     @Override

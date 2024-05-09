@@ -25,7 +25,7 @@ public class ClearCommand implements CommandHandlerInterface {
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        event.replyEmbeds(PlayerManager.getInstance().clearQueue(event.getGuild(), event.getMember().getVoiceState())).queue();
+        event.replyEmbeds(playerManager.clearQueue(event.getGuild(), event.getMember().getVoiceState())).queue();
     }
 
     @Override

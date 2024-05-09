@@ -24,7 +24,7 @@ public class LoopCommand implements CommandHandlerInterface {
     }
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        event.replyEmbeds(PlayerManager.getInstance().loopQueue(event.getGuild(), event.getMember().getVoiceState())).queue();
+        event.replyEmbeds(playerManager.loopQueue(event.getGuild(), event.getMember().getVoiceState())).queue();
     }
 
     @Override

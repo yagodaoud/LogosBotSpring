@@ -31,7 +31,7 @@ public class ForcePlayCommand implements CommandHandlerInterface {
     public void handleCommand(SlashCommandInteractionEvent event) {
         String providerOption = event.getOption("force-play-provider") == null ? "yt" : event.getOption("force-play-provider").getAsString();
 
-        CompletableFuture<MessageEmbed> loadResultFuture = (PlayerManager.getInstance().forcePlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("force-play-query").getAsString(), providerOption));
+        CompletableFuture<MessageEmbed> loadResultFuture = (playerManager.forcePlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("force-play-query").getAsString(), providerOption));
         loadResultFuture.thenAccept(result -> event.replyEmbeds(result).queue());
     }
 

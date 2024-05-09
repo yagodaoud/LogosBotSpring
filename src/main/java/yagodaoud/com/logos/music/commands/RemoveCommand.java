@@ -32,7 +32,7 @@ public class RemoveCommand implements CommandHandlerInterface {
             return;
         }
         int trackNumber = event.getOption("track-index").getAsInt();
-        event.replyEmbeds(PlayerManager.getInstance().remove(event.getGuild(), event.getMember().getVoiceState(), trackNumber)).queue();
+        event.replyEmbeds(playerManager.remove(event.getGuild(), event.getMember().getVoiceState(), trackNumber)).queue();
     }
 
     @Override
