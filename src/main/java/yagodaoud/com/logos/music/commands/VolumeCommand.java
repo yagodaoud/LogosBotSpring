@@ -31,11 +31,14 @@ public class VolumeCommand implements CommandHandlerInterface {
             event.replyEmbeds(getNotAdminEmbedMessage()).queue();
             return;
         }
-        if (event.getOption("volume").getType() != OptionType.INTEGER) {
+
+        int volume;
+        try {
+            volume = event.getOption("volume").getAsInt();
+        } catch (Exception e) {
             event.replyEmbeds(getWrongOptionTypeMessage("number")).queue();
             return;
         }
-        int volume = event.getOption("volume").getAsInt();
         event.replyEmbeds(PlayerManager.getInstance().setVolume(event.getGuild(), event.getMember().getVoiceState(), volume)).queue();
     }
 
