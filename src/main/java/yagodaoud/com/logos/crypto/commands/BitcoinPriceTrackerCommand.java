@@ -12,7 +12,10 @@ import yagodaoud.com.logos.crypto.alertData.AlertDataTracker;
 import yagodaoud.com.logos.tools.Colors;
 
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
 import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
