@@ -1,11 +1,11 @@
 package yagodaoud.com.logos.listeners;
 
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
@@ -20,6 +20,7 @@ import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getSomethingWen
 import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getUnknownCommandEmbedMessage;
 
 @Component
+@Lazy
 public class BotCommandsListener extends ListenerAdapter {
     private final CommandRegistryService commandRegistry;
     private final DbEventHandler dbEventHandler;

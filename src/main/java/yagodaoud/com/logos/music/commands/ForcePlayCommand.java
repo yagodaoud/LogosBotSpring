@@ -14,25 +14,22 @@ import yagodaoud.com.logos.music.audio.PlayerManager;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getPlayerNotStartedEmbedMessage;
-
 @Component
 public class ForcePlayCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public ForcePlayCommand(CommandRegistryService commandRegistry) {
+    public ForcePlayCommand(CommandRegistryService commandRegistry, PlayerManager playerManager) {
         commandRegistry.registerCommand(this);
+        this.playerManager = playerManager;
     }
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        if (PlayerManager.getInstance() == null) {
-            event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
-            return;
-        }
         String providerOption = event.getOption("force-play-provider") == null ? "yt" : event.getOption("force-play-provider").getAsString();
 
-        CompletableFuture<MessageEmbed> loadResultFuture = (PlayerManager.getInstance().forcePlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("force-play-query").getAsString(), providerOption));
+        CompletableFuture<MessageEmbed> loadResultFuture = (playerManager.forcePlay(event.getChannel().asTextChannel(), event.getMember().getVoiceState(), event.getOption("force-play-query").getAsString(), providerOption));
         loadResultFuture.thenAccept(result -> event.replyEmbeds(result).queue());
     }
 

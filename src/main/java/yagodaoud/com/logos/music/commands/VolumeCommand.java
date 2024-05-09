@@ -12,14 +12,18 @@ import yagodaoud.com.logos.music.audio.PlayerManager;
 
 import java.util.List;
 
-import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.*;
+import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getNotAdminEmbedMessage;
+import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
 
 @Component
 public class VolumeCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public VolumeCommand(CommandRegistryService commandRegistry) {
+    public VolumeCommand(CommandRegistryService commandRegistry, PlayerManager playerManager) {
         commandRegistry.registerCommand(this);
+        this.playerManager = playerManager;
     }
 
     @Override
@@ -28,16 +32,15 @@ public class VolumeCommand implements CommandHandlerInterface {
             event.replyEmbeds(getNotAdminEmbedMessage()).queue();
             return;
         }
-        if (PlayerManager.getInstance() == null) {
-            event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
-            return;
-        }
-        if (event.getOption("volume").getType() != OptionType.INTEGER) {
+
+        int volume;
+        try {
+            volume = event.getOption("volume").getAsInt();
+        } catch (Exception e) {
             event.replyEmbeds(getWrongOptionTypeMessage("number")).queue();
             return;
         }
-        int volume = event.getOption("volume").getAsInt();
-        event.replyEmbeds(PlayerManager.getInstance().setVolume(event.getGuild(), event.getMember().getVoiceState(), volume)).queue();
+        event.replyEmbeds(playerManager.setVolume(event.getGuild(), event.getMember().getVoiceState(), volume)).queue();
     }
 
     @Override

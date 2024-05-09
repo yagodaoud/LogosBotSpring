@@ -11,29 +11,27 @@ import yagodaoud.com.logos.music.audio.PlayerManager;
 
 import java.util.List;
 
-import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getPlayerNotStartedEmbedMessage;
 import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
 
 @Component
 public class RemoveCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public RemoveCommand(CommandRegistryService commandRegistry) {
+    public RemoveCommand(CommandRegistryService commandRegistry, PlayerManager playerManager) {
         commandRegistry.registerCommand(this);
+        this.playerManager = playerManager;
     }
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        if (PlayerManager.getInstance() == null) {
-            event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
-            return;
-        }
         if (event.getOption("track-index").getType() != OptionType.INTEGER) {
             event.replyEmbeds(getWrongOptionTypeMessage("number")).queue();
             return;
         }
         int trackNumber = event.getOption("track-index").getAsInt();
-        event.replyEmbeds(PlayerManager.getInstance().remove(event.getGuild(), event.getMember().getVoiceState(), trackNumber)).queue();
+        event.replyEmbeds(playerManager.remove(event.getGuild(), event.getMember().getVoiceState(), trackNumber)).queue();
     }
 
     @Override

@@ -17,14 +17,16 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class PlayCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public PlayCommand(CommandRegistryService commandRegistry) {
+    public PlayCommand(CommandRegistryService commandRegistry, PlayerManager playerManager) {
         commandRegistry.registerCommand(this);
+        this.playerManager = playerManager;
     }
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        PlayerManager playerManager = new PlayerManager();
         String providerOption = event.getOption("provider") == null ? "yt" : event.getOption("provider").getAsString();
 
         event.deferReply().queue();

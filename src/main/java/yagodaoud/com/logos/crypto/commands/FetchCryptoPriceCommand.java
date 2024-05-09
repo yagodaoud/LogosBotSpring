@@ -4,8 +4,8 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
 import yagodaoud.com.logos.crypto.services.CoinMarketCapApiService;
@@ -18,8 +18,12 @@ import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component
 public class FetchCryptoPriceCommand implements CommandHandlerInterface {
-    CoinMarketCapApiService coinMarketCapApiService = new CoinMarketCapApiService(new RestTemplate());
-    public FetchCryptoPriceCommand(CommandRegistryService commandRegistry) {
+
+    private final CoinMarketCapApiService coinMarketCapApiService;
+
+    @Autowired
+    public FetchCryptoPriceCommand(CommandRegistryService commandRegistry, CoinMarketCapApiService coinMarketCapApiService) {
+        this.coinMarketCapApiService = coinMarketCapApiService;
         commandRegistry.registerCommand(this);
     }
 

@@ -11,24 +11,21 @@ import yagodaoud.com.logos.music.audio.PlayerManager;
 
 import java.util.List;
 
-import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getPlayerNotStartedEmbedMessage;
-
 @Component
 public class JumpToCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public JumpToCommand(CommandRegistryService commandRegistry) {
+    public JumpToCommand(CommandRegistryService commandRegistry, PlayerManager playerManager) {
         commandRegistry.registerCommand(this);
+        this.playerManager = playerManager;
     }
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        if (PlayerManager.getInstance() == null) {
-            event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
-            return;
-        }
         String trackNumber = event.getOption("track-time").getAsString();
-        event.replyEmbeds(PlayerManager.getInstance().jumpTo(event.getGuild(), event.getMember().getVoiceState(), trackNumber)).queue();
+        event.replyEmbeds(playerManager.jumpTo(event.getGuild(), event.getMember().getVoiceState(), trackNumber)).queue();
     }
 
     @Override

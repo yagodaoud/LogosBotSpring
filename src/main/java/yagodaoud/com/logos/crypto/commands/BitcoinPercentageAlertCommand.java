@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
 import yagodaoud.com.logos.crypto.alertData.AlertDataPercentage;
-import yagodaoud.com.logos.crypto.alertData.AlertDataTracker;
 import yagodaoud.com.logos.tools.Colors;
 
 import java.util.HashMap;

@@ -10,22 +10,19 @@ import yagodaoud.com.logos.music.audio.PlayerManager;
 
 import java.util.List;
 
-import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getPlayerNotStartedEmbedMessage;
-
 @Component
 public class StopCommand implements CommandHandlerInterface {
 
+    private final PlayerManager playerManager;
+
     @Autowired
-    public StopCommand(CommandRegistryService commandRegistry) {
+    public StopCommand(CommandRegistryService commandRegistry, PlayerManager playerManager) {
         commandRegistry.registerCommand(this);
+        this.playerManager = playerManager;
     }
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        if (PlayerManager.getInstance() == null) {
-            event.replyEmbeds(getPlayerNotStartedEmbedMessage()).queue();
-            return;
-        }
-        event.replyEmbeds(PlayerManager.getInstance().stopPlayer(event.getGuild(), event.getMember().getVoiceState())).queue();
+        event.replyEmbeds(playerManager.stopPlayer(event.getGuild(), event.getMember().getVoiceState())).queue();
     }
 
     @Override
