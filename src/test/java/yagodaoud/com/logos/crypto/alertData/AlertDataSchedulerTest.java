@@ -1,4 +1,4 @@
-package yagodaoud.com.logos.crypto;
+package yagodaoud.com.logos.crypto.alertData;
 
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.junit.jupiter.api.BeforeEach;
