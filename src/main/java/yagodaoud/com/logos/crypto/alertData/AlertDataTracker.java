@@ -1,5 +1,6 @@
 package yagodaoud.com.logos.crypto.alertData;
 
+import lombok.Getter;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.crypto.services.CoinMarketCapApiService;
@@ -11,6 +12,7 @@ public class AlertDataTracker {
     private boolean isActive;
     private final double targetPrice;
     private double currentPrice;
+    @Getter
     private double priceTrend;
     private final String userId;
     private final MessageChannel channel;
@@ -20,16 +22,14 @@ public class AlertDataTracker {
         this.channel = channel;
         this.userId = userId;
         this.isActive = true;
-        updatePriceTrend();
+        updatePriceTrend(parsePrice(new CoinMarketCapApiService(new RestTemplate()).getCryptoPrice("BTC")));
     }
 
     public void updateCurrentPrice(String cryptoPrice) {
         currentPrice = parsePrice(cryptoPrice);
     }
 
-    public void updatePriceTrend() {
-        double btcStartingPrice = parsePrice(new CoinMarketCapApiService(new RestTemplate()).getCryptoPrice("BTC"));
-
+    public void updatePriceTrend(double btcStartingPrice) {
         priceTrend = -1; // No change
 
         if (btcStartingPrice > targetPrice) {

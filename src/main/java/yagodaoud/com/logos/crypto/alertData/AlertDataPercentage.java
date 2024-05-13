@@ -1,14 +1,18 @@
 package yagodaoud.com.logos.crypto.alertData;
 
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import yagodaoud.com.logos.tools.Colors;
 
 import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
+@RequiredArgsConstructor
 public class AlertDataPercentage {
     private boolean isActive;
     private double percentage;
     private double currentPrice;
+    @Setter
     private double lastPrice;
     private final MessageChannel channel;
 
@@ -39,8 +43,8 @@ public class AlertDataPercentage {
         if (!isActive || message == null) {
             return;
         }
-        channel.sendMessageEmbeds(messageEmbedBuilder(message, Colors.SUCCESS)).queue();
         isActive = false;
+        channel.sendMessageEmbeds(messageEmbedBuilder(message, Colors.SUCCESS)).queue();
     }
 
     public double priceVariationCalculator() {
