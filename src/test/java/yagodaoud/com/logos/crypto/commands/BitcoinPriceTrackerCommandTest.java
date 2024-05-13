@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import yagodaoud.com.logos.commands.CommandRegistryService;
-import yagodaoud.com.logos.crypto.alertData.AlertDataPercentage;
 import yagodaoud.com.logos.crypto.alertData.AlertDataTracker;
 import yagodaoud.com.logos.tools.Colors;
 
@@ -29,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getWrongOptionTypeMessage;
 import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
@@ -67,7 +65,7 @@ public class BitcoinPriceTrackerCommandTest {
             when(event.replyEmbeds(any(MessageEmbed.class))).thenReturn(mock(ReplyCallbackAction.class));
         }
         @Test
-        public void shouldHandleValidPercentageOption() {
+        public void shouldHandleValidTargetPriceOption() {
             when(event.isFromGuild()).thenReturn(true);
             when(textChannel.getIdLong()).thenReturn(123L);
             when(event.getUser()).thenReturn(user);
@@ -82,7 +80,7 @@ public class BitcoinPriceTrackerCommandTest {
         }
 
         @Test
-        public void shouldHandleInvalidPercentageOption() {
+        public void shouldHandleInvalidTargetPriceOption() {
             when(event.getOption("target-price").getAsDouble()).thenThrow(NumberFormatException.class);
             command.handleCommand(event);
 

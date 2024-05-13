@@ -52,7 +52,7 @@ public class BitcoinPriceSchedulerCommandTest {
             when(event.replyEmbeds(any(MessageEmbed.class))).thenReturn(mock(ReplyCallbackAction.class));
         }
         @Test
-        public void shouldHandleValidPercentageOption() {
+        public void shouldHandleSchedulerAndSendMessage() {
             when(event.isFromGuild()).thenReturn(true);
             when(textChannel.getIdLong()).thenReturn(123L);
             when(event.getChannel()).thenReturn(messageChannelUnion);
