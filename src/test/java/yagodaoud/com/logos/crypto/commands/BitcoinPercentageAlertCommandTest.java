@@ -51,8 +51,6 @@ public class BitcoinPercentageAlertCommandTest {
 
         @BeforeEach
         public void setup() {
-            textChannel = mock(TextChannel.class);
-            event = mock(SlashCommandInteractionEvent.class);
             Map<Long, AlertDataPercentage> alertDataPercentageMap = new HashMap<>(Collections.singletonMap(123L, mock(AlertDataPercentage.class)));
             command.alertDataMap.put("1", alertDataPercentageMap);
 

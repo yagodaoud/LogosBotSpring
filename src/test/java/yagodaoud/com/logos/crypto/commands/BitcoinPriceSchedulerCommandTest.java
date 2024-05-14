@@ -45,8 +45,6 @@ public class BitcoinPriceSchedulerCommandTest {
 
         @BeforeEach
         public void setup() {
-            textChannel = mock(TextChannel.class);
-            event = mock(SlashCommandInteractionEvent.class);
             command.alertDataMap.put(1L, mock(AlertDataScheduler.class));
 
             when(event.replyEmbeds(any(MessageEmbed.class))).thenReturn(mock(ReplyCallbackAction.class));

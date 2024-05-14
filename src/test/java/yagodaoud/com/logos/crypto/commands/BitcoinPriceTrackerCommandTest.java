@@ -54,8 +54,6 @@ public class BitcoinPriceTrackerCommandTest {
 
         @BeforeEach
         public void setup() {
-            textChannel = mock(TextChannel.class);
-            event = mock(SlashCommandInteractionEvent.class);
             Map<Long, AlertDataTracker> alertDataTrackerMap = new HashMap<>(Collections.singletonMap(123L, mock(AlertDataTracker.class)));
             command.alertDataMap.put("1", alertDataTrackerMap);
 
