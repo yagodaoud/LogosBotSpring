@@ -67,4 +67,8 @@ public class BitcoinPriceTrackerCommand implements CommandHandlerInterface{
     public List<OptionData> getOptions() {
         return List.of(new OptionData(OptionType.STRING, "target-price", "Target price desired", true));
     }
+
+    public Map<String, Map<Long, AlertDataTracker>> getAlertDataMap() {
+        return this.alertDataMap;
+    }
 }

@@ -52,6 +52,10 @@ public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
         }
     }
 
+    public Map<String, Map<Long, AlertDataPercentage>> getAlertDataMap() {
+        return this.alertDataMap;
+    }
+
     @Override
     public String getName() {
         return "bitcoin-percentage-alert";

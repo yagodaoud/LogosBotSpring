@@ -21,7 +21,7 @@ public class BitcoinPercentageAlertService {
 
     @Scheduled(fixedRate = 60 * 60000, initialDelay = 0)
     public void trackBitcoinPercentage() {
-        bitcoinPercentageAlertCommand.alertDataMap.forEach((channelId, userAlertData) -> {
+        bitcoinPercentageAlertCommand.getAlertDataMap().forEach((channelId, userAlertData) -> {
             userAlertData.values().forEach(alertData -> {
                 alertData.updateCurrentPrice(coinMarketCapApiService.getCryptoPrice("BTC"));
                 String message = alertData.generateNotificationMessage();
