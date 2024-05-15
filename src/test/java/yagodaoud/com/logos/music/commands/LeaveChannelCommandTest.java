@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import yagodaoud.com.logos.commands.CommandRegistryService;
 import yagodaoud.com.logos.tools.Colors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -41,48 +44,68 @@ public class LeaveChannelCommandTest {
     @InjectMocks
     private LeaveChannelCommand command;
 
-    @BeforeEach
-    public void setup() {
-        when(event.replyEmbeds(any(MessageEmbed.class))).thenReturn(mock(ReplyCallbackAction.class));
+    @Nested
+    class NestedHandleCommandBlock {
+
+        @BeforeEach
+        public void setup() {
+            when(event.replyEmbeds(any(MessageEmbed.class))).thenReturn(mock(ReplyCallbackAction.class));
+        }
+
+        @Test
+        public void handleCommand() {
+            when(event.getMember()).thenReturn(member);
+            when(event.getMember().getVoiceState()).thenReturn(voiceState);
+
+            when(voiceState.inAudioChannel()).thenReturn(true);
+            when(voiceState.getChannel()).thenReturn(channel);
+            when(voiceState.getGuild()).thenReturn(guild);
+            when(voiceState.getGuild().getAudioManager()).thenReturn(audioManager);
+
+            command.handleCommand(event);
+
+            verify(event, times(1)).replyEmbeds(messageEmbedBuilder("Left the voice channel.", Colors.SUCCESS));
+        }
+
+        @Test
+        public void shouldNotLeaveVoiceChannel() {
+            when(event.getMember()).thenReturn(member);
+            when(event.getMember().getVoiceState()).thenReturn(voiceState);
+
+            when(voiceState.inAudioChannel()).thenReturn(false);
+
+            command.handleCommand(event);
+
+            verify(event, times(1)).replyEmbeds(messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT));
+        }
+
+        @Test
+        public void shouldFailToLeaveVoiceChannel() {
+            when(event.getMember()).thenReturn(member);
+            when(event.getMember().getVoiceState()).thenReturn(voiceState);
+
+            when(voiceState.inAudioChannel()).thenReturn(true);
+            when(voiceState.getChannel()).thenReturn(null);
+
+            command.handleCommand(event);
+
+            verify(event, times(1)).replyEmbeds(messageEmbedBuilder("Failed to leave voice channel.", Colors.ADVERT));
+        }
+
     }
 
     @Test
-    public void handleCommand() {
-        when(event.getMember()).thenReturn(member);
-        when(event.getMember().getVoiceState()).thenReturn(voiceState);
-
-        when(voiceState.inAudioChannel()).thenReturn(true);
-        when(voiceState.getChannel()).thenReturn(channel);
-        when(voiceState.getGuild()).thenReturn(guild);
-        when(voiceState.getGuild().getAudioManager()).thenReturn(audioManager);
-
-        command.handleCommand(event);
-
-        verify(event, times(1)).replyEmbeds(messageEmbedBuilder("Left the voice channel.", Colors.SUCCESS));
+    public void shouldReturnName() {
+        assertEquals(command.getName(), "leave");
     }
 
     @Test
-    public void shouldNotLeaveVoiceChannel() {
-        when(event.getMember()).thenReturn(member);
-        when(event.getMember().getVoiceState()).thenReturn(voiceState);
-
-        when(voiceState.inAudioChannel()).thenReturn(false);
-
-        command.handleCommand(event);
-
-        verify(event, times(1)).replyEmbeds(messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT));
+    public void shouldReturnDescription() {
+        assertEquals(command.getDescription(), "Leave the voice channel.");
     }
 
     @Test
-    public void shouldFailToLeaveVoiceChannel() {
-        when(event.getMember()).thenReturn(member);
-        when(event.getMember().getVoiceState()).thenReturn(voiceState);
-
-        when(voiceState.inAudioChannel()).thenReturn(true);
-        when(voiceState.getChannel()).thenReturn(null);
-
-        command.handleCommand(event);
-
-        verify(event, times(1)).replyEmbeds(messageEmbedBuilder("Failed to leave voice channel.", Colors.ADVERT));
+    public void shouldReturnNullOptions() {
+        assertNull(command.getOptions());
     }
 }
