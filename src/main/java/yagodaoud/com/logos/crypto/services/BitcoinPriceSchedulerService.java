@@ -22,7 +22,7 @@ public class BitcoinPriceSchedulerService {
     @Scheduled(cron = "0 0 0 * * *", zone = "UTC")
     public void scheduleBitcoinPrice() {
         String btcPrice = coinMarketCapApiService.getCryptoPrice("BTC");
-        bitcoinPriceSchedulerCommand.alertDataMap.forEach((channelId, alertData) -> {
+        bitcoinPriceSchedulerCommand.getAlertDataMap().forEach((channelId, alertData) -> {
                 alertData.sendBitcoinPrice(btcPrice);
         });
     }

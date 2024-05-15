@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
 import yagodaoud.com.logos.crypto.alertData.AlertDataScheduler;
+import yagodaoud.com.logos.crypto.alertData.AlertDataTracker;
 import yagodaoud.com.logos.tools.Colors;
 
 import java.util.HashMap;
@@ -55,5 +56,9 @@ public class BitcoinPriceSchedulerCommand implements CommandHandlerInterface {
     @Override
     public List<OptionData> getOptions() {
         return null;
+    }
+
+    public Map<Long, AlertDataScheduler> getAlertDataMap() {
+        return this.alertDataMap;
     }
 }
