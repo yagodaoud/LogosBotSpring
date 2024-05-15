@@ -21,7 +21,7 @@ public class BitcoinPriceTrackerService {
     @Scheduled(fixedRate = 3 * 60000)
     public void trackBitcoinPrice() {
         String btcPrice = coinMarketCapApiService.getCryptoPrice("BTC");
-        bitcoinPriceTrackerCommand.alertDataMap.forEach((userId, userAlertData) -> {
+        bitcoinPriceTrackerCommand.getAlertDataMap().forEach((userId, userAlertData) -> {
             userAlertData.values().forEach(alertData -> {
                 alertData.updateCurrentPrice(btcPrice);
                 String message = alertData.generateNotificationMessage();
