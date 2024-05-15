@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @ExtendWith(MockitoExtension.class)
-public class JoinCommandTest {
+public class JoinChannelCommandTest {
     @Mock
     private CommandRegistryService commandRegistry;
     @Mock
