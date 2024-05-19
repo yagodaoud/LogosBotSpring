@@ -19,11 +19,11 @@ public class AudioEventHandler {
 
     public MessageEmbed joinVoiceChannel() {
         if (!guildVoiceState.inAudioChannel()) {
-            return  messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
+            return messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
         }
 
         if (audioChannel == null) {
-            return  messageEmbedBuilder("Failed to join voice channel.", Colors.ADVERT);
+            return messageEmbedBuilder("Failed to join voice channel.", Colors.ADVERT);
         }
 
         guildVoiceState.getGuild().getAudioManager().openAudioConnection(guildVoiceState.getChannel());
