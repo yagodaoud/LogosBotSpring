@@ -1,4 +1,4 @@
-package yagodaoud.com.logos;
+package yagodaoud.com;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
