@@ -1,4 +1,4 @@
-package yagodaoud.com.logos.help.view;
+package yagodaoud.com.logos.helper.view;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;

@@ -5,8 +5,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.commands.CommandRegistryService;
 import yagodaoud.com.logos.db.DbEventHandler;
+import yagodaoud.com.logos.db.entity.AnnouncementChannel;
+import yagodaoud.com.logos.db.repository.AnnouncementChannelRepository;
 import yagodaoud.com.logos.db.repository.CommandHistoryRepository;
 import yagodaoud.com.logos.db.repository.UserRepository;
+
+import java.util.Optional;
 
 @Configuration
 public class AppConfig {
@@ -24,4 +28,6 @@ public class AppConfig {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
+
 }
