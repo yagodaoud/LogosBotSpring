@@ -19,27 +19,66 @@
 <button id="sendAnnouncement">Send</button>
 <div id="result"></div>
 
+<div>
+    <div id="guilds">
+        <ul th:if="${guilds}" class="guild-list">
+            <li th:each="guild : ${guilds}">
+                <span th:text="${guild.guildName}"></span>
+                <br>
+                <div th:if="${guild.guildIconUrl}">
+                    <img th:src="${guild.guildIconUrl}" alt="Guild Icon" />
+                </div>
+                <div th:if="${guild.guildIconUrl == null}">
+                    <span th:text="${guild.guildName.substring(0, 1)}"></span>
+                </div>
+                <span th:text="${guild.guildMemberCount}"></span>
+            </li>
+        </ul>
+        <div>
+            <button id="updateGuilds">Update Guilds</button>
+        </div>
+    </div>
+</div>
+
+
 <script>
-    $(document).ready(function() {
-        $('#sendAnnouncement').click(function() {
-            const message = $('#announcementMessage').val();
-            const csrfToken = $('#csrfToken').val();
-            $.ajax({
-                url: '/dashboard/announce',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ message: message}),
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-                },
-                success: function(response) {
-                    const result = response;
-                    $('#result').text(result);
-                },
-                error: function(xhr, status, error) {
-                    $('#result').text('Error: ' + xhr.responseText);
-                }
-            });
+    $('#sendAnnouncement').click(function() {
+        const message = $('#announcementMessage').val();
+        const csrfToken = $('#csrfToken').val();
+        $.ajax({
+            url: '/dashboard/announce',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ message: message}),
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+            },
+            success: function(response) {
+                const result = response;
+                $('#result').text(result);
+            },
+            error: function(xhr, status, error) {
+                $('#result').text('Error: ' + xhr.responseText);
+            }
+        });
+    });
+
+    $('#updateGuilds').click(function() {
+        const csrfToken = $('#csrfToken').val();
+        $.ajax({
+            url: '/dashboard/updateGuilds',
+            type: 'POST',
+            contentType: 'application/json',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+            },
+            success: function(response) {
+                const result = response;
+                $('#result').text(result);
+            },
+            error: function(xhr, status, error) {
+                $('#result').text('Error: ' + xhr.responseText);
+            }
         });
     });
 </script>

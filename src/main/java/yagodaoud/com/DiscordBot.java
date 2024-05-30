@@ -22,6 +22,6 @@ public class DiscordBot {
 
 	@Bean
 	public String discordBotToken() {
-		return Dotenv.configure().load().get("TOKENDISCORDTEST");
+		return Dotenv.configure().load().get("TOKENDISCORD");
 	}
 }
