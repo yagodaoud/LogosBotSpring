@@ -38,6 +38,24 @@
             <button id="updateGuilds">Update Guilds</button>
         </div>
     </div>
+    <div id="audioManagers">
+        <ul th:if="${audioManagers}" class="audioManagers-list">
+            <li th:each="audioManager : ${audioManagers}">
+                <div>
+                    <span th:text="${audioManager.getName()}"></span>
+                    <button th:value="${audioManager.getId()}" class="disconnectVoiceChannel">
+                        Disconnect
+                    </button>
+                    <br>
+                    <span th:text="${audioManager.getId()}"></span>
+                    <div th:if="${audioManager.getGuild().getIconUrl()}">
+                        <img th:src="${audioManager.getGuild().getIconUrl()}" alt="Guild Icon" />
+                    </div>
+                    <span th:text="${audioManager.getGuild().getName()}"></span>
+                </div>
+            </li>
+        </ul>
+    </div>
 </div>
 
 
@@ -79,6 +97,30 @@
             error: function(xhr, status, error) {
                 $('#result').text('Error: ' + xhr.responseText);
             }
+        });
+    });
+
+     $(document).ready(function() {
+        $('.disconnectVoiceChannel').click(function() {
+            const csrfToken = $('#csrfToken').val();
+            const audioManagerId = $(this).val();
+
+            $.ajax({
+                url: '/dashboard/disconnectVoiceChannel',
+                type: 'POST',
+                data: audioManagerId,
+                contentType: 'application/json',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+                },
+                success: function(response) {
+                    const result = response;
+                    $('#result').text(result);
+                },
+                error: function(xhr, status, error) {
+                    $('#result').text('Error: ' + xhr.responseText);
+                }
+            });
         });
     });
 </script>
