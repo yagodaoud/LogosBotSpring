@@ -1,7 +1,6 @@
 package yagodaoud.com.logos.music.audio;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Guild;
@@ -187,6 +186,13 @@ public class PlayerManager {
         }
         GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
         return messageEmbedBuilder(musicManager.scheduler.remove(trackNumber), Colors.SUCCESS);
+    }
+
+    public MessageEmbed restartPlayer(Guild guild, GuildVoiceState voiceState) {
+        if (!voiceState.inAudioChannel()) {
+            return messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
+        }
+        return messageEmbedBuilder(GuildMusicManager.restartPlayer(guild, voiceState, this.audioPlayerManager), Colors.SUCCESS);
     }
 
     private boolean isUrl(String url) {
