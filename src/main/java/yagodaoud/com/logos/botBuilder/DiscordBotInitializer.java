@@ -1,6 +1,7 @@
 package yagodaoud.com.logos.botBuilder;
 
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -21,6 +22,8 @@ public class DiscordBotInitializer {
     private final CommandRegistryService commandRegistry;
     private final String token;
     private final ApplicationContext context;
+    @Getter
+    private static JDA discordBot;
 
     @Autowired
     public DiscordBotInitializer(CommandRegistryService commandRegistry, String token, ApplicationContext context) {
@@ -41,7 +44,7 @@ public class DiscordBotInitializer {
         addGatewayIntents(builder);
         configureEventListeners(builder, context);
 
-        JDA discordBot = builder.build();
+        discordBot = builder.build();
         setActivity(discordBot);
     }
 

@@ -26,6 +26,7 @@ public class AudioEventHandler {
             return messageEmbedBuilder("Failed to join voice channel.", Colors.ADVERT);
         }
 
+        guildVoiceState.getGuild().getAudioManager().setSelfDeafened(true);
         guildVoiceState.getGuild().getAudioManager().openAudioConnection(guildVoiceState.getChannel());
 
         return messageEmbedBuilder("Joining: `" + audioChannel.getName() + "`.", Colors.SUCCESS);

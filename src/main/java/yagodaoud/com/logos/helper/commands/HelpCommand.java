@@ -1,4 +1,4 @@
-package yagodaoud.com.logos.help.commands;
+package yagodaoud.com.logos.helper.commands;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -9,7 +9,7 @@ import yagodaoud.com.logos.commands.CommandRegistryService;
 
 import java.util.List;
 
-import static yagodaoud.com.logos.help.view.DefaultHelpView.getHelpView;
+import static yagodaoud.com.logos.helper.view.DefaultHelpView.getHelpView;
 
 @Component
 public class HelpCommand implements CommandHandlerInterface {

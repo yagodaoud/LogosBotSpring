@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Dashboard</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{static/css/index.css}" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row content">
+        <div class="col-sm-3 sidenav hidden-xs">
+            <div class="row">
+                <div class="col-sm-4">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1518/1518886.png" alt="GymManager" style="width: 60px; height: 58px;">
+                </div>
+                <div class="col-sm-1">
+                    <h3 style="font-size: 20px; margin-bottom: 70px; padding-bottom: 40px;">GymManager</h3>
+                </div>
+            </div>
+            <ul class="nav nav-stacked">
+                <li class="active"><a href="dashboard"><img src="https://img.icons8.com/?size=50&id=vFqlDrzMYOT0&format=png" alt="Dashboard">Dashboard</a></li>
+                <li><a href="#section2"><img src="https://www.svgrepo.com/show/86725/person.svg" alt="Alunos">Alunos</a></li>
+                <li><a href="funcionarios"><img src="https://cdn-icons-png.freepik.com/256/782/782899.png?semt=ais_hybrid" alt="Funcionários">Funcionários</a></li>
+                <li><a href="#section4"><img src="https://www.svgrepo.com/show/592/money.svg" alt="Financeiro">Financeiro</a></li>
+                <li><a href="#section5"><img src="https://www.svgrepo.com/download/43043/report.svg" alt="Relatórios">Relatórios</a></li>
+            </ul><br>
+        </div>
+        <div class="horizontal-div">
+            <img src="https://cdn-icons-png.flaticon.com/128/12314/12314153.png" style="width: 40px; height: 40px; margin-right: 10px; margin-left: 50px;" alt="Dashboard Icon" class="dashboard-icon">
+            <span style="font-size: 20px;">Dashboard</span>
+            <input type="text" class="search-bar" placeholder="Buscar...">
+            <button class="search-button"><i class="fas fa-search"></i></button>
+            <img class="plus" src="https://cdn2.iconfinder.com/data/icons/everything-but-the-kitchen-sink-2/100/common-06-512.png" alt="Add">
+            <img class="bell" src="https://static-00.iconduck.com/assets.00/notification-bell-icon-1775x2048-y1w4ovo2.png" alt="Notification">
+            <img class="user" src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png" alt="Notification">
+        </div>
+        <div class="col-sm-5" style="padding-left: 80px; padding-top: 50px; width: 36%;">
+            <div class="well">
+                <h5 class="title2">Alunos</h5>
+                <div class="data-container">
+                    <p class="data2" style="font-size: 17px; left: 49%;">Ativos: 87</p>
+                    <p class="additional-text">Total:  100</p>
+                </div>
+                <span class="circle">
+                    <img src="https://www.svgrepo.com/show/86725/person.svg" alt="Alunos" style="width: 100%; height: 100%; border-radius: 50%;">
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-5" style="padding-left: 80px; padding-top: 50px; width: 36%;">
+            <div class="well">
+                <h5 class="title2">Receita</h5>
+                <p class="data3" style="font-size: 20px; left: 52%;">R$ 12.000,00</p>
+                <span class="circle">
+                    <img src="https://www.svgrepo.com/show/59997/dollar-sign.svg" alt="Receita" style="width: 100%; height: 100%; border-radius: 50%;">
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-5" style="padding-left: 80px; padding-top: 20px; width: 36%;">
+            <div class="well">
+                <h5 class="title">Funcionários</h5>
+                <p class="data" style="font-size: 20px; left: 47%;" th:text="'Total: ' + ${totalEmployees}"></p>
+                <span class="circle">
+                    <img src="https://cdn-icons-png.freepik.com/256/782/782899.png?semt=ais_hybrid" alt="Funcionários" style="width: 100%; height: 100%; border-radius: 50%;">
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-5" style="padding-left: 80px; padding-top: 20px; width: 36%;">
+            <div class="well">
+                <h5 class="title">Conversão</h5>
+                <p class="data" style="font-size: 25px;">42%</p>
+                <span class="circle">
+                    <img src="https://cdn-icons-png.flaticon.com/128/1055/1055214.png" alt="Conversão" style="width: 70%; height: 70%; border-radius: 10%;">
+                </span>
+            </div>
+        </div>
+        <img src="/images/chart.png" alt="Conversão" style="padding-left: 100px; width: 70%; max-height: 400px; border-radius: 10%;">
+    </div>
+</div>
+</body>
+</html>

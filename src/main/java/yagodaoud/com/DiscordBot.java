@@ -1,4 +1,4 @@
-package yagodaoud.com.logos;
+package yagodaoud.com;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
@@ -22,6 +22,6 @@ public class DiscordBot {
 
 	@Bean
 	public String discordBotToken() {
-		return Dotenv.configure().load().get("TOKENDISCORDTEST");
+		return Dotenv.configure().load().get("TOKENDISCORD");
 	}
 }

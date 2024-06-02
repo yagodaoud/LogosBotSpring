@@ -14,8 +14,8 @@ import yagodaoud.com.logos.db.DbEventHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-import static yagodaoud.com.logos.help.view.HelpCryptoView.getCryptoView;
-import static yagodaoud.com.logos.help.view.HelpMusicView.getMusicView;
+import static yagodaoud.com.logos.helper.view.HelpCryptoView.getCryptoView;
+import static yagodaoud.com.logos.helper.view.HelpMusicView.getMusicView;
 import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getSomethingWentWrongEmbedMessage;
 import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getUnknownCommandEmbedMessage;
 
@@ -52,6 +52,7 @@ public class BotCommandsListener extends ListenerAdapter {
             }
             event.replyEmbeds(getUnknownCommandEmbedMessage(commandName)).queue();
         } catch (Exception exception) {
+            System.out.println(exception.getMessage());
             event.replyEmbeds(getSomethingWentWrongEmbedMessage()).queue();
         }
     }
