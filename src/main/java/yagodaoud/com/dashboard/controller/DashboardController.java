@@ -31,8 +31,7 @@ import java.util.stream.Collectors;
 @Lazy
 public class DashboardController {
 
-    @Autowired
-    private AnnouncementChannelRepository announcementChannelRepository;
+
     @Autowired
     private GuildRepository guildRepository;
     private final JDA discordBot = DiscordBotInitializer.getDiscordBot();
@@ -72,22 +71,7 @@ public class DashboardController {
     }
 
 
-    @PostMapping("/dashboard/announce")
-    @ResponseBody
-    public String sendGlobalAnnouncement(@RequestBody String announcement) {
-        String message = "";
-        ObjectMapper objectMapper = new ObjectMapper();
 
-        try {
-            JsonNode jsonNode = objectMapper.readTree(announcement);
-            message = jsonNode.get("message").asText();
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        sendAnnouncementOnAllChannels(discordBot, message);
-
-        return "{\"status\":\"Announcement sent: " + message + "\"}";
-    }
 
     public List<String> getAllGuilds(JDA bot) {
         List<Guild> guilds = bot.getGuilds();
@@ -115,9 +99,6 @@ public class DashboardController {
                 .collect(Collectors.toList());
     }
 
-    public void sendAnnouncementOnAllChannels(JDA bot, String message) {
-        List<AnnouncementChannel> channelList = (ArrayList<AnnouncementChannel>) announcementChannelRepository.findAll();
-        channelList.forEach(c -> bot.getTextChannelById(c.getChannelId()).sendMessage(DefaultAnnouncementView.getDefaultAnnouncementView(bot, message)).queue());
-    }
+
 }
 
