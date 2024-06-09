@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 @Lazy
 public class DashboardController {
 
-
     @Autowired
     private GuildRepository guildRepository;
     private final JDA discordBot = DiscordBotInitializer.getDiscordBot();
@@ -39,11 +38,6 @@ public class DashboardController {
         return "dashboard";
     }
 
-    @PostMapping("/dashboard/updateGuilds")
-    @ResponseBody
-    public List<String> updateGuilds() {
-        return getAllGuilds(discordBot);
-    }
     @PostMapping("/dashboard/disconnectVoiceChannel")
     @ResponseBody
     public String disconnectVoiceChannel(@RequestBody String channelId) {
@@ -62,25 +56,6 @@ public class DashboardController {
         audioManager.closeAudioConnection();
 
         return "{\"status\":\"Disconnected from: " + channelName + "\"}";
-    }
-
-    public List<String> getAllGuilds(JDA bot) {
-        List<Guild> guilds = bot.getGuilds();
-
-        guildRepository.deleteAll();
-
-        guilds.forEach(guild -> {
-            yagodaoud.com.logos.db.entity.Guild guildEntity = new yagodaoud.com.logos.db.entity.Guild();
-            guildEntity.setGuildId(guild.getId());
-            guildEntity.setGuildName(guild.getName());
-            guildEntity.setGuildDescription(guild.getDescription());
-            guildEntity.setGuildIconUrl(guild.getIconUrl());
-            guildEntity.setGuildMemberCount(guild.getMemberCount());
-
-            guildRepository.save(guildEntity);
-        });
-
-        return guilds.stream().map(Guild::getName).toList();
     }
 
     public List<AudioChannelUnion> getAllConnectedChannels(JDA bot) {
