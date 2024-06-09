@@ -5,125 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" th:href="@{static/css/dashboard.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{static/css/announcements.css}" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<style>
-    .header {
-     background-color: #333;
-     color: white;
-     padding: 15px 0;
-     height: 80px;
-     margin-left: 120px;
-     display: flex;
-     justify-content: center;
- }
-
- .header-container {
-     width: 100%;
-     max-width: 1200px;
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
- }
-
- .full-height-div {
-     height: 80vh;
-     width: 170px;
-     position: fixed;
-     top: 0;
-     left: 0;
-     background-color: #333;
-     border-top-right-radius: 10px;
- }
-
- .logo {
-     font-size: 1.5em;
-     font-weight: bold;
- }
-
- .user-profile {
-     display: flex;
-     align-items: center;
- }
-
- .user-avatar {
-     width: 40px;
-     height: 40px;
-     border-radius: 50%;
-     margin-right: 10px;
- }
-
- .user-name {
-     font-size: 1em;
- }
-
- .logos-header {
-     display: flex;
-     flex-direction: row;
-     align-items: center;
-     padding: 20px 0;
- }
-
- .logos-title {
-     color: white;
-     margin: 18px;
-     font-size: 18px;
- }
-
- .logos-icon {
-     width: 60px;
-     height: 60px;
- }
-
-    .sidenav img {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
-    vertical-align: middle;
-}
-
-.sidenav .nav-stacked li a {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    text-decoration: none;
-    color: #000;
-}
-
-.sidenav .nav-stacked li.active a {
-    background-color: #ddd;
-}
-
-.data {
-    border: solid black;
-    height: 72vh;
-    display:flex;
-}
-
-.announcement {
-    margin-top: 20px;
-    border: solid black;
-    align-items: center;
-    text-align: center;
-}
-
-.announcement-title {
-    font-size: 30px;
-}
-
-.announcement-history {
-    margin-top: 20px;
-}
-
-</style>
 <body>
-
-
-
 <header class="header">
     <div class="header-container">
         <div class="logo">Announcements</div>
@@ -164,13 +52,14 @@
             <div class="announcement-title">
                 Announcement History
             </div>
-            <ul>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
+            <ul th:if="${announcements}" class="announcement-list">
+                <li th:each="announcement : ${announcements}">
+                    <span th:text="${announcement.announcementMessage}"></span>
+                    <br>
+                    <span th:text="${announcement.formattedDateAdded}"></span>
+                </li>
             </ul>
+            <div th:unless="${announcements}">No announcements yet</div>
         </div>
     </div>
 </div>
@@ -188,13 +77,42 @@
                 xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
             },
             success: function(response) {
-                const result = response;
-                $('#result').text(result);
+                $('#result').text(response);
+                fetchAnnouncements();
             },
             error: function(xhr, status, error) {
                 $('#result').text('Error: ' + xhr.responseText);
             }
         });
     });
+
+    function fetchAnnouncements() {
+        $.ajax({
+            url: '/announcements/list',
+            type: 'GET',
+            success: function(response) {
+                const announcements = response;
+                updateAnnouncementList(announcements);
+            },
+            error: function(xhr, status, error) {
+                $('#result').text('Error fetching announcements: ' + xhr.responseText);
+            }
+        });
+    }
+
+    function updateAnnouncementList(announcements) {
+        const announcementList = $('.announcement-list');
+        announcementList.empty();
+        announcements.forEach(function(announcement) {
+            const listItem = `
+                <li>
+                    <span>${announcement.announcementMessage}</span>
+                    <br>
+                    <span>${announcement.formattedDateAdded}</span>
+                </li>
+            `;
+            announcementList.append(listItem);
+        });
+    }
 </script>
 </html>

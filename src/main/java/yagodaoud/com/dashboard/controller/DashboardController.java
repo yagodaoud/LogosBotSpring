@@ -1,8 +1,5 @@
 package yagodaoud.com.dashboard.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
@@ -15,10 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import yagodaoud.com.dashboard.helper.DefaultAnnouncementView;
 import yagodaoud.com.logos.botBuilder.DiscordBotInitializer;
-import yagodaoud.com.logos.db.entity.AnnouncementChannel;
-import yagodaoud.com.logos.db.repository.AnnouncementChannelRepository;
 import yagodaoud.com.logos.db.repository.GuildRepository;
 
 import java.util.ArrayList;
@@ -69,9 +63,6 @@ public class DashboardController {
 
         return "{\"status\":\"Disconnected from: " + channelName + "\"}";
     }
-
-
-
 
     public List<String> getAllGuilds(JDA bot) {
         List<Guild> guilds = bot.getGuilds();
