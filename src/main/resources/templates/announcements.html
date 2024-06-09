@@ -88,11 +88,11 @@
 
     function fetchAnnouncements() {
         $.ajax({
-            url: '/announcements/list',
+            url: '/announcements/lastAnnouncement',
             type: 'GET',
             success: function(response) {
-                const announcements = response;
-                updateAnnouncementList(announcements);
+                const lastAnnouncement = response;
+                updateAnnouncementList(lastAnnouncement);
             },
             error: function(xhr, status, error) {
                 $('#result').text('Error fetching announcements: ' + xhr.responseText);
@@ -100,19 +100,17 @@
         });
     }
 
-    function updateAnnouncementList(announcements) {
+    function updateAnnouncementList(lastAnnouncement) {
+        var lastAnnouncement = lastAnnouncement[0];
         const announcementList = $('.announcement-list');
-        announcementList.empty();
-        announcements.forEach(function(announcement) {
-            const listItem = `
-                <li>
-                    <span>${announcement.announcementMessage}</span>
-                    <br>
-                    <span>${announcement.formattedDateAdded}</span>
-                </li>
-            `;
-            announcementList.append(listItem);
-        });
+        const listItem = `
+            <li>
+                <span>${lastAnnouncement.announcementMessage}</span>
+                <br>
+                <span>${lastAnnouncement.formattedDateAdded}</span>
+            </li>
+        `;
+        announcementList.append(listItem);
     }
 </script>
 </html>

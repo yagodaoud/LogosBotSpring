@@ -66,10 +66,10 @@ public class AnnouncementController {
         return "{\"status\":\"Announcement sent: " + message + "\"}";
     }
 
-    @GetMapping("/announcements/list")
+    @GetMapping("/announcements/lastAnnouncement")
     @ResponseBody
-    public List<Announcement> getAnnouncements() {
-        return this.formatAnnouncementDate(announcementRepository.findAll());
+    public List<Announcement> getLastAnnouncement() {
+        return this.formatAnnouncementDate(announcementRepository.findTopByOrderByIdDesc());
     }
 
     public void sendAnnouncementOnAllChannels(JDA bot, String message) {
