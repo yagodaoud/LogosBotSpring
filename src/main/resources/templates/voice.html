@@ -118,6 +118,7 @@
         $(document).on('click', '.disconnectVoiceChannel', function() {
             const csrfToken = $('#csrfToken').val();
             const audioManagerId = $(this).val();
+            $(this).closest('li').remove();
 
             $.ajax({
                 url: '/voice/disconnectVoiceChannel',
