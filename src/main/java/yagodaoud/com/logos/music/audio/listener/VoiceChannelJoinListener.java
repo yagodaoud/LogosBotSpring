@@ -17,6 +17,7 @@ public class VoiceChannelJoinListener {
         String message = "{\"channelId\":\"" + event.getChannelId() + "\"," +
                 "\"channelName\":\"" + event.getChannelName() + "\"," +
                 "\"guildName\":\"" + event.getGuildName() + "\"," +
+                "\"guildId\":\"" + event.getGuildId() + "\"," +
                 "\"type\":\"join\"," +
                 "\"guildIconUrl\":\"" + event.getGuildIconUrl() + "\"}";
 

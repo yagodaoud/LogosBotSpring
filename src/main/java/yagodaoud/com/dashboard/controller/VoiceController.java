@@ -29,10 +29,9 @@ public class VoiceController {
         return "voice";
     }
 
-    @PostMapping("/dashboard/disconnectVoiceChannel")
+    @PostMapping("/voice/disconnectVoiceChannel")
     @ResponseBody
     public String disconnectVoiceChannel(@RequestBody String channelId) {
-        System.out.println(channelId);
 
         Optional<AudioManager> optionalAudioManager = discordBot.getAudioManagers().stream()
                 .filter(am -> am.getConnectedChannel() != null && am.getConnectedChannel().getId().equals(channelId))
@@ -55,8 +54,4 @@ public class VoiceController {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
-
-    public void updateVoiceChannels(String channelId) {
-    }
-
 }

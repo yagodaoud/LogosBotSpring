@@ -32,10 +32,14 @@ public class AudioEventHandler implements ApplicationEventPublisherAware {
             return messageEmbedBuilder("Failed to join voice channel.", Colors.ADVERT);
         }
 
+        if (guildVoiceState.getGuild().getAudioManager().isConnected() && guildVoiceState.getChannel().getId().equals(guildVoiceState.getGuild().getAudioManager().getConnectedChannel().getId())) {
+            return messageEmbedBuilder("I'm already in a voice channel.", Colors.ADVERT);
+        }
+
         guildVoiceState.getGuild().getAudioManager().setSelfDeafened(true);
         guildVoiceState.getGuild().getAudioManager().openAudioConnection(guildVoiceState.getChannel());
 
-        new Thread(() -> eventPublisher.publishEvent(new VoiceChannelJoinEvent(this, audioChannel.getId(), audioChannel.getName(), audioChannel.getGuild().getName(), audioChannel.getGuild().getIconUrl()))).start();
+        new Thread(() -> eventPublisher.publishEvent(new VoiceChannelJoinEvent(this, audioChannel.getId(), audioChannel.getName(), audioChannel.getGuild().getName(), audioChannel.getGuild().getId(), audioChannel.getGuild().getIconUrl()))).start();
 
         return messageEmbedBuilder("Joining: `" + audioChannel.getName() + "`.", Colors.SUCCESS);
     }
@@ -47,6 +51,10 @@ public class AudioEventHandler implements ApplicationEventPublisherAware {
 
         if (audioChannel == null) {
             return messageEmbedBuilder("Failed to leave voice channel.", Colors.ADVERT);
+        }
+
+        if (!guildVoiceState.getGuild().getAudioManager().isConnected()) {
+            return messageEmbedBuilder("I'm not in a voice channel.", Colors.ADVERT);
         }
 
         guildVoiceState.getGuild().getAudioManager().closeAudioConnection();

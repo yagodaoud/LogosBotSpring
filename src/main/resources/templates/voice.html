@@ -50,6 +50,7 @@
                         </button>
                         <br>
                         <span th:text="${voiceChannel.getId()}"></span>
+                        <span th:text="${voiceChannel.getGuild().getId()}"></span>
                         <div th:if="${voiceChannel.getGuild().getIconUrl()}">
                             <img th:src="${voiceChannel.getGuild().getIconUrl()}" alt="Guild Icon" />
                         </div>
@@ -61,7 +62,8 @@
         </div>
     </div>
 </div>
-<script>
+<script th:inline="javascript">
+    var csrfToken = /*[[${_csrf.token}]]*/ '';
     $(document).ready(function() {
         let socket = new WebSocket("ws://localhost:8080/ws/voice-channel");
 
@@ -73,16 +75,19 @@
             let channelInfo = JSON.parse(json);
 
             if (channelInfo.type === "join") {
+                $(`.voiceChannels-list li:has(span:contains("${channelInfo.guildId}"))`).remove();
+
                 newChannelHtml = `
                     <li>
                         <div>
                             <span>${channelInfo.channelName}</span>
-                            <input type="hidden" id="csrfToken" value="${channelInfo.csrfToken}" />
+                            <input type="hidden" id="csrfToken" value="${csrfToken}" />
                             <button value="${channelInfo.channelId}" class="disconnectVoiceChannel">
                                 Disconnect
                             </button>
                             <br>
                             <span>${channelInfo.channelId}</span>
+                            <span>${channelInfo.guildId}</span>
                             ${channelInfo.guildIconUrl !== "null" ? `<div><img src="${channelInfo.guildIconUrl}" alt="Guild Icon" /></div>` : ''}
                             <span>${channelInfo.guildName}</span>
                         </div>
@@ -94,30 +99,29 @@
             if (channelInfo.type === "leave") {
                 $(`.voiceChannels-list li:has(span:contains("${channelInfo.channelId}"))`).remove();
             }
-
         }
 
-       $('.disconnectVoiceChannel').click(function() {
-           const csrfToken = $('#csrfToken').val();
-           const audioManagerId = $(this).val();
+        $(document).on('click', '.disconnectVoiceChannel', function() {
+            const csrfToken = $('#csrfToken').val();
+            const audioManagerId = $(this).val();
 
-           $.ajax({
-               url: '/dashboard/disconnectVoiceChannel',
-               type: 'POST',
-               data: audioManagerId,
-               contentType: 'application/json',
-               beforeSend: function(xhr) {
-                 xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-               },
-               success: function(response) {
-                 $('#result').text(response);
-               },
-               error: function(xhr, status, error) {
-                 $('#result').text('Error: ' + xhr.responseText);
-               }
-           });
-       });
-   });
+            $.ajax({
+                url: '/voice/disconnectVoiceChannel',
+                type: 'POST',
+                data: audioManagerId,
+                contentType: 'application/json',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+                },
+                success: function(response) {
+                    $('#result').text(response);
+                },
+                error: function(xhr, status, error) {
+                    $('#result').text('Error: ' + xhr.responseText);
+                }
+            });
+        });
+    });
 </script>
 </body>
 </html>
