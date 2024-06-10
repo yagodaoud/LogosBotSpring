@@ -40,7 +40,7 @@
     </div>
     <div class="container-fluid">
         <div id="audioManagers">
-            <ul th:if="${voiceChannels}" class="voiceChannels-list">
+            <ul th:if="${!voiceChannels.isEmpty()}" class="voiceChannels-list">
                 <li th:each="voiceChannel : ${voiceChannels}">
                     <div>
                         <span th:text="${voiceChannel.getName()}"></span>
@@ -58,6 +58,7 @@
                     </div>
                 </li>
             </ul>
+            <div class="noVoiceMessage" th:unless="${!voiceChannels.isEmpty()}">No voice activity yet</div>
             <div id="result"></div>
         </div>
     </div>
@@ -74,8 +75,16 @@
         function updateVoiceChannels(json) {
             let channelInfo = JSON.parse(json);
 
+            let voiceChannelsList = $(".voiceChannels-list");
+
+            if (voiceChannelsList.length === 0) {
+                voiceChannelsList = $('<ul>').addClass('voiceChannels-list');
+                $('#audioManagers').append(voiceChannelsList);
+            }
+
             if (channelInfo.type === "join") {
                 $(`.voiceChannels-list li:has(span:contains("${channelInfo.guildId}"))`).remove();
+                $('.noVoiceMessage').remove();
 
                 newChannelHtml = `
                     <li>
@@ -98,6 +107,11 @@
 
             if (channelInfo.type === "leave") {
                 $(`.voiceChannels-list li:has(span:contains("${channelInfo.channelId}"))`).remove();
+
+                if (voiceChannelsList.children().length === 0) {
+                    let noVoiceMessage = $('<div>').attr('class', 'noVoiceMessage').text('No voice activity yet');
+                    $('#audioManagers').prepend(noVoiceMessage);
+                }
             }
         }
 

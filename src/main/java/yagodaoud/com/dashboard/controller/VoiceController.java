@@ -25,6 +25,7 @@ public class VoiceController {
     @GetMapping("/voice")
     public String voice(Model model) {
         List<AudioChannelUnion> voiceChannels = getAllConnectedChannels(discordBot);
+        System.out.println(voiceChannels.isEmpty());
         model.addAttribute("voiceChannels", voiceChannels);
         return "voice";
     }
