@@ -61,6 +61,7 @@ public class LeaveChannelCommandTest {
             when(voiceState.getChannel()).thenReturn(channel);
             when(voiceState.getGuild()).thenReturn(guild);
             when(voiceState.getGuild().getAudioManager()).thenReturn(audioManager);
+            when(voiceState.getGuild().getAudioManager().isConnected()).thenReturn(true);
 
             command.handleCommand(event);
 

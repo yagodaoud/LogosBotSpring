@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import yagodaoud.com.logos.music.audio.conversion.spotify.SpotifyAudioObject;
@@ -27,9 +28,11 @@ import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 public class PlayerManager {
     private final AudioPlayerManager audioPlayerManager;
     private SpotifyHandler spotifyHandler;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public PlayerManager(AudioPlayerManager audioPlayerManager) {
+    public PlayerManager(ApplicationEventPublisher eventPublisher, AudioPlayerManager audioPlayerManager) {
+        this.eventPublisher = eventPublisher;
         this.audioPlayerManager = audioPlayerManager;
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
@@ -47,7 +50,7 @@ public class PlayerManager {
 
         final GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(channel.getGuild(), this.audioPlayerManager);
 
-        AudioEventHandler audioEventHandler = new AudioEventHandler(guildVoiceState);
+        AudioEventHandler audioEventHandler = new AudioEventHandler(eventPublisher, guildVoiceState);
 
         audioEventHandler.joinVoiceChannel();
 

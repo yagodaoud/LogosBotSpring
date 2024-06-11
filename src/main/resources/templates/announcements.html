@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Announcements</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{static/css/announcements.css}" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<header class="header">
+    <div class="header-container">
+        <div class="logo">Announcements</div>
+        <div class="user-profile">
+            <img src="https://freesvg.org/img/abstract-user-flat-3.png" alt="User Avatar" class="user-avatar">
+            <span class="user-name">John Doe</span>
+        </div>
+    </div>
+</header>
+
+<div class="data">
+    <div class="full-height-div">
+        <div class="logos-header">
+            <div class="logos-title">Logos</div>
+            <img class="logos-icon" src="https://cdn-icons-png.flaticon.com/512/749/749024.png?w=826&t=st=1689123378~exp=1689123978~hmac=e975ec34409fd04e619d0f301ab29850bfdebdc13c749d2ee39b9f00bd8dcf9c" alt="Logos Bot">
+        </div>
+        <div class="col-sm-3 sidenav hidden-xs">
+            <ul class="nav nav-stacked">
+                <li><a href="dashboard"><img src="https://img.icons8.com/?size=50&id=vFqlDrzMYOT0&format=png" alt="Dashboard">Dashboard</a></li>
+                <li><a href="guilds"><img src="https://icons.veryicon.com/png/o/business/classic-icon/community-12.png" alt="Guilds">Guilds</a></li>
+                <li><a href="members"><img src="https://www.svgrepo.com/show/86725/person.svg" alt="Members">Members</a></li>
+                <li class="active"><a href="announcements"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Icon-Megaphone.svg/904px-Icon-Megaphone.svg.png" alt="Announcements">Announcements</a></li>
+                <li><a href="voice"><img src="https://www.svgrepo.com/show/93163/voice-microphone.svg" alt="Voice Channel">Voice Channels</a></li>
+            </ul><br>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="announcement">
+            <div class="announcement-title">
+                Announcements
+            </div>
+            <input type="hidden" id="csrfToken" th:value="${_csrf.token}" />
+            <label for="announcementMessage"></label><textarea id="announcementMessage" rows="4" cols="50"></textarea><br>
+            <button id="sendAnnouncement">Send</button>
+            <div id="result"></div>
+        </div>
+        <div class="announcement-history">
+            <div class="announcement-title">
+                Announcement History
+            </div>
+            <ul th:if="${announcements}" class="announcement-list">
+                <li th:each="announcement : ${announcements}">
+                    <span th:text="${announcement.announcementMessage}"></span>
+                    <br>
+                    <span th:text="${announcement.formattedDateAdded}"></span>
+                </li>
+            </ul>
+            <div th:unless="${announcements}">No announcements yet</div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $('#sendAnnouncement').click(function() {
+        const message = $('#announcementMessage').val();
+        const csrfToken = $('#csrfToken').val();
+        $.ajax({
+            url: '/announcements/announce',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ message: message}),
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+            },
+            success: function(response) {
+                $('#result').text(response);
+                fetchAnnouncements();
+            },
+            error: function(xhr, status, error) {
+                $('#result').text('Error: ' + xhr.responseText);
+            }
+        });
+    });
+
+    function fetchAnnouncements() {
+        $.ajax({
+            url: '/announcements/lastAnnouncement',
+            type: 'GET',
+            success: function(response) {
+                const lastAnnouncement = response;
+                updateAnnouncementList(lastAnnouncement);
+            },
+            error: function(xhr, status, error) {
+                $('#result').text('Error fetching announcements: ' + xhr.responseText);
+            }
+        });
+    }
+
+    function updateAnnouncementList(lastAnnouncement) {
+        var lastAnnouncement = lastAnnouncement[0];
+        const announcementList = $('.announcement-list');
+        const listItem = `
+            <li>
+                <span>${lastAnnouncement.announcementMessage}</span>
+                <br>
+                <span>${lastAnnouncement.formattedDateAdded}</span>
+            </li>
+        `;
+        announcementList.append(listItem);
+    }
+</script>
+</html>

@@ -3,6 +3,7 @@ package yagodaoud.com.logos.music.commands;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
@@ -13,14 +14,16 @@ import java.util.List;
 @Component
 public class JoinChannelCommand implements CommandHandlerInterface {
 
+    private final ApplicationEventPublisher eventPublisher;
     @Autowired
-    public JoinChannelCommand(CommandRegistryService commandRegistry) {
+    public JoinChannelCommand(ApplicationEventPublisher applicationEventPublisher, CommandRegistryService commandRegistry) {
+        this.eventPublisher = applicationEventPublisher;
         commandRegistry.registerCommand(this);
     }
 
     @Override
     public void handleCommand(SlashCommandInteractionEvent event) {
-        AudioEventHandler audioEventHandler = new AudioEventHandler(event.getMember().getVoiceState());
+        AudioEventHandler audioEventHandler = new AudioEventHandler(eventPublisher, event.getMember().getVoiceState());
         event.replyEmbeds(audioEventHandler.joinVoiceChannel()).queue();
     }
 
