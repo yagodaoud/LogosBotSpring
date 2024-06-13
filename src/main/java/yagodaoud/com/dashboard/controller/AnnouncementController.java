@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import yagodaoud.com.dashboard.helper.DefaultAnnouncementView;
-import yagodaoud.com.dashboard.model.entity.Announcement;
+import yagodaoud.com.dashboard.entity.Announcement;
 import yagodaoud.com.dashboard.repository.AnnouncementRepository;
+import yagodaoud.com.dashboard.service.AnnouncementService;
 import yagodaoud.com.logos.botBuilder.DiscordBotInitializer;
 import yagodaoud.com.logos.db.entity.AnnouncementChannel;
 import yagodaoud.com.logos.db.repository.AnnouncementChannelRepository;
@@ -34,6 +35,8 @@ public class AnnouncementController {
     private AnnouncementChannelRepository announcementChannelRepository;
     @Autowired
     private AnnouncementRepository announcementRepository;
+    @Autowired
+    private AnnouncementService announcementService;
 
     private final JDA discordBot = DiscordBotInitializer.getDiscordBot();
 
@@ -61,7 +64,7 @@ public class AnnouncementController {
         sendAnnouncementOnAllChannels(discordBot, message);
 
         String finalMessage = message;
-        new Thread(() -> this.insertAnnouncementAsync(finalMessage)).start();
+        new Thread(() -> announcementService.insertAnnouncementAsync(finalMessage)).start();
 
         return "{\"status\":\"Announcement sent: " + message + "\"}";
     }
@@ -75,14 +78,6 @@ public class AnnouncementController {
     public void sendAnnouncementOnAllChannels(JDA bot, String message) {
         List<AnnouncementChannel> channelList = (ArrayList<AnnouncementChannel>) announcementChannelRepository.findAll();
         channelList.forEach(c -> bot.getTextChannelById(c.getChannelId()).sendMessage(DefaultAnnouncementView.getDefaultAnnouncementView(bot, message)).queue());
-    }
-
-    @Async
-    private void insertAnnouncementAsync(String message) {
-        Announcement announcement = new Announcement();
-        announcement.setAnnouncementMessage(message);
-        announcement.setDateAdded(LocalDateTime.now());
-        announcementRepository.save(announcement);
     }
 
     private List<Announcement> formatAnnouncementDate(List<Announcement> announcements) {
