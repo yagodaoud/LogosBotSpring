@@ -65,12 +65,31 @@
 </div>
 <script th:inline="javascript">
     var csrfToken = /*[[${_csrf.token}]]*/ '';
-    $(document).ready(function() {
-        let socket = new WebSocket("ws://localhost:8080/ws/voice-channel");
+   $(document).ready(function() {
+    let socket;
 
-        socket.onmessage = function(event) {
-            updateVoiceChannels(event.data);
-        };
+        function connectWebSocket() {
+            socket = new WebSocket("ws://localhost:8080/ws/voice-channel");
+
+            socket.onopen = function(event) {
+                console.log("WebSocket is open now.");
+            };
+
+            socket.onmessage = function(event) {
+                updateVoiceChannels(event.data);
+            };
+
+            socket.onclose = function(event) {
+                console.log("WebSocket is closed now. Reconnecting...");
+                setTimeout(connectWebSocket, 1000);
+            };
+
+            socket.onerror = function(error) {
+                console.log("WebSocket error: ", error);
+            };
+        }
+
+        connectWebSocket();
 
         function updateVoiceChannels(json) {
             let channelInfo = JSON.parse(json);
@@ -129,10 +148,22 @@
                     xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
                 },
                 success: function(response) {
-                    $('#result').text(response);
+                    $('#result').text(response).fadeIn();
+                    setTimeout(function() {
+                        $('#result').fadeOut(function() {
+                            $(this).text('');
+                            $(this).show();
+                        });
+                    }, 5000);
                 },
                 error: function(xhr, status, error) {
-                    $('#result').text('Error: ' + xhr.responseText);
+                    $('#result').text('Error: ' + xhr.responseText).fadeIn();
+                    setTimeout(function() {
+                        $('#result').fadeOut(function() {
+                            $(this).text('');
+                            $(this).show();
+                        });
+                    }, 5000);
                 }
             });
         });
