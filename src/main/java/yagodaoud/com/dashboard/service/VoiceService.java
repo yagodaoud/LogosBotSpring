@@ -18,4 +18,11 @@ public class VoiceService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
+
+    public int countAllConnectedChannels(JDA bot) {
+        return bot.getAudioManagers().stream()
+                .map(AudioManager::getConnectedChannel)
+                .filter(Objects::nonNull)
+                .toList().size();
+    }
 }

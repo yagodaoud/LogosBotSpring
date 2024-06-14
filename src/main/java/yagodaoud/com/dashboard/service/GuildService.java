@@ -35,4 +35,8 @@ public class GuildService {
 
         return guilds.stream().map(net.dv8tion.jda.api.entities.Guild::getName).toList();
     }
+
+    public long getTotalGuilds() {
+        return guildRepository.count();
+    }
 }
