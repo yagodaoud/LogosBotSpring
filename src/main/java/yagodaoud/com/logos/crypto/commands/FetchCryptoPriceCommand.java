@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.commands.CryptoCommandInterface;
 import yagodaoud.com.logos.crypto.services.CoinMarketCapApiService;
 import yagodaoud.com.logos.tools.Colors;
 
@@ -17,7 +18,7 @@ import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getWrongOptionT
 import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component
-public class FetchCryptoPriceCommand implements CommandHandlerInterface {
+public class FetchCryptoPriceCommand implements CommandHandlerInterface, CryptoCommandInterface {
 
     private final CoinMarketCapApiService coinMarketCapApiService;
 

@@ -32,7 +32,7 @@
             <ul class="nav nav-stacked">
                 <li><a href="dashboard"><img src="https://img.icons8.com/?size=50&id=vFqlDrzMYOT0&format=png" alt="Dashboard">Dashboard</a></li>
                 <li><a href="guilds"><img src="https://icons.veryicon.com/png/o/business/classic-icon/community-12.png" alt="Guilds">Guilds</a></li>
-                <li><a href="members"><img src="https://www.svgrepo.com/show/86725/person.svg" alt="Members">Members</a></li>
+                <li><a href="commands"><img src="https://cdn-icons-png.flaticon.com/512/5111/5111599.png" alt="Commands">Commands</a></li>
                 <li><a href="announcements"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Icon-Megaphone.svg/904px-Icon-Megaphone.svg.png" alt="Announcements">Announcements</a></li>
                 <li class="active"><a href="voice"><img src="https://www.svgrepo.com/show/93163/voice-microphone.svg" alt="Voice Channel">Voice Channels</a></li>
             </ul><br>
@@ -65,12 +65,31 @@
 </div>
 <script th:inline="javascript">
     var csrfToken = /*[[${_csrf.token}]]*/ '';
-    $(document).ready(function() {
-        let socket = new WebSocket("ws://localhost:8080/ws/voice-channel");
+   $(document).ready(function() {
+    let socket;
 
-        socket.onmessage = function(event) {
-            updateVoiceChannels(event.data);
-        };
+        function connectWebSocket() {
+            socket = new WebSocket("ws://localhost:8080/ws/voice-channel");
+
+            socket.onopen = function(event) {
+                console.log("WebSocket is open now.");
+            };
+
+            socket.onmessage = function(event) {
+                updateVoiceChannels(event.data);
+            };
+
+            socket.onclose = function(event) {
+                console.log("WebSocket is closed now. Reconnecting...");
+                setTimeout(connectWebSocket, 1000);
+            };
+
+            socket.onerror = function(error) {
+                console.log("WebSocket error: ", error);
+            };
+        }
+
+        connectWebSocket();
 
         function updateVoiceChannels(json) {
             let channelInfo = JSON.parse(json);
@@ -129,10 +148,22 @@
                     xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
                 },
                 success: function(response) {
-                    $('#result').text(response);
+                    $('#result').text(response).fadeIn();
+                    setTimeout(function() {
+                        $('#result').fadeOut(function() {
+                            $(this).text('');
+                            $(this).show();
+                        });
+                    }, 5000);
                 },
                 error: function(xhr, status, error) {
-                    $('#result').text('Error: ' + xhr.responseText);
+                    $('#result').text('Error: ' + xhr.responseText).fadeIn();
+                    setTimeout(function() {
+                        $('#result').fadeOut(function() {
+                            $(this).text('');
+                            $(this).show();
+                        });
+                    }, 5000);
                 }
             });
         });

@@ -9,7 +9,7 @@
 <body>
 <div class="login-container">
     <div class="login-wrapper">
-        <h2>GymManager</h2>
+        <h2>Logos</h2>
         <form th:action="@{/login}" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <div th:if="${param.error}" class="error">Usuário ou senha inválidos</div>

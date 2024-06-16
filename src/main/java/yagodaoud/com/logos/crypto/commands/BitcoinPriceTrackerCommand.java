@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.commands.CryptoCommandInterface;
 import yagodaoud.com.logos.crypto.alertData.AlertDataTracker;
 import yagodaoud.com.logos.tools.Colors;
 
@@ -21,7 +22,7 @@ import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getWrongOptionT
 import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component
-public class BitcoinPriceTrackerCommand implements CommandHandlerInterface{
+public class BitcoinPriceTrackerCommand implements CryptoCommandInterface {
     public final Map<String, Map<Long, AlertDataTracker>> alertDataMap = new HashMap<>();
 
     @Autowired

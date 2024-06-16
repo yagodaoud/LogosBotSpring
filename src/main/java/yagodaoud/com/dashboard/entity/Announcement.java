@@ -1,4 +1,4 @@
-package yagodaoud.com.dashboard.model.entity;
+package yagodaoud.com.dashboard.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.commands.CryptoCommandInterface;
 import yagodaoud.com.logos.crypto.alertData.AlertDataScheduler;
 import yagodaoud.com.logos.crypto.alertData.AlertDataTracker;
 import yagodaoud.com.logos.tools.Colors;
@@ -20,7 +21,7 @@ import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component
 @Scope("singleton")
-public class BitcoinPriceSchedulerCommand implements CommandHandlerInterface {
+public class BitcoinPriceSchedulerCommand implements CommandHandlerInterface, CryptoCommandInterface {
     public final Map<Long, AlertDataScheduler> alertDataMap = new HashMap<>();
 
     @Autowired
