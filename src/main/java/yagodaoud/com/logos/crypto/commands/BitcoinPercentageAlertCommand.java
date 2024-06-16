@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.commands.CryptoCommandInterface;
 import yagodaoud.com.logos.crypto.alertData.AlertDataPercentage;
 import yagodaoud.com.logos.tools.Colors;
 
@@ -19,7 +20,7 @@ import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getWrongOptionT
 import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 
 @Component
-public class BitcoinPercentageAlertCommand implements CommandHandlerInterface {
+public class BitcoinPercentageAlertCommand implements CommandHandlerInterface, CryptoCommandInterface {
     public final Map<String, Map<Long, AlertDataPercentage>> alertDataMap = new HashMap<>();
 
 

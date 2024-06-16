@@ -5,8 +5,8 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.commands.MusicCommandInterface;
 import yagodaoud.com.logos.music.audio.PlayerManager;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
 import static yagodaoud.com.logos.tools.EmbedErrorMessageBuilder.getNotAdminEmbedMessage;
 
 @Component
-public class RestartPlayerCommand implements CommandHandlerInterface {
+public class RestartPlayerCommand implements MusicCommandInterface {
     private final PlayerManager playerManager;
 
     @Autowired

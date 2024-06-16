@@ -5,14 +5,14 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-import yagodaoud.com.logos.commands.CommandHandlerInterface;
 import yagodaoud.com.logos.commands.CommandRegistryService;
+import yagodaoud.com.logos.commands.MusicCommandInterface;
 import yagodaoud.com.logos.music.audio.AudioEventHandler;
 
 import java.util.List;
 
 @Component
-public class JoinChannelCommand implements CommandHandlerInterface {
+public class JoinChannelCommand implements MusicCommandInterface {
 
     private final ApplicationEventPublisher eventPublisher;
     @Autowired
