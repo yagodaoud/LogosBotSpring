@@ -48,7 +48,7 @@ public class CustomAudioLoadResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void playlistLoaded(AudioPlaylist playlist) {
-        if (playlist.getTracks().size() == 0) {
+        if (playlist.getTracks().isEmpty()) {
             noMatches();
             return;
         }

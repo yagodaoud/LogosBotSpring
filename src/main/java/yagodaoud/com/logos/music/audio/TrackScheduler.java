@@ -8,21 +8,28 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     private final BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
     private boolean loop = false;
     private boolean shuffle = false;
+    public boolean autoplay = false;
+    private String currentSongUrl;
     private BlockingQueue<AudioTrack> originalQueue = new LinkedBlockingQueue<>();
+    private final GuildMusicManager guildMusicManager;
 
-    public TrackScheduler(AudioPlayer player) {
+    public TrackScheduler(AudioPlayer player, GuildMusicManager guildMusicManager) {
         this.player = player;
+        this.guildMusicManager = guildMusicManager;
     }
 
     public void queue(AudioTrack track, boolean forcePlay) {
         System.out.println(track.getInfo().title);
+        currentSongUrl = track.getInfo().uri;
 
         if (forcePlay) {
             this.player.startTrack(track, false);
@@ -52,6 +59,10 @@ public class TrackScheduler extends AudioEventAdapter {
         if (nextTrack == null) {
             this.player.stopTrack();
             this.queue.clear();
+
+            if (autoplay) {
+                return "Autoplay is looking for the next track.";
+            }
             return "Skipped current track, the queue is now empty.";
         }
         this.player.startTrack(nextTrack, false);
@@ -60,13 +71,20 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if (endReason.toString().equals("FINISHED") || endReason.mayStartNext) {
+        System.out.println(endReason.toString());
+        if (endReason.toString().equals("FINISHED") || endReason.mayStartNext || endReason.toString().equals("STOPPED")) {
             AudioTrack nextTrack;
 
             nextTrack = track.makeClone();
+
+            if (autoplay && queue.size() <= 1) {
+                PlayerManager.loadAutoplayTrack(this, PlayerManager.getAudioPlayerManager(), guildMusicManager,
+                        new CustomAudioLoadResultHandler(guildMusicManager, "", false, new CompletableFuture<>(), new AtomicReference<>()));
+            }
             if (!loop) {
                 nextTrack = queue.poll();
             }
+
             this.player.startTrack(nextTrack, false);
         }
     }
@@ -242,6 +260,15 @@ public class TrackScheduler extends AudioEventAdapter {
         return "Removed: " + getNowPlayingMessage(removedTrack, true);
     }
 
+    public String autoplay() {
+        if (!autoplay) {
+            autoplay = true;
+            return "Autoplay is on!";
+        }
+        autoplay = false;
+        return "Autoplay is off!";
+    }
+
     public String getNowPlayingMessage(AudioTrack audioTrack, boolean removeNowPlaying) {
         if (audioTrack == null) {
             return "Nothing is being played right now.";
@@ -302,4 +329,7 @@ public class TrackScheduler extends AudioEventAdapter {
         return String.format("%02d:%02d", minutes, seconds);
     }
 
+    public String getCurrentSongUrl() {
+        return this.currentSongUrl;
+    }
 }

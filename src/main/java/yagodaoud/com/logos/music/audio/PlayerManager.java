@@ -15,6 +15,7 @@ import yagodaoud.com.logos.music.audio.conversion.spotify.SpotifyAudioObject;
 import yagodaoud.com.logos.music.audio.conversion.spotify.SpotifyHandler;
 import yagodaoud.com.logos.music.audio.conversion.spotify.services.SpotifyApiConnection;
 import yagodaoud.com.logos.music.audio.conversion.spotify.services.SpotifyApiService;
+import yagodaoud.com.logos.music.audio.conversion.youtube.YoutubeScraper;
 import yagodaoud.com.logos.music.services.VolumeService;
 import yagodaoud.com.logos.tools.Colors;
 
@@ -27,6 +28,7 @@ import static yagodaoud.com.logos.tools.MessageEmbedBuilder.messageEmbedBuilder;
 @Service
 public class PlayerManager {
     private final AudioPlayerManager audioPlayerManager;
+    private static AudioPlayerManager audioPlayerManagerInstance;
     private SpotifyHandler spotifyHandler;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -34,6 +36,7 @@ public class PlayerManager {
     public PlayerManager(ApplicationEventPublisher eventPublisher, AudioPlayerManager audioPlayerManager) {
         this.eventPublisher = eventPublisher;
         this.audioPlayerManager = audioPlayerManager;
+        audioPlayerManagerInstance = audioPlayerManager;
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
     }
@@ -89,6 +92,15 @@ public class PlayerManager {
 
         futureMessage = loadResultHandlerImplementation.getFutureMessage();
         return futureMessage;
+    }
+
+    @SneakyThrows
+    public static void loadAutoplayTrack(TrackScheduler trackScheduler, AudioPlayerManager audioPlayerManager, GuildMusicManager musicManager, CustomAudioLoadResultHandler loadResultHandlerImplementation) {
+        Thread.sleep(200);
+        String currentSongUrl = trackScheduler.getCurrentSongUrl();
+            String finalUrlOrName = YoutubeScraper.getNextRecommendedVideoUrl(currentSongUrl);
+            System.out.println(finalUrlOrName);
+            audioPlayerManager.loadItemOrdered(musicManager, finalUrlOrName, loadResultHandlerImplementation);
     }
 
     public MessageEmbed skipTrack(Guild guild, GuildVoiceState voiceState) {
@@ -198,6 +210,14 @@ public class PlayerManager {
         return messageEmbedBuilder(GuildMusicManager.restartPlayer(guild, voiceState, this.audioPlayerManager), Colors.SUCCESS);
     }
 
+    public MessageEmbed autoplay(Guild guild, GuildVoiceState voiceState) {
+        if (!voiceState.inAudioChannel()) {
+            return messageEmbedBuilder("You must be in a voice channel first.", Colors.ADVERT);
+        }
+        GuildMusicManager musicManager = GuildMusicManager.getOrCreateInstance(guild, this.audioPlayerManager);
+        return messageEmbedBuilder(musicManager.scheduler.autoplay(), Colors.SUCCESS);
+    }
+
     private boolean isUrl(String url) {
         try {
             new URL(url);
@@ -210,5 +230,9 @@ public class PlayerManager {
     private void completeFutureWithMessage(CompletableFuture<MessageEmbed> future, AtomicReference<MessageEmbed> messageContainer, MessageEmbed message) {
         messageContainer.set(message);
         future.complete(messageContainer.get());
+    }
+
+    public static AudioPlayerManager getAudioPlayerManager() {
+        return audioPlayerManagerInstance;
     }
 }
