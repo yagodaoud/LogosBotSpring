@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 public class YoutubeScraper {
     private static final Pattern RECOMMENDED_VIDEO_PATTERN = Pattern.compile("\\{\"webCommandMetadata\":\\{\"url\":\"(/watch\\?v=[^\"]+)\"");
+    private static final List<String> lastUrls = new ArrayList<>();
 
     public static String getNextRecommendedVideoUrl(String videoUrl) throws IOException {
         URL url = new URL(videoUrl);
@@ -34,16 +35,25 @@ public class YoutubeScraper {
         List<String> matches = new ArrayList<>();
 
         int i = 0;
-        while (matcher.find() && i < 6) {
+        while (matcher.find() && i < 3) {
             String urlFinal = matcher.group(1).replaceFirst("\\\\u0026.*", "");
-            matches.add("https://www.youtube.com" + urlFinal);
-            i++;
+            String fullUrl = "https://www.youtube.com" + urlFinal;
+            if (!lastUrls.contains(fullUrl)) {
+                matches.add(fullUrl);
+                i++;
+            }
+        }
+
+        if (lastUrls.size() >= 6) {
+            lastUrls.clear();
         }
 
         if (!matches.isEmpty()) {
             Random random = new Random();
             int randomIndex = random.nextInt(matches.size());
-            return matches.get(randomIndex);
+            String link = matches.get(randomIndex);
+            lastUrls.add(link);
+            return link;
         }
 
         return null;
