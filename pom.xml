@@ -21,6 +21,10 @@
             <name>Lavalink Repository</name>
             <url>https://maven.lavalink.dev/snapshots</url>
         </repository>
+        <repository>
+            <id>lavalink</id>
+            <url>https://maven.lavalink.dev/releases</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -102,16 +106,22 @@
             <artifactId>JDA</artifactId>
             <version>5.0.0-beta.12</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>dev.arbjerg</groupId>-->
-<!--            <artifactId>lavaplayer</artifactId>-->
-<!--            <version>2.1.1</version>-->
-<!--        </dependency>-->
-    <dependency><!--     Snapshot dependency-->
+        <dependency>
             <groupId>dev.arbjerg</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>afec211f05c9dcf0b6ee44276a02f0316ea2458a-SNAPSHOT</version>
+            <version>2.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>dev.lavalink.youtube</groupId>
+            <artifactId>common</artifactId>
+            <version>1.7.2</version>
+        </dependency>
+
+        <!--    <dependency>&lt;!&ndash;     Snapshot dependency&ndash;&gt;-->
+<!--            <groupId>dev.arbjerg</groupId>-->
+<!--            <artifactId>lavaplayer</artifactId>-->
+<!--            <version>afec211f05c9dcf0b6ee44276a02f0316ea2458a-SNAPSHOT</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>

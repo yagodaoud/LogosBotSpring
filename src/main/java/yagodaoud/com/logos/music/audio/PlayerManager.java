@@ -2,6 +2,7 @@ package yagodaoud.com.logos.music.audio;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
@@ -37,7 +38,8 @@ public class PlayerManager {
         this.eventPublisher = eventPublisher;
         this.audioPlayerManager = audioPlayerManager;
         audioPlayerManagerInstance = audioPlayerManager;
-        AudioSourceManagers.registerRemoteSources(audioPlayerManager);
+        YoutubeAudioSourceManager ytSourceManager = new YoutubeAudioSourceManager();
+        audioPlayerManager.registerSourceManager(ytSourceManager);
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
     }
 
